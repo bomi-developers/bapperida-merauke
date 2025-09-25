@@ -18,7 +18,7 @@ $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(valu
 
         <!-- ===== Content Area Start ===== -->
         <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
-        
+
             {{ $slot }}
         </div>
         <!-- ===== Content Area End ===== -->
