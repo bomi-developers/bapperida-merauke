@@ -1,7 +1,9 @@
 <?php
 
-
+use App\Http\Controllers\BeritaController;
+use App\Http\Controllers\BidangController;
 use App\Http\Controllers\PagesController;
+use App\Http\Controllers\ProfileDinasController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Response;
@@ -37,11 +39,33 @@ Auth::routes(['register' => false, 'verify' => false, 'reset' => false]);
 Route::middleware(['auth'])->group(function () {
   // dashboard page
   Route::get('/home', [PagesController::class, 'dashboard'])->name('home');
+  // bidang
+  Route::prefix('admin')->name('admin.')->group(function () {
+    // bidang
+    Route::get('bidang', [\App\Http\Controllers\BidangController::class, 'index'])->name('bidang.index');
+    Route::get('bidang/data', [\App\Http\Controllers\BidangController::class, 'getData'])->name('bidang.data');
+    Route::post('bidang', [\App\Http\Controllers\BidangController::class, 'store'])->name('bidang.store');
+    Route::put('bidang/{bidang}', [\App\Http\Controllers\BidangController::class, 'update'])->name('bidang.update');
+    Route::delete('bidang/{bidang}', [\App\Http\Controllers\BidangController::class, 'destroy'])->name('bidang.destroy');
+    // profile dinas
+    Route::get('/profile-dinas', [ProfileDinasController::class, 'index'])->name('profile-dinas');
+    Route::post('/profile-dinas', [ProfileDinasController::class, 'store'])->name('profile-dinas.store');
+    // berita
+    Route::get('berita', [BeritaController::class, 'index'])->name('berita.index');
+    Route::get('berita/data', [BeritaController::class, 'data'])->name('berita.data');
+    Route::post('berita', [BeritaController::class, 'store'])->name('berita.store');
+    Route::put('berita/{id}', [BeritaController::class, 'update'])->name('berita.update');
+    Route::delete('berita/{id}', [BeritaController::class, 'destroy'])->name('berita.destroy');
+  });
   // setting page
   Route::get('/website-setting', [PagesController::class, 'websiteSetting'])->name('website-setting');
   Route::put('/website-setting', [PagesController::class, 'websiteSettingUpdate'])->name('website-setting.update');
   // account
   Route::get('/profile', [PagesController::class, 'profile'])->name('profile');
+  // logs login
+  Route::get('/admin/login-logs', [PagesController::class, 'loginLogs'])->name('admin.login-logs');
+  Route::get('/admin/activity-logs', [PagesController::class, 'activityLogs'])->name('admin.activity-logs');
+  Route::get('/admin/view-logs', [PagesController::class, 'viewLogs'])->name('admin.view-logs');
 
   // pages examples
   Route::get('/calendar', [PagesController::class, 'calendar'])->name('calendar');

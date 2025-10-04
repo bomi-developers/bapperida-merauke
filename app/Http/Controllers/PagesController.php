@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\WebsiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\LoginLog;
+use Spatie\Activitylog\Models\Activity;
+use App\Models\PageView;
 
 class PagesController extends Controller
 {
@@ -139,5 +142,63 @@ class PagesController extends Controller
         $settings->save();
 
         return redirect()->back()->with('success', 'Website settings updated successfully.');
+    }
+    public function loginLogs()
+    {
+        $data = [
+            'title' => 'Login Logs',
+            'logs' => LoginLog::all(),
+        ];
+        return view('pages.logs.index', $data);
+    }
+    public function activityLogs()
+    {
+        $data = [
+            'title' => 'Activity Logs',
+            'logs' => Activity::with('causer')->latest()->paginate(20),
+        ];
+        return view('pages.logs.activity', $data);
+    }
+    public function viewLogs(Request $request)
+    {
+        $filter = $request->get('filter');
+        $search = $request->get('search');
+
+        $logs = PageView::with('user')
+            ->when($filter === 'guest', function ($query) {
+                $query->whereNull('user_id');
+            })
+            ->when($filter === 'user', function ($query) {
+                $query->whereNotNull('user_id');
+            })
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('url', 'like', "%{$search}%")
+                        ->orWhere('ip_address', 'like', "%{$search}%")
+                        ->orWhereHas('user', fn($uq) => $uq->where('name', 'like', "%{$search}%"));
+                });
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(20);
+        $todayGuest = PageView::whereNull('user_id')
+            ->whereDate('viewed_at', today())->count();
+
+        $todayUser = PageView::whereNotNull('user_id')
+            ->whereDate('viewed_at', today())->count();
+
+        // Statistik total
+        $totalGuest = PageView::whereNull('user_id')->count();
+        $totalUser  = PageView::whereNotNull('user_id')->count();
+
+        $data = [
+            'title' => 'Activity Logs',
+            'logs' => $logs,
+            'todayGuest' => $todayGuest,
+            'todayUser' => $todayUser,
+            'totalGuest' => $totalGuest,
+            'totalUser' => $totalUser,
+            'search' => $search,
+        ];
+        return view('pages.logs.view', $data);
     }
 }
