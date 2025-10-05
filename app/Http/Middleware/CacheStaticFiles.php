@@ -18,7 +18,7 @@ class CacheStaticFiles
         $response = $next($request);
 
         if ($request->is('img/*') || $request->is('tailadmin/*')) {
-            $response->headers->set('Cache-Control', 'max-age=31536000, public');
+            $response->headers->set('Cache-Control', 'max-age=2592000, public');
         }
 
         return $response;

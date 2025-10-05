@@ -16,7 +16,7 @@ Route::get('img/{path}', function ($path) {
   if (!File::exists($fullPath)) abort(404);
 
   return Response::file($fullPath, [
-    'Cache-Control' => 'max-age=31536000, public',
+    'Cache-Control' => 'max-age=2592000, public',
   ]);
 })->where('path', '.*');
 
@@ -47,6 +47,24 @@ Route::middleware(['auth'])->group(function () {
     Route::post('bidang', [\App\Http\Controllers\BidangController::class, 'store'])->name('bidang.store');
     Route::put('bidang/{bidang}', [\App\Http\Controllers\BidangController::class, 'update'])->name('bidang.update');
     Route::delete('bidang/{bidang}', [\App\Http\Controllers\BidangController::class, 'destroy'])->name('bidang.destroy');
+    // golongan
+    Route::get('golongan', [\App\Http\Controllers\GolonganController::class, 'index'])->name('golongan');
+    Route::get('golongan/data', [\App\Http\Controllers\GolonganController::class, 'getData'])->name('golongan.data');
+    Route::post('golongan', [\App\Http\Controllers\GolonganController::class, 'store'])->name('golongan.store');
+    Route::put('golongan/{golongan}', [\App\Http\Controllers\GolonganController::class, 'update'])->name('golongan.update');
+    Route::delete('golongan/{golongan}', [\App\Http\Controllers\GolonganController::class, 'destroy'])->name('golongan.destroy');
+    // jabatan
+    Route::get('jabatan', [\App\Http\Controllers\JabatanController::class, 'index'])->name('jabatan');
+    Route::get('jabatan/data', [\App\Http\Controllers\JabatanController::class, 'getData'])->name('jabatan.data');
+    Route::post('jabatan', [\App\Http\Controllers\JabatanController::class, 'store'])->name('jabatan.store');
+    Route::put('jabatan/{jabatan}', [\App\Http\Controllers\JabatanController::class, 'update'])->name('jabatan.update');
+    Route::delete('jabatan/{jabatan}', [\App\Http\Controllers\JabatanController::class, 'destroy'])->name('jabatan.destroy');
+    // pegawai
+    Route::get('pegawai', [\App\Http\Controllers\PegawaiController::class, 'index'])->name('pegawai');
+    Route::get('pegawai/data', [\App\Http\Controllers\PegawaiController::class, 'getData'])->name('pegawai.data');
+    Route::post('pegawai', [\App\Http\Controllers\PegawaiController::class, 'store'])->name('pegawai.store');
+    Route::put('pegawai/{pegawai}', [\App\Http\Controllers\PegawaiController::class, 'update'])->name('pegawai.update');
+    Route::delete('pegawai/{pegawai}', [\App\Http\Controllers\PegawaiController::class, 'destroy'])->name('pegawai.destroy');
     // profile dinas
     Route::get('/profile-dinas', [ProfileDinasController::class, 'index'])->name('profile-dinas');
     Route::post('/profile-dinas', [ProfileDinasController::class, 'store'])->name('profile-dinas.store');

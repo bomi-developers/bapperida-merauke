@@ -95,11 +95,13 @@
                     </li> --}}
                     <!-- Menu Item Tables -->
                 </ul>
-                <h3 class="mb-4 ml-4 text-sm font-medium text-bodydark2">MASTER DATA</h3>
+
 
                 <ul class="mb-6 flex flex-col gap-1.5">
-                    <!-- Menu Item Dashboard -->
+                    <!-- Menu Item Settings -->
+                    <h3 class="mb-4 ml-4 text-sm font-medium text-bodydark2">PEGAWAI</h3>
                     <li>
+
                         <a href="{{ route('admin.bidang.index') }}"
                             class="group relative flex items-center gap-2.5 rounded-xl px-4 py-2 font-medium duration-300 ease-in-out
                                 {{ request()->routeIs('admin.bidang.index')
@@ -108,12 +110,46 @@
                             <i class="bi bi-people"></i>
                             Bidang
                         </a>
+
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.golongan') }}"
+                            class="group relative flex items-center gap-2.5 rounded-xl px-4 py-2 font-medium duration-300 ease-in-out
+                                {{ request()->routeIs('admin.golongan')
+                                    ? 'bg-graydark dark:bg-meta-4 text-bodydark1 font-bold'
+                                    : 'text-bodydark1 hover:bg-graydark dark:hover:bg-meta-4' }}">
+                            <i class="bi bi-gear"></i>
+
+                            Golongan
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.jabatan') }}"
+                            class="group relative flex items-center gap-2.5 rounded-xl px-4 py-2 font-medium duration-300 ease-in-out
+                                {{ request()->routeIs('admin.jabatan')
+                                    ? 'bg-graydark dark:bg-meta-4 text-bodydark1 font-bold'
+                                    : 'text-bodydark1 hover:bg-graydark dark:hover:bg-meta-4' }}">
+                            <i class="bi bi-gear"></i>
+
+                            Jabatan
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.pegawai') }}"
+                            class="group relative flex items-center gap-2.5 rounded-xl px-4 py-2 font-medium duration-300 ease-in-out
+                                {{ request()->routeIs('admin.pegawai')
+                                    ? 'bg-graydark dark:bg-meta-4 text-bodydark1 font-bold'
+                                    : 'text-bodydark1 hover:bg-graydark dark:hover:bg-meta-4' }}">
+                            <i class="bi bi-gear"></i>
+
+                            Data Pegawai
+                        </a>
                     </li>
                 </ul>
-
                 <ul class="mb-6 flex flex-col gap-1.5">
                     <!-- Menu Item Settings -->
                     <h3 class="mb-4 ml-4 text-sm font-medium text-bodydark2">SETTINGS</h3>
+
                     <li>
                         <a href="{{ route('settings') }}"
                             class="group relative flex items-center gap-2.5 rounded-xl px-4 py-2 font-medium duration-300 ease-in-out
