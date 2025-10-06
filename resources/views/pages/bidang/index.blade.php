@@ -1,30 +1,34 @@
 <x-layout>
     <x-header />
 
-    <div class="p-6">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold text-black dark:text-white">Daftar Bidang</h2>
-            <button onclick="openCreateForm()" class="px-4 py-2 bg-primary text-white rounded hover:bg-primary/80">
+    <main class="p-6">
+        <!-- Header Section -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                Daftar Bidang
+            </h2>
+            <button onclick="openCreateForm()"
+                class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow transition-colors duration-200">
                 + Tambah Bidang
             </button>
         </div>
 
-        <!-- Search -->
-        <div class="mb-4">
+        <!-- Search Input -->
+        <div class="mb-5">
             <input type="text" id="search" placeholder="Cari bidang..."
-                class="px-3 py-3 text-sm rounded border border-gray-300 dark:border-strokedark 
-                       bg-white dark:bg-boxdark text-black dark:text-white 
-                       focus:ring-2 focus:ring-primary outline-none transition-colors duration-200">
+                class="w-full sm:w-80 px-4 py-2.5 text-sm border border-gray-300 dark:border-gray-700 rounded-lg
+               bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
+               focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200" />
         </div>
 
-        <!-- Table -->
-        <div
-            class="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default 
-                   dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+        <!-- Table Container -->
+        <section
+            class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md overflow-hidden">
             <div class="max-w-full overflow-x-auto" id="bidang-table"></div>
-        </div>
-    </div>
+        </section>
+    </main>
+
     @include('pages.bidang.modal')
-    </div>
 </x-layout>
+
 @include('pages.bidang.script')

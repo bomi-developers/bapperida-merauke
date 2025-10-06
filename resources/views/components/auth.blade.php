@@ -3,10 +3,8 @@
 
 <x-head></x-head>
 
-<body x-data="{ page: 'modals', 'loaded': true, 'darkMode': true, 'stickyMenu': false, 'sidebarToggle': false, 'scrollTop': false, showMaintenance: {{ $websiteSettings && $websiteSettings->is_maintenance ? 'true' : 'false' }} }" x-init="darkMode = JSON.parse(localStorage.getItem('darkMode'));
-$watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))" :class="{ 'dark text-bodydark bg-boxdark-2': darkMode === true }">
-    <!-- ===== Preloader Start ===== -->
-    <x-preloader></x-preloader>
+<body class="bg-gradient-to-br from-blue-100 via-white to-blue-300 ">
+
 
     <!-- ===== Preloader End ===== -->
     {{-- <!-- ===== Maintenance Popup ===== -->
@@ -27,15 +25,15 @@ $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(valu
 
 
     <!-- ===== Page Wrapper Start ===== -->
-    <div class="flex h-screen overflow-hidden">
+    <div class="flex items-center justify-center min-h-screen p-4">
         <!-- ===== Content Area Start ===== -->
-        <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+        <div class="w-full max-w-6xl mx-auto">
             {{ $slot }}
         </div>
         <!-- ===== Content Area End ===== -->
     </div>
     <!-- ===== Page Wrapper End ===== -->
-    <script defer src="{{ asset('tailadmin/build/bundle.js') }}"></script>
+    {{-- <script defer src="{{ asset('tailadmin/build/bundle.js') }}"></script> --}}
 </body>
 
 </html>

@@ -65,6 +65,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('pegawai', [\App\Http\Controllers\PegawaiController::class, 'store'])->name('pegawai.store');
     Route::put('pegawai/{pegawai}', [\App\Http\Controllers\PegawaiController::class, 'update'])->name('pegawai.update');
     Route::delete('pegawai/{pegawai}', [\App\Http\Controllers\PegawaiController::class, 'destroy'])->name('pegawai.destroy');
+    // akun pegawai
+    Route::get('pegawai/akun', [\App\Http\Controllers\UserController::class, 'pegawai'])->name('pegawai.akun');
     // profile dinas
     Route::get('/profile-dinas', [ProfileDinasController::class, 'index'])->name('profile-dinas');
     Route::post('/profile-dinas', [ProfileDinasController::class, 'store'])->name('profile-dinas.store');
@@ -74,16 +76,16 @@ Route::middleware(['auth'])->group(function () {
     Route::post('berita', [BeritaController::class, 'store'])->name('berita.store');
     Route::put('berita/{id}', [BeritaController::class, 'update'])->name('berita.update');
     Route::delete('berita/{id}', [BeritaController::class, 'destroy'])->name('berita.destroy');
+    // logs login
+    Route::get('login-logs', [PagesController::class, 'loginLogs'])->name('login-logs');
+    Route::get('activity-logs', [PagesController::class, 'activityLogs'])->name('activity-logs');
+    Route::get('view-logs', [PagesController::class, 'viewLogs'])->name('view-logs');
   });
   // setting page
   Route::get('/website-setting', [PagesController::class, 'websiteSetting'])->name('website-setting');
   Route::put('/website-setting', [PagesController::class, 'websiteSettingUpdate'])->name('website-setting.update');
   // account
   Route::get('/profile', [PagesController::class, 'profile'])->name('profile');
-  // logs login
-  Route::get('/admin/login-logs', [PagesController::class, 'loginLogs'])->name('admin.login-logs');
-  Route::get('/admin/activity-logs', [PagesController::class, 'activityLogs'])->name('admin.activity-logs');
-  Route::get('/admin/view-logs', [PagesController::class, 'viewLogs'])->name('admin.view-logs');
 
   // pages examples
   Route::get('/calendar', [PagesController::class, 'calendar'])->name('calendar');

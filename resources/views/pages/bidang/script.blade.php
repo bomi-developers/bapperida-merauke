@@ -1,73 +1,89 @@
 <script>
-    let pageUrl = "{{ route('admin.bidang.data') }}";
+    const pageUrl = "{{ route('admin.bidang.data') }}";
+    let deleteId = null;
 
+
+
+    // 🔹 Load Data
     function loadData(url = pageUrl) {
-        fetch(url + "?search=" + document.getElementById('search').value)
+        const search = document.getElementById('search').value;
+        fetch(`${url}?search=${search}`)
             .then(res => res.json())
             .then(res => {
                 let html = `
-                        <table class="w-full table-auto">
-                            <thead>
-                                <tr class="bg-gray-2 text-left dark:bg-meta-4">
-                                    <th class="min-w-[200px] px-4 py-4 font-medium text-black dark:text-white xl:pl-11">
-                                        Nama Bidang
-                                    </th>
-                                    <th class="min-w-[250px] px-4 py-4 font-medium text-black dark:text-white">
-                                        Deskripsi
-                                    </th>
-                                    <th class="px-4 py-4 font-medium text-black dark:text-white">
-                                        Aksi
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>`;
+                    <table class="w-full table-auto border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100 dark:bg-gray-800 text-left text-sm font-semibold">
+                                <th class="px-4 py-3 text-gray-700 dark:text-gray-200 w-16">No</th>
+                                <th class="px-4 py-3 text-gray-700 dark:text-gray-200">Nama Bidang</th>
+                                <th class="px-4 py-3 text-gray-700 dark:text-gray-200">Deskripsi</th>
+                                <th class="px-4 py-3 text-gray-700 dark:text-gray-200 text-center w-32">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm text-gray-800 dark:text-gray-100">
+                `;
 
                 if (res.data.length > 0) {
-                    res.data.forEach(b => {
+                    res.data.forEach((b, i) => {
                         html += `
-                                <tr>
-                                    <td class="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
-                                        <h5 class="font-medium text-black dark:text-white">${b.nama_bidang}</h5>
-                                    </td>
-                                    <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                                        <p class="text-black dark:text-white">${b.deskripsi ?? ''}</p>
-                                    </td>
-                                    <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                                        <div class="flex items-center space-x-3.5">
-                                            <button onclick="editBidang(${b.id}, '${b.nama_bidang}', '${b.deskripsi ?? ''}')" 
-                                                class="hover:text-primary" title="Edit">
-                                                   <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button onclick="deleteBidang(${b.id})" 
-                                                class="hover:text-primary" title="Hapus">
-                                                 <i class="bi bi-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>`;
+                            <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+                                <td class="px-4 py-3">${i + 1}</td>
+                                <td class="px-4 py-3 font-medium">${b.nama_bidang}</td>
+                                <td class="px-4 py-3">${b.deskripsi ?? ''}</td>
+                                <td class="px-4 py-3 flex items-center justify-center gap-3">
+                                    <button onclick="editBidang(${b.id}, '${b.nama_bidang}', '${b.deskripsi ?? ''}')"
+                                        class="p-2 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900 text-blue-600 dark:text-blue-400 transition"
+                                        title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button onclick="deleteBidang(${b.id})"
+                                        class="p-2 rounded-lg hover:bg-red-100 dark:hover:bg-red-900 text-red-600 dark:text-red-400 transition"
+                                        title="Hapus">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>`;
                     });
                 } else {
-                    html += `<tr><td colspan="3" class="text-center py-5 dark:text-white">Tidak ada data</td></tr>`;
+                    html += `
+                        <tr>
+                            <td colspan="4" class="text-center py-6 text-gray-500 dark:text-gray-400">
+                                Tidak ada data
+                            </td>
+                        </tr>`;
                 }
 
-                html += `</tbody></table>
-                             <div class="mt-3 flex gap-2">`;
+                html += `
+                        </tbody>
+                    </table>
+
+                    <!-- Pagination -->
+                    <div class="mt-4 flex flex-wrap gap-2 justify-center">
+                `;
 
                 res.links.forEach(link => {
                     if (link.url) {
-                        html +=
-                            `<button onclick="loadData('${link.url}')" 
-                                    class="px-3 py-1 rounded 
-                                           ${link.active ? 'bg-primary text-white' : 'bg-gray-200 dark:bg-gray-700 text-black dark:text-white'}">
-                                    ${link.label}
-                                </button>`;
+                        html += `
+                            <button onclick="loadData('${link.url}')"
+                                class="px-3 py-1 rounded-md text-sm font-medium transition
+                                       ${link.active 
+                                            ? 'bg-blue-600 text-white' 
+                                            : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'}">
+                                ${link.label}
+                            </button>`;
                     }
                 });
+
                 html += `</div>`;
                 document.getElementById('bidang-table').innerHTML = html;
+            })
+            .catch(err => {
+                console.error('Error loading data:', err);
+                showToast('Gagal memuat data', false);
             });
     }
 
+    // 🔹 Open Form
     function openCreateForm() {
         document.getElementById('modalTitle').innerText = "Tambah Bidang";
         document.getElementById('bidang_id').value = "";
@@ -76,6 +92,7 @@
         document.getElementById('formModal').classList.remove('hidden');
     }
 
+    // 🔹 Edit Form
     function editBidang(id, nama, desk) {
         document.getElementById('modalTitle').innerText = "Edit Bidang";
         document.getElementById('bidang_id').value = id;
@@ -84,24 +101,26 @@
         document.getElementById('formModal').classList.remove('hidden');
     }
 
+    // 🔹 Close Form
     function closeForm() {
         document.getElementById('formModal').classList.add('hidden');
     }
 
-    document.getElementById('formBidang').addEventListener('submit', function(e) {
+    // 🔹 Submit Form
+    document.getElementById('formBidang').addEventListener('submit', e => {
         e.preventDefault();
 
-        let id = document.getElementById('bidang_id').value;
-        let method = id ? 'PUT' : 'POST';
-        let url = id ? `/admin/bidang/${id}` : `/admin/bidang`;
+        const id = document.getElementById('bidang_id').value;
+        const method = id ? 'PUT' : 'POST';
+        const url = id ? `/admin/bidang/${id}` : `/admin/bidang`;
 
-        let data = {
+        const data = {
             nama_bidang: document.getElementById('nama_bidang').value,
             deskripsi: document.getElementById('deskripsi').value
         };
 
         fetch(url, {
-                method: method,
+                method,
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -110,16 +129,30 @@
             })
             .then(res => res.json())
             .then(res => {
-                alert(res.message);
                 closeForm();
+                showToast(res.message, true);
                 loadData();
             })
-            .catch(err => console.error(err));
+            .catch(err => {
+                console.error('Error saving data:', err);
+                showToast('Terjadi kesalahan saat menyimpan', false);
+            });
     });
 
+    // 🔹 Delete with confirmation modal
     function deleteBidang(id) {
-        if (confirm("Yakin hapus bidang ini?")) {
-            fetch(`/admin/bidang/${id}`, {
+        deleteId = id;
+        document.getElementById('confirmModal').classList.remove('hidden');
+    }
+
+    document.getElementById('cancelDelete').addEventListener('click', () => {
+        document.getElementById('confirmModal').classList.add('hidden');
+    });
+
+    document.getElementById('confirmDelete').addEventListener('click', () => {
+        document.getElementById('confirmModal').classList.add('hidden');
+        if (deleteId) {
+            fetch(`/admin/bidang/${deleteId}`, {
                     method: 'DELETE',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -127,13 +160,19 @@
                 })
                 .then(res => res.json())
                 .then(res => {
-                    alert(res.message);
+                    showToast(res.message, true);
                     loadData();
+                })
+                .catch(err => {
+                    console.error('Error deleting data:', err);
+                    showToast('Gagal menghapus data', false);
                 });
         }
-    }
+    });
 
+    // 🔹 Search realtime
     document.getElementById('search').addEventListener('input', () => loadData());
 
+    // 🔹 Initial Load
     loadData();
 </script>
