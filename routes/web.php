@@ -10,25 +10,22 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\File;
 
 // cache control
+
 Route::get('img/{path}', function ($path) {
   $fullPath = public_path('img/' . $path);
 
   if (!File::exists($fullPath)) abort(404);
 
-  return Response::file($fullPath, [
+  $mime = File::mimeType($fullPath);
+  $contents = File::get($fullPath);
+
+  return Response::make($contents, 200, [
+    'Content-Type' => $mime,
     'Cache-Control' => 'max-age=2592000, public',
+    'Last-Modified' => gmdate('D, d M Y H:i:s', filemtime($fullPath)) . ' GMT',
   ]);
 })->where('path', '.*');
 
-Route::get('tailadmin/{path}', function ($path) {
-  $fullPath = public_path('tailadmin/' . $path);
-
-  if (!File::exists($fullPath)) abort(404);
-
-  return Response::file($fullPath, [
-    'Cache-Control' => 'max-age=31536000, public',
-  ]);
-})->where('path', '.*');
 // end cache control
 
 Route::get('/', function () {

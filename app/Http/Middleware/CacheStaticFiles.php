@@ -17,9 +17,18 @@ class CacheStaticFiles
     {
         $response = $next($request);
 
-        if ($request->is('img/*') || $request->is('tailadmin/*')) {
-            $response->headers->set('Cache-Control', 'max-age=2592000, public');
+        if ($request->is('img/*')) {
+            if ($response->headers->has('Content-Type')) {
+                $response->headers->set('Cache-Control', 'max-age=2592000, public');
+
+                $path = public_path($request->path());
+                if (file_exists($path)) {
+                    $lastModified = gmdate('D, d M Y H:i:s', filemtime($path)) . ' GMT';
+                    $response->headers->set('Last-Modified', $lastModified);
+                }
+            }
         }
+
 
         return $response;
     }
