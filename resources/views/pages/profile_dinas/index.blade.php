@@ -1,26 +1,3 @@
-@push('styles')
-    <!-- Trix Editor -->
-    <!-- CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/trix@2.0.0/dist/trix.css">
-
-    <!-- JS -->
-    <script src="https://unpkg.com/trix@2.0.0/dist/trix.umd.min.js"></script>
-    <style>
-        trix-editor {
-            min-height: 200px;
-        }
-
-        .dark trix-editor {
-            background-color: #1f2937;
-            /* dark:bg-boxdark */
-            color: #f9fafb;
-            /* text-white */
-            border-color: #374151;
-            /* dark:border-strokedark */
-        }
-    </style>
-@endpush
-
 <x-layout>
     <x-header />
 
@@ -44,39 +21,17 @@
                     <div class="p-7">
                         <form id="profileForm" enctype="multipart/form-data">
                             @csrf
-
                             <!-- Visi -->
-                            <div class="mb-5.5">
-                                <label class="block text-sm font-medium text-black dark:text-white">Visi</label>
-                                <textarea name="visi"
-                                    class="w-full rounded border border-stroke bg-gray px-4 py-3 font-medium 
-                                text-black dark:border-strokedark dark:bg-meta-4 dark:text-white">{{ $profile->visi ?? '' }}</textarea>
-                            </div>
-
+                            <x-textarea label="Visi" name="visi"
+                                rows="4">{{ $profile->visi ?? '' }}</x-textarea>
                             <!-- Misi -->
-                            <div class="mb-5.5">
-                                <label class="block text-sm font-medium text-black dark:text-white">Misi</label>
-                                <textarea name="misi"
-                                    class="w-full rounded border border-stroke bg-gray px-4 py-3 font-medium 
-                                text-black dark:border-strokedark dark:bg-meta-4 dark:text-white">{{ $profile->misi ?? '' }}</textarea>
-                            </div>
-
+                            <x-textarea label="Misi" name="misi"
+                                rows="4">{{ $profile->misi ?? '' }}</x-textarea>
                             <!-- Sejarah -->
-                            <div class="mb-5.5">
-                                <label class="block text-sm font-medium text-black dark:text-white">Sejarah</label>
-                                <textarea name="sejarah"
-                                    class="w-full rounded border border-stroke bg-gray px-4 py-3 font-medium 
-                                text-black dark:border-strokedark dark:bg-meta-4 dark:text-white">{{ $profile->sejarah ?? '' }}</textarea>
-                            </div>
-
+                            <x-form.trix label="Sejarah" id="sejarah" name="sejarah" :value="$profile->sejarah ?? ''" />
                             <!-- Tugas & Fungsi (Trix Editor) -->
-                            <div class="mb-5.5">
-                                <label class="block text-sm font-medium text-black dark:text-white">Tugas &
-                                    Fungsi</label>
-                                <input id="tugas_fungsi" type="hidden" name="tugas_fungsi"
-                                    value="{{ $profile->tugas_fungsi ?? '' }}">
-                                <trix-editor input="tugas_fungsi"></trix-editor>
-                            </div>
+                            <x-form.trix label="Tugas & Fungsi" id="tugas_fungsi" name="tugas_fungsi"
+                                :value="$profile->tugas_fungsi ?? ''" />
 
                             <!-- Struktur Organisasi -->
                             <div class="mb-5.5">

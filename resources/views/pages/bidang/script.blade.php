@@ -3,7 +3,7 @@
     let deleteId = null;
 
 
-
+    console.log(document.getElementById('modalTitle'));
     // 🔹 Load Data
     function loadData(url = pageUrl) {
         const search = document.getElementById('search').value;
@@ -34,12 +34,12 @@
                                     <button onclick="editBidang(${b.id}, '${b.nama_bidang}', '${b.deskripsi ?? ''}')"
                                         class="p-2 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900 text-blue-600 dark:text-blue-400 transition"
                                         title="Edit">
-                                        <i class="bi bi-pencil"></i>
+                                        <i class="bi bi-pencil text-lg"></i>
                                     </button>
                                     <button onclick="deleteBidang(${b.id})"
                                         class="p-2 rounded-lg hover:bg-red-100 dark:hover:bg-red-900 text-red-600 dark:text-red-400 transition"
                                         title="Hapus">
-                                        <i class="bi bi-trash"></i>
+                                        <i class="bi bi-trash text-lg"></i>
                                     </button>
                                 </td>
                             </tr>`;

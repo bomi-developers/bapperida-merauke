@@ -114,11 +114,15 @@
             <!-- Profile Dropdown -->
             <div class="relative">
                 <button id="profile-button" class="flex items-center gap-3">
-                    <img src="https://placehold.co/40x40/7e22ce/ffffff?text=TU" alt="User Avatar"
-                        class="w-10 h-10 rounded-full">
+                    @php
+                        $initials = strtoupper(substr(Auth::user()->name ?? 'User', 0, 2));
+                    @endphp
+                    <img src="https://placehold.co/40x40/7e22ce/ffffff?text={{ $initials }}"
+                        alt="{{ Auth::user()->name }}" class="w-10 h-10 rounded-full">
                     <div class="hidden md:block text-left">
-                        <p class="text-sm font-semibold text-gray-800 dark:text-white">Test User</p>
-                        <p class="text-xs text-gray-500 dark:text-slate-400">UX Designer</p>
+                        <p class="text-sm font-semibold text-gray-800 dark:text-white">
+                            {{ Auth::user()->name ?? 'User' }}</p>
+                        <p class="text-xs text-gray-500 dark:text-slate-400">Staff</p>
                     </div>
                     <i class="bi bi-chevron-down hidden md:block text-slate-400"></i>
                 </button>

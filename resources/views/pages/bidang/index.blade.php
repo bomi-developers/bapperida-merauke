@@ -30,5 +30,4 @@
 
     @include('pages.bidang.modal')
 </x-layout>
-
 @include('pages.bidang.script')
