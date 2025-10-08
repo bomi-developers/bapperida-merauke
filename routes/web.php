@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\BidangController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ProfileDinasController;
 use Illuminate\Support\Facades\Auth;
@@ -28,9 +29,11 @@ Route::get('img/{path}', function ($path) {
 
 // end cache control
 
-Route::get('/', function () {
-  return redirect()->route('login');
-})->name('welcome');
+// Route::get('/', function () {
+//   return redirect()->route('login');
+// })->name('welcome');
+
+Route::get('/', [HomeController::class, 'index'])->name('welcome');
 
 Auth::routes(['register' => false, 'verify' => false, 'reset' => false]);
 Route::middleware(['auth'])->group(function () {
