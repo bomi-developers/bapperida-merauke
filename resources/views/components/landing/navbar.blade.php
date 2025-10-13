@@ -118,7 +118,7 @@
                 <a href="#"
                     class="text-white bg-transparent rounded-md px-3 py-1 text-sm transition-colors duration-300 hover:bg-[#CCFF00]/50">Galeri</a>
             </div>
-            <a href="#"
+            <a href="{{ route('berita.public.home') }}"
                 class="text-white bg-transparent rounded-md px-3 py-1 text-sm transition-colors duration-300 hover:bg-[#CCFF00]/50">Berita</a>
             <div>
                 <a href="{{ route('login') }}"

@@ -34,6 +34,8 @@ Route::get('img/{path}', function ($path) {
 // })->name('welcome');
 
 Route::get('/', [HomeController::class, 'index'])->name('welcome');
+Route::get('/berita', [BeritaController::class, 'home'])->name('berita.public.home');
+Route::get('/berita/{berita:slug}', [BeritaController::class, 'show'])->name('berita.public.show');
 
 Auth::routes(['register' => false, 'verify' => false, 'reset' => false]);
 Route::middleware(['auth'])->group(function () {
@@ -71,11 +73,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile-dinas', [ProfileDinasController::class, 'index'])->name('profile-dinas');
     Route::post('/profile-dinas', [ProfileDinasController::class, 'store'])->name('profile-dinas.store');
     // berita
-    Route::get('berita', [BeritaController::class, 'index'])->name('berita.index');
-    Route::get('berita/data', [BeritaController::class, 'data'])->name('berita.data');
-    Route::post('berita', [BeritaController::class, 'store'])->name('berita.store');
-    Route::put('berita/{id}', [BeritaController::class, 'update'])->name('berita.update');
-    Route::delete('berita/{id}', [BeritaController::class, 'destroy'])->name('berita.destroy');
+    Route::get('berita', [\App\Http\Controllers\BeritaController::class, 'index'])->name('berita.index');
+    Route::get('berita/create', [\App\Http\Controllers\BeritaController::class, 'create'])->name('berita.create');
+    Route::post('berita', [\App\Http\Controllers\BeritaController::class, 'store'])->name('berita.store');
+    Route::get('berita/{berita}/edit', [\App\Http\Controllers\BeritaController::class, 'edit'])->name('berita.edit');
+    Route::put('berita/{berita}', [\App\Http\Controllers\BeritaController::class, 'update'])->name('berita.update');
+    Route::delete('berita/{berita}', [\App\Http\Controllers\BeritaController::class, 'destroy'])->name('berita.destroy');
+    Route::get('berita/search', [\App\Http\Controllers\BeritaController::class, 'search'])->name('berita.search');
+
     // logs login
     Route::get('login-logs', [PagesController::class, 'loginLogs'])->name('login-logs');
     Route::get('activity-logs', [PagesController::class, 'activityLogs'])->name('activity-logs');
