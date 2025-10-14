@@ -28,6 +28,12 @@
                     ],
                 ],
                 [
+                    'title' => 'Information',
+                    'items' => [
+                        ['label' => 'Berita', 'icon' => 'bi bi-person-badge', 'route' => 'admin.berita.index'],
+                    ],
+                ],
+                [
                     'title' => 'Settings',
                     'items' => [
                         ['label' => 'Akun Setting', 'icon' => 'bi-person-badge', 'route' => 'profile'],
