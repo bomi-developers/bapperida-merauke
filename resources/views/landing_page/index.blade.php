@@ -21,12 +21,12 @@
         </div>
     </section>
 
-    <section class="py-24">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <img src="{{ asset('assets/Ellipse.png') }}" alt="" aria-hidden="true"
+    <section class="relative py-24 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            {{-- <img src="{{ asset('assets/Ellipse.png') }}" alt="" aria-hidden="true"
                 class="absolute bottom-0 right-0 w-[1200px] h-auto mix-blend-multiply opacity-100 -z-10 translate-x-[35%] translate-y-[70%]">
             <img src="{{ asset('assets/Ellipse.png') }}" alt="" aria-hidden="true"
-                class="absolute bottom-0 right-0 w-[1200px] h-auto mix-blend-multiply opacity-100 -z-10 -translate-x-[80%] translate-y-[150%]">
+                class="absolute bottom-0 right-0 w-[1200px] h-auto mix-blend-multiply opacity-100 -z-10 -translate-x-[80%] translate-y-[150%]"> --}}
             <div class="reveal-on-scroll">
                 <h2 class="text-3xl font-bold text-[#004299]">Dokumen BAPPERIDA Publik</h2>
                 <div class="w-24 h-1 bg-[#CCFF00] mx-auto mt-4 rounded-full"></div>

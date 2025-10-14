@@ -3,7 +3,7 @@
 {{-- head --}}
 <x-landing.head></x-landing.head>
 
-<body class="bg-gray-100">
+<body>
     {{-- navbar --}}
     <x-landing.navbar></x-landing.navbar>
     {{-- hading for title --}}
