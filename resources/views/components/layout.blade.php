@@ -34,6 +34,13 @@
                     ],
                 ],
                 [
+                    'title' => 'Document Management',
+                    'items' => [
+                        ['label' => 'Kategori Dokumen', 'icon' => 'bi bi-person-badge', 'route' => 'admin.doctkategori.index'],
+                        ['label' => 'Dokumen', 'icon' => 'bi bi-person-badge', 'route' => 'admin.documents.index'],
+                    ],
+                ],
+                [
                     'title' => 'Settings',
                     'items' => [
                         ['label' => 'Akun Setting', 'icon' => 'bi-person-badge', 'route' => 'profile'],
@@ -81,10 +88,10 @@
     </div>
     {{-- toast --}}
     <x-toast></x-toast>
-    @stack('scripts')
     {{-- script components layout --}}
     <x-script></x-script>
-
+    
+    @stack('scripts')
 </body>
 
 </html>

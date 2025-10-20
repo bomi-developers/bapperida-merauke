@@ -9,7 +9,7 @@
                 </div>
             </div>
             <div class="hidden md:flex items-center space-x-2">
-                <a href="index.html"
+                <a href="{{ url('/') }}"
                     class="text-[#006FFF] font-semibold bg-[#CCFF00] rounded-md px-3 py-1 text-sm">Beranda</a>
                 <div class="relative group">
                     <button
@@ -49,13 +49,18 @@
                     </button>
                     <div
                         class="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 invisible opacity-0 transform scale-95 transition-all duration-200 ease-in-out group-hover:visible group-hover:opacity-100 group-hover:scale-100">
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#CCFF00]">RKPD
-                            n-1</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#CCFF00]">RPJMD</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#CCFF00]">RPJPD</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#CCFF00]">LKPJ</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#CCFF00]">Dokumen
-                            Lainnya</a>
+                        {{-- Loop dinamis dari data kategori --}}
+                        @if ($kategoriDocuments->isNotEmpty())
+                            @foreach ($kategoriDocuments as $kategori)
+                                {{-- Arahkan ke route 'documents.by_category' dengan parameter ID dan slug --}}
+                                <a href="{{ route('documents.by_category', ['kategori' => $kategori->id, 'slug' => Str::slug($kategori->nama_kategori)]) }}"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#CCFF00]">
+                                    {{ $kategori->nama_kategori }}
+                                </a>
+                            @endforeach
+                        @else
+                            <span class="block px-4 py-2 text-sm text-gray-400">Tidak ada kategori</span>
+                        @endif
                     </div>
                 </div>
                 <div class="relative group">

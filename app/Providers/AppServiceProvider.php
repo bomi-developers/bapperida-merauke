@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use App\Models\WebsiteSetting;
+use App\Models\KategoriDocument;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +25,9 @@ class AppServiceProvider extends ServiceProvider
         View::composer('*', function ($view) {
             $websiteSettings = WebsiteSetting::first(); // ambil data pertama
             $view->with('websiteSettings', $websiteSettings);
+        });
+        View::composer('components.landing.navbar', function ($view) {
+            $view->with('kategoriDocuments', KategoriDocument::orderBy('nama_kategori')->get());
         });
     }
 }

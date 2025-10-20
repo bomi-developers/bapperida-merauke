@@ -1,14 +1,16 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use Illuminate\Support\Facades\Response;
+use App\Http\Controllers\PagesController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\BidangController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PagesController;
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ProfileDinasController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\File;
+use App\Http\Controllers\KategoriDocumentController;
 
 // cache control
 
@@ -36,6 +38,9 @@ Route::get('img/{path}', function ($path) {
 Route::get('/', [HomeController::class, 'index'])->name('welcome');
 Route::get('/berita', [BeritaController::class, 'home'])->name('berita.public.home');
 Route::get('/berita/{berita:slug}', [BeritaController::class, 'show'])->name('berita.public.show');
+Route::get('/dokumen/kategori/{kategori}/{slug}', [DocumentController::class, 'showByCategory'])
+  ->name('documents.by_category');
+Route::get('/dokumen/search', [DocumentController::class, 'searchPublic'])->name('documents.search_public');
 
 Auth::routes(['register' => false, 'verify' => false, 'reset' => false]);
 Route::middleware(['auth'])->group(function () {
@@ -80,7 +85,19 @@ Route::middleware(['auth'])->group(function () {
     Route::put('berita/{berita}', [\App\Http\Controllers\BeritaController::class, 'update'])->name('berita.update');
     Route::delete('berita/{berita}', [\App\Http\Controllers\BeritaController::class, 'destroy'])->name('berita.destroy');
     Route::get('berita/search', [\App\Http\Controllers\BeritaController::class, 'search'])->name('berita.search');
-
+    // document
+    Route::get('documents', [DocumentController::class, 'index'])->name('documents.index');
+    Route::post('documents', [DocumentController::class, 'store'])->name('documents.store');
+    Route::get('documents/{document}', [DocumentController::class, 'show'])->name('documents.show');
+    Route::put('documents/{document}', [DocumentController::class, 'update'])->name('documents.update');
+    Route::delete('documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
+    Route::get('/documents/{document}/download', [DocumentController::class, 'downloadFile'])->name('documents.download');
+    // kategori document
+    Route::get('/document-kategori', [KategoriDocumentController::class, 'index'])->name('doctkategori.index');
+    Route::post('/document-kategori', [KategoriDocumentController::class, 'store'])->name('doctkategori.store');
+    Route::get('/document-kategori/{kategori}', [KategoriDocumentController::class, 'show'])->name('doctkategori.show');
+    Route::put('/document-kategori/{kategori}', [KategoriDocumentController::class, 'update'])->name('doctkategori.update');
+    Route::delete('/document-kategori/{kategori}', [KategoriDocumentController::class, 'destroy'])->name('doctkategori.destroy');
     // logs login
     Route::get('login-logs', [PagesController::class, 'loginLogs'])->name('login-logs');
     Route::get('activity-logs', [PagesController::class, 'activityLogs'])->name('activity-logs');

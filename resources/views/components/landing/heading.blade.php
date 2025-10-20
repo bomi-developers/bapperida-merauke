@@ -23,6 +23,32 @@
              'title' => 'Selamat Datang',
              'subtitle' => 'Badan Perencanaan Daerah Kabupaten Merauke',
          ];
+         if ($currentRoute === 'documents.by_category') {
+             // Ambil model Kategori langsung dari parameter rute
+             $kategoriModel = Route::current()->parameter('kategori');
+             if ($kategoriModel) {
+                 $hero = [
+                     'title' => 'Dokumen',
+                     'subtitle' => $kategoriModel->nama_kategori,
+                     'description' =>
+                         'Temukan semua dokumen terkait kategori ' . $kategoriModel->nama_kategori . ' di sini.',
+                     'is_split_title' => true, // Flag untuk gaya judul terpisah
+                 ];
+             }
+         } else {
+             // Jika bukan halaman kategori, cari di grup rute biasa
+             $hero = collect($heroGroups)->first(fn($group) => in_array($currentRoute, $group['routes']));
+         }
+
+         // Fallback jika tidak ada yang cocok
+         if (!$hero) {
+             $hero = [
+                 'title' => 'Selamat Datang',
+                 'subtitle' => 'Website Resmi Bapperida Merauke',
+                 'description' =>
+                     'Bersama BAPPERIDA Kabupaten Merauke, wujudkan pembangunan berkelanjutan, inklusif, dan berbasis potensi lokal.',
+             ];
+         }
      @endphp
 
      <div class="relative z-10 h-full flex flex-col items-center justify-start text-center px-4 animate-fade-in-up"
