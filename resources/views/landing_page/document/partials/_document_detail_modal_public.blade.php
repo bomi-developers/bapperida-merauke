@@ -41,10 +41,5 @@
                 </div>
             </div>
         </div>
-
-        <!-- Footer -->
-        <div class="p-4 bg-slate-900/50 border-t border-slate-700 flex justify-end flex-shrink-0">
-            <button type="button" class="btn-secondary close-show-modal">Tutup</button>
-        </div>
     </div>
 </div>

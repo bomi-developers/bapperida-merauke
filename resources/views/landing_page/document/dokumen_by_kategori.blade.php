@@ -49,9 +49,6 @@
                                             class="px-6 py-3 text-start text-xs font-medium text-blue-800 uppercase">
                                             Misi</th>
                                         <th scope="col"
-                                            class="px-6 py-3 text-start text-xs font-medium text-blue-800 uppercase">
-                                            Tanggal Rilis</th>
-                                        <th scope="col"
                                             class="px-6 py-3 text-end text-xs font-medium text-blue-800 uppercase">Aksi
                                         </th>
                                     </tr>

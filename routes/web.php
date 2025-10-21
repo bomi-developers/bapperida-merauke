@@ -41,6 +41,8 @@ Route::get('/berita/{berita:slug}', [BeritaController::class, 'show'])->name('be
 Route::get('/dokumen/kategori/{kategori}/{slug}', [DocumentController::class, 'showByCategory'])
   ->name('documents.by_category');
 Route::get('/dokumen/search', [DocumentController::class, 'searchPublic'])->name('documents.search_public');
+// download 
+Route::get('/documents/{document}/download', [DocumentController::class, 'downloadFile'])->name('documents.download');
 
 Auth::routes(['register' => false, 'verify' => false, 'reset' => false]);
 Route::middleware(['auth'])->group(function () {
