@@ -25,22 +25,30 @@
         function createItemElement(type, content = '', caption = '') {
             const uniqueId = itemCounter++;
             const wrapper = document.createElement('div');
-            wrapper.className = 'item-block relative p-4 border border-gray-300 dark:border-gray-600 rounded-lg mb-4';
+            wrapper.className =
+                'item-block relative p-4 border border-gray-300 dark:border-gray-600 rounded-lg mb-4';
             wrapper.setAttribute('data-id', uniqueId);
 
             let contentHtml = '';
-            
+
             // Generate the appropriate input based on the item type
             switch (type) {
                 case 'text':
-                    contentHtml = `<textarea name="items[${uniqueId}][content]" class="form-input block w-full" rows="5" placeholder="Tulis paragraf di sini..." required>${content}</textarea>`;
+                    // contentHtml =
+                    //     `<textarea name="items[${uniqueId}][content]" class="form-input block w-full" rows="5" placeholder="Tulis paragraf di sini..." required>${content}</textarea>`;
+                    contentHtml = `<x-form.trix label="Content" id="tugas_fungsi" name="items[${uniqueId}][content]"
+                                :value="''" />`;
                     break;
                 case 'quote':
-                    contentHtml = `<textarea name="items[${uniqueId}][content]" class="form-input block w-full" rows="5" placeholder="Masukkan teks kutipan..." required>${content}</textarea>`;
+                    contentHtml =
+                        `<textarea name="items[${uniqueId}][content]" class="form-input block w-full" rows="5" placeholder="Masukkan teks kutipan..." required>${content}</textarea>`;
                     break;
                 case 'image':
-                    const existingImagePathInput = content ? `<input type="hidden" name="items[${uniqueId}][content]" value="${content}">` : '';
-                    const existingImagePreview = content ? `<img src="${'{{ asset('storage') }}/' + content}" alt="Gambar lama" class="mt-2 rounded-md w-32 h-auto object-cover border dark:border-gray-700">` : '';
+                    const existingImagePathInput = content ?
+                        `<input type="hidden" name="items[${uniqueId}][content]" value="${content}">` : '';
+                    const existingImagePreview = content ?
+                        `<img src="${'{{ asset('storage') }}/' + content}" alt="Gambar lama" class="mt-2 rounded-md w-32 h-auto object-cover border dark:border-gray-700">` :
+                        '';
                     contentHtml = `
                         <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center">
                             <label for="image_file_${uniqueId}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Upload Gambar Baru (Opsional)</label>
@@ -54,10 +62,12 @@
                     `;
                     break;
                 case 'video':
-                    contentHtml = `<input type="url" name="items[${uniqueId}][content]" class="form-input block w-full" placeholder="https://www.youtube.com/watch?v=..." value="${content}" required>`;
+                    contentHtml =
+                        `<input type="url" name="items[${uniqueId}][content]" class="form-input block w-full" placeholder="https://www.youtube.com/watch?v=..." value="${content}" required>`;
                     break;
                 case 'embed':
-                    contentHtml = `<textarea name="items[${uniqueId}][content]" class="form-input block w-full font-mono text-sm" rows="5" placeholder="<iframe src='...'></iframe>" required>${content}</textarea>`;
+                    contentHtml =
+                        `<textarea name="items[${uniqueId}][content]" class="form-input block w-full font-mono text-sm" rows="5" placeholder="<iframe src='...'></iframe>" required>${content}</textarea>`;
                     break;
             }
 
@@ -103,7 +113,7 @@
         if (addEmbedButton) addEmbedButton.addEventListener('click', () => createItemElement('embed'));
         if (addQuoteButton) addQuoteButton.addEventListener('click', () => createItemElement('quote'));
 
-        
+
         itemsContainer.addEventListener('click', function(e) {
             const removeButton = e.target.closest('.remove-item');
             if (removeButton) {
@@ -114,7 +124,7 @@
                 }
             }
         });
-        
+
         // Inisialisasi SortableJS for drag-and-drop
         new Sortable(itemsContainer, {
             animation: 150,
@@ -126,12 +136,12 @@
 
         // --- INITIALIZATION ---
         if (typeof existingItems !== 'undefined' && Array.isArray(existingItems)) {
-            existingItems.sort((a, b) => a.position - b.position); 
+            existingItems.sort((a, b) => a.position - b.position);
             existingItems.forEach(item => {
                 createItemElement(item.type, item.content, item.caption || '');
             });
         }
-        
+
         updatePositions();
     });
 </script>
@@ -144,27 +154,30 @@
 
     /* CSS Anda yang sudah ada */
     .form-input {
-        border: 1px solid #d1d5db; 
+        border: 1px solid #d1d5db;
         border-radius: 0.5rem;
         padding: 0.75rem 1rem;
         background-color: #f9fafb;
         color: #111827;
     }
+
     .dark .form-input {
         border-color: #4b5563;
         background-color: #374151;
         color: #f9fafb;
     }
+
     .sortable-ghost {
         opacity: 0.4;
         background: #c2d4ff;
         border: 1px dashed #667eea;
     }
+
     .item-block .handle {
         cursor: grab;
     }
+
     .item-block .handle:active {
         cursor: grabbing;
     }
 </style>
-

@@ -1,57 +1,70 @@
 <x-layout>
-    <x-header></x-header>
+    <x-header />
 
-    <div class="w-full mx-auto p-6">
-        <!-- Login Activity -->
+    <div class="w-full mx-auto p-6 transition-colors duration-300 bg-gray-50 dark:bg-gray-900 overflow-auto">
+        <!-- Activity Tracker -->
         <div
-            class="rounded-sm border border-stroke bg-white shadow-default 
-                    dark:border-strokedark dark:bg-boxdark">
+            class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg overflow-hidden transition-colors duration-300">
 
             <!-- Header -->
-            <div class="border-b border-stroke px-6 py-4 dark:border-strokedark">
-                <h3 class="text-lg font-semibold text-black dark:text-white">
+            <div
+                class="border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
                     Activity Tracker
                 </h3>
+
+                <!-- Search -->
+                <form method="GET" action="{{ route('admin.activity-logs') }}"
+                    class="flex w-full md:w-auto md:flex-grow gap-2">
+                    <input type="text" name="search" value="{{ request('search') ?? '' }}"
+                        placeholder="Cari user, event, model..."
+                        class="w-full px-3 py-1 text-sm rounded border border-gray-300 dark:border-gray-600 
+                        bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 
+                        focus:ring-2 focus:ring-indigo-500 outline-none transition-colors duration-200" />
+                    <button type="submit"
+                        class="px-3 py-1 text-sm rounded bg-indigo-600 text-white hover:bg-indigo-700 transition">
+                        Cari
+                    </button>
+                </form>
             </div>
 
             <!-- Table -->
-            <div class="p-6 overflow-x-auto">
-                <table class="w-full table-auto border-collapse">
-                    <thead>
-                        <tr class="bg-gray-2 text-left dark:bg-meta-4">
-                            <th class="px-4 py-3 text-sm font-medium text-black dark:text-white">User</th>
-                            <th class="px-4 py-3 text-sm font-medium text-black dark:text-white">Event</th>
-                            <th class="px-4 py-3 text-sm font-medium text-black dark:text-white">Model</th>
-                            <th class="px-4 py-3 text-sm font-medium text-black dark:text-white">Time</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($logs as $log)
-                            <tr
-                                class="border-b border-stroke dark:border-strokedark hover:bg-gray-50 dark:hover:bg-meta-3 transition">
-                                <td class="px-4 py-3 text-sm text-black dark:text-white">
-                                    {{ $log->causer?->name ?? 'System' }}
-                                </td>
-                                <td class="px-4 py-3 text-sm text-black dark:text-white">
-                                    {{ $log->description }}
-                                </td>
-                                <td class="px-4 py-3 text-sm text-black dark:text-white truncate max-w-[250px]">
-                                    {{ $log->log_name }}
-                                </td>
-                                <td class="px-4 py-3 text-sm text-black dark:text-white">
-                                    {{ $log->created_at }}
-                                </td>
-
-                            </tr>
-                        @empty
+            <div class="p-6 mb-4">
+                <!-- Bungkus tabel dalam div overflow -->
+                <div class="w-full overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+                    <table class="min-w-full text-sm text-left text-gray-600 dark:text-gray-300">
+                        <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-200">
                             <tr>
-                                <td colspan="5" class="px-4 py-3 text-center text-sm text-black dark:text-white">
-                                    Belum ada aktivitas
-                                </td>
+                                <th class="px-4 py-3 whitespace-nowrap">User</th>
+                                <th class="px-4 py-3 whitespace-nowrap">Event</th>
+                                <th class="px-4 py-3 whitespace-nowrap">Model</th>
+                                <th class="px-4 py-3 whitespace-nowrap">Time</th>
                             </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @forelse ($logs as $log)
+                                <tr
+                                    class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition">
+                                    <td class="px-4 py-3 whitespace-nowrap">{{ $log->causer?->name ?? 'System' }}</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">{{ $log->description }}</td>
+                                    <td class="px-4 py-3 truncate max-w-[250px]">{{ $log->log_name }}</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">{{ $log->created_at }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="px-4 py-3 text-center text-gray-500 dark:text-gray-300">
+                                        Belum ada aktivitas
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="mt-4">
+                    {{ $logs->links() }}
+                </div>
             </div>
         </div>
     </div>

@@ -6,7 +6,7 @@
     <div class="flex flex-col h-full">
         <!-- Header -->
         <div class="flex items-center justify-between p-6">
-            <a href="{{ route('home') }}">
+            <a href="{{ url('/') }}">
                 <img src="{{ asset('img/bapperida_white.png') }}" alt="Logo" class="h-8">
             </a>
         </div>

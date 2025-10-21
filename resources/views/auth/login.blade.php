@@ -5,7 +5,9 @@
 
                 <!-- Bagian Kiri -->
                 <div class="hidden lg:flex flex-col items-center justify-center text-center p-12 bg-indigo-600">
-                    <img src="{{ asset('img/bapperida_white.png') }}" alt="Bapperida Logo" class="mb-8 w-48">
+                    <a href="{{ url('/') }}">
+                        <img src="{{ asset('img/bapperida_white.png') }}" alt="Bapperida Logo" class="mb-8 w-48">
+                    </a>
 
                     <p class="max-w-xs text-white text-lg">
                         Selamat datang di website resmi <br>

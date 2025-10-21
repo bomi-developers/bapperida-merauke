@@ -147,7 +147,7 @@ class PagesController extends Controller
     {
         $data = [
             'title' => 'Login Logs',
-            'logs' => LoginLog::all(),
+            'logs' => LoginLog::latest()->paginate(15),
         ];
         return view('pages.logs.index', $data);
     }

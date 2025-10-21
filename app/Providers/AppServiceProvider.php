@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with('websiteSettings', $websiteSettings);
         });
         View::composer('components.landing.navbar', function ($view) {
-            $view->with('kategoriDocuments', KategoriDocument::orderBy('nama_kategori')->get());
+            $view->with('kategoriDocuments', KategoriDocument::orderBy('nama_kategori')->orderBy('id', 'desc')->get());
         });
     }
 }

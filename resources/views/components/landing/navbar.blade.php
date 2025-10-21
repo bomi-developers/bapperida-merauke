@@ -126,8 +126,13 @@
             <a href="{{ route('berita.public.home') }}"
                 class="text-white bg-transparent rounded-md px-3 py-1 text-sm transition-colors duration-300 hover:bg-[#CCFF00]/50">Berita</a>
             <div>
-                <a href="{{ route('login') }}"
-                    class="bg-lime-400 text-blue-600 px-6 py-2 rounded-md text-sm font-semibold hover:bg-lime-600 transition-colors">Login</a>
+                @guest
+                    <a href="{{ route('login') }}"
+                        class="bg-lime-400 text-blue-600 px-6 py-2 rounded-md text-sm font-semibold hover:bg-lime-600 transition-colors">Login</a>
+                @else
+                    <a href="{{ route('home') }}"
+                        class="bg-lime-400 text-blue-600 px-6 py-2 rounded-md text-sm font-semibold hover:bg-lime-600 transition-colors">Dashboard</a>
+                @endguest
             </div>
         </div>
     </div>

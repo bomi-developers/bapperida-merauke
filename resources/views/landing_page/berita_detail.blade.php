@@ -72,7 +72,7 @@
                             @case('text')
                                 {{-- Tutup div flex untuk video sebelum menampilkan teks, lalu buka lagi setelahnya jika ada video lagi --}}
                         </div>
-                        <p class="text-gray-700 leading-relaxed my-6 text-justify">{!! nl2br(e($item->content)) !!}</p>
+                        <p class="text-gray-700 leading-relaxed my-6 text-justify">{!! $item->content !!}</p>
                         <div class="flex flex-wrap justify-center gap-8 my-4">
                         @break
 

@@ -1,196 +1,229 @@
 <x-layout>
-    <x-header></x-header>
+    <x-header />
+    <main class="p-6 overflow-y-auto h-[calc(100vh-4rem)]" id="main-container">
+        <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Pengaturan Website</h2>
 
-    <main>
-        <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-            <div class="mx-auto max-w-3xl">
+        {{-- Breadcrumb --}}
+        <nav class="mb-6 text-sm text-gray-600 dark:text-gray-300">
+            <a href="{{ route('home') }}" class="hover:underline text-primary">Dashboard</a> /
+            <span>Website Settings</span>
+        </nav>
 
-                <!-- Breadcrumb -->
-                <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <h2 class="text-title-md2 font-bold text-black dark:text-white">
-                        Website Settings
-                    </h2>
+        {{-- Form Utama --}}
+        <form action="{{ route('website-setting.update') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
 
-                    <nav>
-                        <ol class="flex items-center gap-2">
-                            <li>
-                                <a class="font-medium" href="{{ route('home') }}">Dashboard /</a>
-                            </li>
-                            <li class="font-medium text-primary">Website Settings</li>
-                        </ol>
-                    </nav>
-                </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {{-- Kolom Kiri --}}
+                <div
+                    class="lg:col-span-2 bg-white dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Informasi Umum</h3>
 
-                <!-- Settings Section -->
-                <div class="grid grid-cols-5 gap-8">
-                    <!-- Left Column: Website Info -->
-                    <div class="col-span-5 xl:col-span-3">
-                        <div
-                            class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-                            <div class="border-b border-stroke px-7 py-4 dark:border-strokedark">
-                                <h3 class="font-medium text-black dark:text-white">General Information</h3>
-                            </div>
-                            <div class="p-7">
-                                <form action="{{ route('website-setting.update') }}" method="POST"
-                                    enctype="multipart/form-data">
-                                    @csrf
-                                    @method('PUT')
+                    {{-- Nama Kantor --}}
+                    <div class="mb-4">
+                        <label class="form-label">Nama Kantor</label>
+                        <input type="text" name="nama_kantor" value="{{ $settings->nama_kantor ?? '' }}"
+                            class="form-input block w-full" required>
+                    </div>
 
-                                    <!-- Nama Kantor -->
-                                    <div class="mb-5.5">
-                                        <label class="mb-3 block text-sm font-medium text-black dark:text-white">Nama
-                                            Kantor</label>
-                                        <input type="text" name="nama_kantor"
-                                            value="{{ $settings->nama_kantor ?? '' }}"
-                                            class="w-full rounded border border-stroke bg-gray px-4 py-3 font-medium text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white">
-                                    </div>
+                    {{-- Alamat --}}
+                    <div class="mb-4">
+                        <label class="form-label">Alamat</label>
+                        <textarea name="alamat" rows="3" class="form-input block w-full">{{ $settings->alamat ?? '' }}</textarea>
+                    </div>
 
-                                    <!-- Alamat -->
-                                    <div class="mb-5.5">
-                                        <label
-                                            class="mb-3 block text-sm font-medium text-black dark:text-white">Alamat</label>
-                                        <textarea name="alamat" rows="3"
-                                            class="w-full rounded border border-stroke bg-gray px-4 py-3 font-medium text-black focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:text-white">{{ $settings->alamat ?? '' }}</textarea>
-                                    </div>
+                    {{-- Telepon & Email --}}
+                    <div class="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <input type="text" name="telepon" placeholder="Telepon"
+                            value="{{ $settings->telepon ?? '' }}" class="form-input block w-full">
+                        <input type="email" name="email" placeholder="Email" value="{{ $settings->email ?? '' }}"
+                            class="form-input block w-full">
+                    </div>
 
-                                    <!-- Telepon & Email -->
-                                    <div class="mb-5.5 flex gap-4">
-                                        <input type="text" name="telepon" placeholder="Telepon"
-                                            value="{{ $settings->telepon ?? '' }}"
-                                            class="w-1/2 rounded border border-stroke bg-gray px-4 py-3 font-medium text-black focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:text-white">
-                                        <input type="email" name="email" placeholder="Email"
-                                            value="{{ $settings->email ?? '' }}"
-                                            class="w-1/2 rounded border border-stroke bg-gray px-4 py-3 font-medium text-black focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:text-white">
-                                    </div>
+                    {{-- Website --}}
+                    <div class="mb-4">
+                        <label class="form-label">Website</label>
+                        <input type="text" name="website" value="{{ $settings->website ?? '' }}"
+                            class="form-input block w-full">
+                    </div>
 
-                                    <!-- Website -->
-                                    <div class="mb-5.5">
-                                        <label
-                                            class="mb-3 block text-sm font-medium text-black dark:text-white">Website</label>
-                                        <input type="text" name="website" value="{{ $settings->website ?? '' }}"
-                                            class="w-full rounded border border-stroke bg-gray px-4 py-3 font-medium text-black focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:text-white">
-                                    </div>
-
-                                    <!-- Logo & Favicon -->
-                                    <div class="mb-5.5 flex gap-4">
-                                        <div class="w-1/2">
-                                            <label
-                                                class="mb-3 block text-sm font-medium text-black dark:text-white">Logo</label>
-                                            <input type="file" name="logo" class="w-full">
-                                            @if ($settings->logo)
-                                                <img src="{{ asset($settings->logo) }}" alt="Logo"
-                                                    class="mt-2 h-16">
-                                            @endif
-                                        </div>
-                                        <div class="w-1/2">
-                                            <label
-                                                class="mb-3 block text-sm font-medium text-black dark:text-white">Favicon</label>
-                                            <input type="file" name="favicon" class="w-full">
-                                            @if ($settings->favicon)
-                                                <img src="{{ asset($settings->favicon) }}" alt="Favicon"
-                                                    class="mt-2 h-10">
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <!-- Maps -->
-                                    <div class="mb-5.5">
-                                        <label class="mb-3 block text-sm font-medium text-black dark:text-white">Maps
-                                            Embed (iframe)</label>
-                                        <textarea name="maps_iframe" rows="4"
-                                            class="w-full rounded border border-stroke bg-gray px-4 py-3 font-medium text-black focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:text-white">{{ $settings->maps_iframe ?? '' }}</textarea>
-                                    </div>
-
-                                    <!-- Media Sosial -->
-                                    <div class="mb-5.5 grid grid-cols-2 gap-4">
-                                        <input type="text" name="facebook" placeholder="Facebook"
-                                            value="{{ $settings->facebook ?? '' }}"
-                                            class="rounded border border-stroke bg-gray px-4 py-3 text-black">
-                                        <input type="text" name="instagram" placeholder="Instagram"
-                                            value="{{ $settings->instagram ?? '' }}"
-                                            class="rounded border border-stroke bg-gray px-4 py-3 text-black">
-                                        <input type="text" name="twitter" placeholder="Twitter"
-                                            value="{{ $settings->twitter ?? '' }}"
-                                            class="rounded border border-stroke bg-gray px-4 py-3 text-black">
-                                        <input type="text" name="linkedin" placeholder="LinkedIn"
-                                            value="{{ $settings->linkedin ?? '' }}"
-                                            class="rounded border border-stroke bg-gray px-4 py-3 text-black">
-                                        <input type="text" name="youtube" placeholder="YouTube"
-                                            value="{{ $settings->youtube ?? '' }}"
-                                            class="rounded border border-stroke bg-gray px-4 py-3 text-black">
-                                    </div>
-
-                                    <!-- SEO Metadata -->
-                                    <div class="mb-5.5">
-                                        <label class="mb-3 block text-sm font-medium text-black dark:text-white">Meta
-                                            Title</label>
-                                        <input type="text" name="meta_title"
-                                            value="{{ $settings->meta_title ?? '' }}"
-                                            class="w-full rounded border border-stroke bg-gray px-4 py-3 text-black">
-                                    </div>
-                                    <div class="mb-5.5">
-                                        <label class="mb-3 block text-sm font-medium text-black dark:text-white">Meta
-                                            Description</label>
-                                        <textarea name="meta_description" rows="3"
-                                            class="w-full rounded border border-stroke bg-gray px-4 py-3 text-black">{{ $settings->meta_description ?? '' }}</textarea>
-                                    </div>
-                                    <div class="mb-5.5">
-                                        <label class="mb-3 block text-sm font-medium text-black dark:text-white">Meta
-                                            Keywords</label>
-                                        <input type="text" name="meta_keywords"
-                                            value="{{ $settings->meta_keywords ?? '' }}"
-                                            class="w-full rounded border border-stroke bg-gray px-4 py-3 text-black">
-                                    </div>
-
-                                    <!-- Maintenance Mode -->
-                                    <div class="mb-5.5 flex items-center gap-3">
-                                        <input type="checkbox" name="is_maintenance" value="1"
-                                            {{ $settings->is_maintenance ? 'checked' : '' }} class="w-5 h-5">
-                                        <label class="text-black dark:text-white">Enable Maintenance Mode</label>
-                                    </div>
-
-                                    <!-- Submit -->
-                                    <div class="flex justify-end gap-4.5">
-                                        <button type="submit"
-                                            class="flex justify-center rounded border border-stroke px-6 py-2 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white">
-                                            Cancel
-                                        </button>
-                                        <button type="submit"
-                                            class="flex justify-center rounded bg-primary px-6 py-2 font-medium text-gray hover:bg-opacity-90">
-                                            Save Settings
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
+                    {{-- Logo & Favicon --}}
+                    <div class="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="form-label">Logo</label>
+                            <input type="file" name="logo" class="form-input block w-full">
+                            @if ($settings->logo)
+                                <img src="{{ asset($settings->logo) }}" alt="Logo"
+                                    class="mt-2 h-16 rounded-md border">
+                            @endif
+                        </div>
+                        <div>
+                            <label class="form-label">Favicon</label>
+                            <input type="file" name="favicon" class="form-input block w-full">
+                            @if ($settings->favicon)
+                                <img src="{{ asset($settings->favicon) }}" alt="Favicon"
+                                    class="mt-2 h-10 rounded-md border">
+                            @endif
                         </div>
                     </div>
 
-                    <!-- Right Column: Preview (Optional) -->
-                    <div class="col-span-5 xl:col-span-2">
-                        <div
-                            class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark p-7">
-                            <h3 class="font-medium text-black dark:text-white mb-4">Website Preview</h3>
-                            <div class="mb-4">
-                                <strong>Logo:</strong>
-                                @if ($settings->logo)
-                                    <img src="{{ asset($settings->logo) }}" class="h-16" alt="Logo">
-                                @endif
-                            </div>
-                            <div class="mb-4">
-                                <strong>Favicon:</strong>
-                                @if ($settings->favicon)
-                                    <img src="{{ asset($settings->favicon) }}" class="h-10" alt="Favicon">
-                                @endif
-                            </div>
-                            <div class="mb-4">
-                                <strong>Maps:</strong>
-                                {!! $settings->maps_iframe ?? 'Maps not set' !!}
-                            </div>
-                        </div>
+                    {{-- Maps --}}
+                    <div class="mb-4">
+                        <label class="form-label">Maps Embed (iframe)</label>
+                        <textarea name="maps_iframe" rows="3" class="form-input block w-full">{{ $settings->maps_iframe ?? '' }}</textarea>
+                    </div>
+
+                    {{-- Media Sosial --}}
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mt-6 mb-3">Media Sosial</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <input type="text" name="facebook" placeholder="Facebook"
+                            value="{{ $settings->facebook ?? '' }}" class="form-input">
+                        <input type="text" name="instagram" placeholder="Instagram"
+                            value="{{ $settings->instagram ?? '' }}" class="form-input">
+                        <input type="text" name="twitter" placeholder="Twitter"
+                            value="{{ $settings->twitter ?? '' }}" class="form-input">
+                        <input type="text" name="linkedin" placeholder="LinkedIn"
+                            value="{{ $settings->linkedin ?? '' }}" class="form-input">
+                        <input type="text" name="youtube" placeholder="YouTube"
+                            value="{{ $settings->youtube ?? '' }}" class="form-input">
+                    </div>
+
+                    {{-- SEO --}}
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mt-6 mb-3">SEO Metadata</h3>
+                    <div class="mb-4">
+                        <label class="form-label">Meta Title</label>
+                        <input type="text" name="meta_title" value="{{ $settings->meta_title ?? '' }}"
+                            class="form-input block w-full">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Meta Description</label>
+                        <textarea name="meta_description" rows="3" class="form-input block w-full">{{ $settings->meta_description ?? '' }}</textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Meta Keywords</label>
+                        <input type="text" name="meta_keywords" value="{{ $settings->meta_keywords ?? '' }}"
+                            class="form-input block w-full">
+                    </div>
+
+                    {{-- Maintenance Mode --}}
+                    <div class="flex items-center gap-2 mt-6">
+                        <input type="checkbox" name="is_maintenance" value="1"
+                            {{ $settings->is_maintenance ? 'checked' : '' }}
+                            class="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary">
+                        <label class="text-gray-700 dark:text-gray-300">Aktifkan Maintenance Mode</label>
                     </div>
                 </div>
 
+                {{-- Kolom Kanan --}}
+                <div class="lg:col-span-1">
+                    <div
+                        class="bg-white dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Pratinjau Website</h3>
+
+                        {{-- Logo --}}
+                        @if ($settings->logo)
+                            <div class="mb-4">
+                                <strong class="block text-sm text-gray-700 dark:text-gray-300 mb-1">Logo</strong>
+                                <img src="{{ asset($settings->logo) }}" class="h-16 rounded-md border">
+                            </div>
+                        @endif
+
+                        {{-- Favicon --}}
+                        @if ($settings->favicon)
+                            <div class="mb-4">
+                                <strong class="block text-sm text-gray-700 dark:text-gray-300 mb-1">Favicon</strong>
+                                <img src="{{ asset($settings->favicon) }}" class="h-10 rounded-md border">
+                            </div>
+                        @endif
+
+                        {{-- Maps --}}
+                        <div>
+                            <strong class="block text-sm text-gray-700 dark:text-gray-300 mb-2">Maps</strong>
+                            <div class="rounded overflow-hidden border border-gray-200 dark:border-gray-700">
+                                {!! $settings->maps_iframe ?? '<p class="text-sm text-gray-500 p-3">Belum ada maps</p>' !!}
+                            </div>
+                        </div>
+
+                        {{-- Tombol --}}
+                        <div class="mt-6 flex gap-2">
+                            <a href="{{ route('home') }}" class="btn-secondary w-full text-center">Batal</a>
+                            <button type="submit" class="btn-primary w-full">Simpan Pengaturan</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </form>
     </main>
+
+    {{-- Tambahkan helper style --}}
+    <style>
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .dark .form-label {
+            color: #d1d5db;
+        }
+
+        .form-input {
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            padding: 0.6rem 0.75rem;
+            font-size: 0.875rem;
+            background-color: #fff;
+            color: #111827;
+        }
+
+        .dark .form-input {
+            background-color: #1f2937;
+            border-color: #4b5563;
+            color: #f9fafb;
+        }
+
+        .form-input:focus {
+            border-color: #4f46e5;
+            outline: none;
+        }
+
+        .btn-primary {
+            background-color: #4f46e5;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            text-align: center;
+        }
+
+        .btn-primary:hover {
+            background-color: #4338ca;
+        }
+
+        .btn-secondary {
+            background-color: #e5e7eb;
+            color: #1f2937;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .dark .btn-secondary {
+            background-color: #4b5563;
+            color: #f9fafb;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d1d5db;
+        }
+
+        .dark .btn-secondary:hover {
+            background-color: #6b7280;
+        }
+    </style>
 </x-layout>
