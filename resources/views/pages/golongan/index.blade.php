@@ -1,30 +1,32 @@
 <x-layout>
     <x-header />
 
-    <div class="p-6">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold text-black dark:text-white">Daftar Golongan</h2>
-            <button onclick="openCreateForm()" class="px-4 py-2 bg-primary text-white rounded hover:bg-primary/80">
+    <div class="w-full mx-auto p-6 transition-colors duration-300 bg-gray-50 dark:bg-gray-900 overflow-auto">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">Daftar Golongan</h2>
+            <button onclick="openCreateForm()"
+                class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200">
                 + Tambah Golongan
             </button>
         </div>
 
         <!-- Search -->
-        <div class="mb-4">
+        <div class="mb-6">
             <input type="text" id="search" placeholder="Cari golongan..."
-                class="px-3 py-3 text-sm rounded border border-gray-300 dark:border-strokedark 
-                       bg-white dark:bg-boxdark text-black dark:text-white 
-                       focus:ring-2 focus:ring-primary outline-none transition-colors duration-200">
+                class="w-full md:w-1/3 px-4 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-700 
+                       bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 
+                       focus:ring-2 focus:ring-indigo-500 outline-none transition-colors duration-200" />
         </div>
 
         <!-- Table -->
         <div
-            class="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default 
-                   dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-            <div class="max-w-full overflow-x-auto" id="golongan-table"></div>
+            class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg overflow-hidden transition-colors duration-300">
+            <div id="golongan-table" class="max-w-full overflow-x-auto p-6"></div>
         </div>
     </div>
+
     @include('pages.golongan.modal')
-    </div>
 </x-layout>
+
 @include('pages.golongan.script')

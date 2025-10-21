@@ -1,5 +1,5 @@
  <section class="relative h-[1200px] [clip-path:ellipse(120%_60%_at_50%_0%)]">
-     <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/Assets/image6.jpg');">
+     <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/assets/image6.jpg');">
      </div>
 
      <div class="absolute inset-0 bg-blue-800/50"></div>

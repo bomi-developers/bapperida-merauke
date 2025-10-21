@@ -8,7 +8,7 @@
             </button>
             <div class="relative hidden sm:block">
                 <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="text" placeholder="Type to search..."
+                <input type="text" placeholder="Cari menu di sini.." id="searchInput"
                     class="bg-slate-100 dark:bg-slate-700 dark:border-slate-600 rounded-lg w-64 pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-800 dark:text-white">
             </div>
         </div>
@@ -150,3 +150,97 @@
         </div>
     </div>
 </header>
+<!-- Overlay Search -->
+<div id="searchOverlay"
+    class="fixed inset-0 bg-black/60 backdrop-blur-md hidden flex items-center justify-center z-50">
+
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 w-full max-w-md relative">
+        <input id="overlaySearchInput" type="text" placeholder="Cari menu..."
+            class="w-full border border-slate-300 dark:border-slate-600 rounded-lg py-3 px-4 mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-slate-700 dark:text-white">
+
+        <!-- Daftar hasil pencarian -->
+        <ul id="searchResults" class="space-y-2"></ul>
+
+        <!-- Tombol close -->
+        <button id="closeOverlay"
+            class="absolute top-3 right-3 text-slate-400 hover:text-red-500 transition">✕</button>
+    </div>
+</div>
+@push('scripts')
+    <script>
+        // Data JSON untuk daftar menu dan URL
+        const menuData = [{
+                name: "Dashboard",
+                url: "/home"
+            },
+            {
+                name: "Berita",
+                url: "/admin/berita"
+            },
+            {
+                name: "Bidang",
+                url: "/admin/bidang"
+            },
+            {
+                name: "Jabatan",
+                url: "/admin/jabatan"
+            },
+            {
+                name: "Golongan",
+                url: "/admin/golongan"
+            },
+            {
+                name: "Kategori Dokument",
+                url: "/admin/document-kategori"
+            },
+            {
+                name: "Dokument",
+                url: "/admin/documents"
+            },
+            {
+                name: "Pegawai",
+                url: "/admin/pegawai"
+            },
+        ];
+
+        const searchInput = document.getElementById('searchInput');
+        const searchOverlay = document.getElementById('searchOverlay');
+        const overlaySearchInput = document.getElementById('overlaySearchInput');
+        const searchResults = document.getElementById('searchResults');
+        const closeOverlay = document.getElementById('closeOverlay');
+
+        // Buka overlay saat klik search di header
+        searchInput.addEventListener('click', () => {
+            searchOverlay.classList.remove('hidden');
+            overlaySearchInput.focus();
+        });
+
+        // Tutup overlay
+        closeOverlay.addEventListener('click', () => {
+            searchOverlay.classList.add('hidden');
+            overlaySearchInput.value = '';
+            searchResults.innerHTML = '';
+        });
+
+        // Filter hasil pencarian berdasarkan input
+        overlaySearchInput.addEventListener('input', () => {
+            const query = overlaySearchInput.value.toLowerCase();
+            const filtered = menuData.filter(item => item.name.toLowerCase().includes(query));
+
+            searchResults.innerHTML = filtered.map(item =>
+                `<li class="p-3 bg-slate-100 dark:bg-slate-700 rounded-lg hover:bg-indigo-500 hover:text-white transition cursor-pointer" onclick="window.location='${item.url}'">${item.name}</li>`
+            ).join('');
+
+            if (filtered.length === 0 && query) {
+                searchResults.innerHTML = `<li class="text-center text-slate-500">Tidak ditemukan</li>`;
+            }
+        });
+
+        // Tutup overlay dengan klik di luar kotak
+        searchOverlay.addEventListener('click', (e) => {
+            if (e.target === searchOverlay) {
+                searchOverlay.classList.add('hidden');
+            }
+        });
+    </script>
+@endpush
