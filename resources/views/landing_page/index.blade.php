@@ -234,7 +234,7 @@
                     <div class="swiper-slide w-3/4 md:w-1/2">
                         <a href="#"
                             class="block relative aspect-video rounded-2xl overflow-hidden group shadow-lg">
-                            <img src="Assets/image3.png" alt="Berita 3"
+                            <img src="assets/image3.png" alt="Berita 3"
                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                             <div class="absolute bottom-0 left-0 right-0 p-6">
@@ -246,7 +246,7 @@
                     <div class="swiper-slide w-3/4 md:w-1/2">
                         <a href="#"
                             class="block relative aspect-video rounded-2xl overflow-hidden group shadow-lg">
-                            <img src="Assets/image4.png" alt="Berita 4"
+                            <img src="assets/image4.png" alt="Berita 4"
                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                             <div class="absolute bottom-0 left-0 right-0 p-6">
@@ -270,7 +270,7 @@
                     <div class="swiper-slide w-3/4 md:w-1/2">
                         <a href="#"
                             class="block relative aspect-video rounded-2xl overflow-hidden group shadow-lg">
-                            <img src="Assets/image6.jpg" alt="Berita 4"
+                            <img src="assets/image6.jpg" alt="Berita 4"
                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                             <div class="absolute bottom-0 left-0 right-0 p-6">

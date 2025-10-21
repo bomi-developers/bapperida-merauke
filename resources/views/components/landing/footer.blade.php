@@ -1,4 +1,4 @@
-<footer class=" bg-[url('/Assets/backgroundfooter.svg')] bg-cover bg-center">
+<footer class=" bg-[url('/assets/backgroundfooter.svg')] bg-cover bg-center">
     <!-- Curved top border -->
     <div class="absolute top-0 left-0 w-full h-20 curved-top transform -translate-y-10"></div>
 
@@ -8,7 +8,7 @@
             <div class="flex items-center justify-between mb-12 pt-20" style="margin-top: 100pt;">
                 <div class="flex items-center space-x-4">
                     <!-- Logo Placeholder -->
-                    <img class="h-12 w-auto" src="/Assets/LogoKabMerauke.png" alt="Logo BAPPERIDA" />
+                    <img class="h-12 w-auto" src="/assets/LogoKabMerauke.png" alt="Logo BAPPERIDA" />
                     <div>
                         <h2 class="text-white text-2xl font-bold">BAPPERIDA</h2>
                         <p class="text-blue-100 text-sm">KAB. MERAUKE</p>
