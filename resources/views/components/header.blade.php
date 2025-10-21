@@ -1,15 +1,15 @@
 <!-- Header -->
 <header class="bg-white dark:bg-slate-800 dark:border-slate-700">
     <div class="flex items-center justify-between p-4">
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4 w-full">
             <button id="sidebar-toggle"
                 class="lg:hidden text-slate-500 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-white">
                 <i class="bi bi-list text-2xl"></i>
             </button>
-            <div class="relative hidden sm:block">
+            <div class="relative w-full">
                 <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="text" placeholder="Cari menu di sini.." id="searchInput"
-                    class="bg-slate-100 dark:bg-slate-700 dark:border-slate-600 rounded-lg w-64 pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-800 dark:text-white">
+                <input type="text" placeholder="klik [ / ] cari menu.." id="searchInput"
+                    class="bg-slate-100 dark:bg-slate-700 dark:border-slate-600 rounded-lg w-full pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-800 dark:text-white transition-all duration-300">
             </div>
         </div>
         <div class="flex items-center gap-4">
@@ -159,7 +159,9 @@
             class="w-full border border-slate-300 dark:border-slate-600 rounded-lg py-3 px-4 mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-slate-700 dark:text-white">
 
         <!-- Daftar hasil pencarian -->
-        <ul id="searchResults" class="space-y-2"></ul>
+        <div class="max-h-[70vh] overflow-y-auto pr-2">
+            <ul id="searchResults" class="space-y-2"></ul>
+        </div>
 
         <!-- Tombol close -->
         <button id="closeOverlay"
@@ -174,32 +176,64 @@
                 url: "/home"
             },
             {
+                icon: "bi bi-newspaper",
                 name: "Berita",
                 url: "/admin/berita"
             },
             {
+                icon: "bi bi-folder-fill",
                 name: "Bidang",
                 url: "/admin/bidang"
             },
             {
+                icon: "bi bi-briefcase-fill",
                 name: "Jabatan",
                 url: "/admin/jabatan"
             },
             {
+                icon: "bi bi-people-fill",
                 name: "Golongan",
                 url: "/admin/golongan"
             },
             {
+                icon: "bi bi-file-earmark-fill",
                 name: "Kategori Dokument",
                 url: "/admin/document-kategori"
             },
             {
+                icon: "bi bi-file-earmark-text-fill",
                 name: "Dokument",
                 url: "/admin/documents"
             },
             {
+                icon: "bi bi-people-fill",
                 name: "Pegawai",
                 url: "/admin/pegawai"
+            },
+            {
+                icon: "bi bi-box-arrow-in-right",
+                name: "Aktifitas Login",
+                url: "/admin/login-logs"
+            },
+            {
+                icon: "bi bi-activity",
+                name: "Aktifitas Log Data",
+                url: "/admin/activity-logs"
+            },
+            {
+                icon: "bi bi-eye-fill",
+                name: "Aktifitas Akses Tampilan",
+                url: "/admin/view-logs"
+            },
+            {
+                icon: "bi bi-gear-fill",
+                name: "Pengaturan Website",
+                url: "/admin/website-setting"
+            },
+            {
+                icon: "bi bi-person-circle",
+                name: "Profile",
+                url: "/admin/profile"
             },
         ];
 
@@ -209,8 +243,51 @@
         const searchResults = document.getElementById('searchResults');
         const closeOverlay = document.getElementById('closeOverlay');
 
+        let currentIndex = -1;
+        let currentItems = [];
+
+        function renderResults(filtered) {
+            currentItems = filtered;
+            currentIndex = -1;
+
+            searchResults.innerHTML = filtered.map(item => `
+            <li class="p-3 bg-slate-100 dark:bg-slate-700 rounded-lg 
+                       hover:bg-indigo-500 dark:hover:bg-indigo-600 
+                       hover:text-white transition cursor-pointer"
+                data-url="${item.url}"
+                onclick="window.location='${item.url}'">
+                <i class="${item.icon ?? 'bi bi-grid-1x2-fill'} mr-4"></i> ${item.name}
+            </li>
+        `).join('');
+
+            if (filtered.length === 0) {
+                searchResults.innerHTML = `<li class="text-center text-slate-500">Tidak ditemukan</li>`;
+            }
+        }
+        // shortcuts to open search overlay
+        document.addEventListener("keydown", (e) => {
+            // Abaikan jika sedang mengetik di input/textarea
+            const tag = e.target.tagName.toLowerCase();
+            if (tag === "input" || tag === "textarea") return;
+
+            if (e.key === "/") {
+                e.preventDefault(); // cegah muncul karakter '/'
+                searchOverlay.classList.remove("hidden");
+                overlaySearchInput.focus();
+                renderResults(menuData);
+            }
+            if (e.key === "Escape") {
+                // Tutup overlay dengan ESC
+                searchOverlay.classList.add('hidden');
+                overlaySearchInput.value = '';
+                searchResults.innerHTML = '';
+                currentIndex = -1;
+            }
+        });
+
         // Buka overlay saat klik search di header
         searchInput.addEventListener('click', () => {
+            renderResults(menuData);
             searchOverlay.classList.remove('hidden');
             overlaySearchInput.focus();
         });
@@ -220,21 +297,66 @@
             searchOverlay.classList.add('hidden');
             overlaySearchInput.value = '';
             searchResults.innerHTML = '';
+            currentIndex = -1;
         });
 
         // Filter hasil pencarian berdasarkan input
         overlaySearchInput.addEventListener('input', () => {
             const query = overlaySearchInput.value.toLowerCase();
             const filtered = menuData.filter(item => item.name.toLowerCase().includes(query));
+            currentIndex = -1;
+            currentItems = filtered;
 
             searchResults.innerHTML = filtered.map(item =>
-                `<li class="p-3 bg-slate-100 dark:bg-slate-700 rounded-lg hover:bg-indigo-500 hover:text-white transition cursor-pointer" onclick="window.location='${item.url}'">${item.name}</li>`
+                `<li class="p-3 bg-slate-100 dark:bg-slate-700 rounded-lg 
+                        hover:bg-indigo-500 dark:hover:bg-indigo-600 
+                        hover:text-white transition cursor-pointer" 
+                        data-url="${item.url}"
+                    onclick="window.location='${item.url}'">
+                   <i class="${item.icon ?? 'bi bi-grid-1x2-fill'} mr-4"></i>  ${item.name}
+                </li>`
             ).join('');
 
             if (filtered.length === 0 && query) {
                 searchResults.innerHTML = `<li class="text-center text-slate-500">Tidak ditemukan</li>`;
             }
         });
+        // Navigasi keyboard di hasil
+        overlaySearchInput.addEventListener('keydown', (e) => {
+            const items = Array.from(searchResults.querySelectorAll('li'));
+            if (items.length === 0) return;
+
+            if (e.key === "ArrowDown") {
+                e.preventDefault();
+                currentIndex = (currentIndex + 1) % items.length;
+                highlightItem(items);
+            } else if (e.key === "ArrowUp") {
+                e.preventDefault();
+                currentIndex = (currentIndex - 1 + items.length) % items.length;
+                highlightItem(items);
+            } else if (e.key === "Enter") {
+                e.preventDefault();
+                if (currentIndex >= 0 && items[currentIndex]) {
+                    const url = items[currentIndex].dataset.url;
+                    if (url) window.location.href = url;
+                }
+            }
+        });
+
+        function highlightItem(items) {
+            items.forEach((item, i) => {
+                if (i === currentIndex) {
+                    item.classList.add('bg-indigo-500', 'text-white');
+                    item.scrollIntoView({
+                        block: 'nearest',
+                        behavior: 'smooth'
+                    });
+                } else {
+                    item.classList.remove('bg-indigo-500', 'text-white');
+                }
+            });
+        }
+
 
         // Tutup overlay dengan klik di luar kotak
         searchOverlay.addEventListener('click', (e) => {
