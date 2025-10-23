@@ -23,100 +23,46 @@
 
     <section class="relative py-24 overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-            {{-- <img src="{{ asset('assets/Ellipse.png') }}" alt="" aria-hidden="true"
-                class="absolute bottom-0 right-0 w-[1200px] h-auto mix-blend-multiply opacity-100 -z-10 translate-x-[35%] translate-y-[70%]">
-            <img src="{{ asset('assets/Ellipse.png') }}" alt="" aria-hidden="true"
-                class="absolute bottom-0 right-0 w-[1200px] h-auto mix-blend-multiply opacity-100 -z-10 -translate-x-[80%] translate-y-[150%]"> --}}
             <div class="reveal-on-scroll">
                 <h2 class="text-3xl font-bold text-[#004299]">Dokumen BAPPERIDA Publik</h2>
                 <div class="w-24 h-1 bg-[#CCFF00] mx-auto mt-4 rounded-full"></div>
             </div>
 
             <div class="mt-16 flex flex-wrap justify-center gap-8">
-                <div
-                    class="bg-white p-8 rounded-2xl shadow-lg reveal-on-scroll hover:shadow-xl hover:-translate-y-1 transition-all duration-300 w-full max-w-sm">
-                    <div class="flex items-center justify-between">
-                        <svg class="h-12 w-12 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <span
-                            class="bg-[#CCFF00] text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">Selengkapnya</span>
+                @forelse ($dokumen as $item)
+                    <a href="{{ route('documents.by_category', [
+                        'kategori' => $item->id,
+                        'slug' => Str::slug($item->nama_kategori),
+                    ]) }}"
+                        class="bg-white p-8 rounded-2xl shadow-lg reveal-on-scroll hover:shadow-xl hover:-translate-y-1 transition-all duration-300 w-full max-w-sm">
+                        <div class="flex items-center justify-between">
+                            <svg class="h-12 w-12 text-blue-500" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <span
+                                class="bg-[#CCFF00] text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">Selengkapnya</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mt-6 text-left">{{ $item->nama_kategori }}</h3>
+                        <p class="mt-2 text-gray-500 text-left text-sm">{{ $item->deskripsi }}</p>
+                    </a>
+                @empty
+                    <div
+                        class="bg-white p-8 rounded-2xl shadow-lg reveal-on-scroll hover:shadow-xl hover:-translate-y-1 transition-all duration-300 w-full max-w-sm">
+                        <div class="flex items-center justify-between">
+                            <svg class="h-12 w-12 text-blue-500" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <span
+                                class="bg-[#CCFF00] text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">Selengkapnya</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mt-6 text-left">Kategori Dokumen Tidak Ditemukan</h3>
+                        <p class="mt-2 text-gray-500 text-left text-sm">Kategory Dokumen Tidak Ditemukan</p>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800 mt-6 text-left">RPJPD</h3>
-                    <p class="mt-2 text-gray-500 text-left text-sm">Website akan tampil optimal di semua
-                        perangkat: desktop,
-                        tablet,
-                        dan smartphone.</p>
-                </div>
-
-                <div
-                    class="bg-white p-8 rounded-2xl shadow-lg reveal-on-scroll hover:shadow-xl hover:-translate-y-1 transition-all duration-300 w-full max-w-sm">
-                    <div class="flex items-center justify-between">
-                        <svg class="h-12 w-12 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <span
-                            class="bg-[#CCFF00] text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">Selengkapnya</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mt-6 text-left">RPJMD</h3>
-                    <p class="mt-2 text-gray-500 text-left text-sm">UI/UX modern sesuai brand klien, bukan
-                        sekadar template
-                        biasa.
-                    </p>
-                </div>
-
-                <div
-                    class="bg-white p-8 rounded-2xl shadow-lg reveal-on-scroll hover:shadow-xl hover:-translate-y-1 transition-all duration-300 w-full max-w-sm">
-                    <div class="flex items-center justify-between">
-                        <svg class="h-12 w-12 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <span
-                            class="bg-[#CCFF00] text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">Selengkapnya</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mt-6 text-left">RKPD</h3>
-                    <p class="mt-2 text-gray-500 text-left text-sm">Struktur kode dan konten dirancang untuk
-                        memudahkan tampil
-                        di
-                        hasil pencarian Google.</p>
-                </div>
-
-                <div
-                    class="bg-white p-8 rounded-2xl shadow-lg reveal-on-scroll hover:shadow-xl hover:-translate-y-1 transition-all duration-300 w-full max-w-sm">
-                    <div class="flex items-center justify-between">
-                        <svg class="h-12 w-12 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <span
-                            class="bg-[#CCFF00] text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">Selengkapnya</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mt-6 text-left">RKPD</h3>
-                    <p class="mt-2 text-gray-500 text-left text-sm">Struktur kode dan konten dirancang untuk
-                        memudahkan tampil
-                        di
-                        hasil pencarian Google.</p>
-                </div>
-
-                <div
-                    class="bg-white p-8 rounded-2xl shadow-lg reveal-on-scroll hover:shadow-xl hover:-translate-y-1 transition-all duration-300 w-full max-w-sm">
-                    <div class="flex items-center justify-between">
-                        <svg class="h-12 w-12 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <span
-                            class="bg-[#CCFF00] text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">Selengkapnya</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mt-6 text-left">RKPD</h3>
-                    <p class="mt-2 text-gray-500 text-left text-sm">Struktur kode dan konten dirancang untuk
-                        memudahkan tampil
-                        di
-                        hasil pencarian Google.</p>
-                </div>
+                @endforelse
 
             </div>
         </div>

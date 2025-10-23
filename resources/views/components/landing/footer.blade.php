@@ -76,21 +76,27 @@
 
                 <!-- Services Column -->
                 <div class="text-white">
-                    <h3 class="text-lg font-semibold mb-6">Services</h3>
-                    <ul class="space-y-3">
-                        <li><a href="#"
-                                class="text-blue-100 hover:text-white transition-colors text-sm">Pricing</a>
+                    <h3 class="text-lg font-semibold mb-6">Tentang</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{{ url('/visi-misi') }}"
+                                class="text-blue-100 hover:text-white transition-colors text-sm">Visi dan
+                                Misi</a>
                         </li>
-                        <li><a href="#" class="text-blue-100 hover:text-white transition-colors text-sm">Borni
-                                Product</a></li>
-                        <li><a href="#" class="text-blue-100 hover:text-white transition-colors text-sm">FAQ</a>
+                        <li><a href="{{ url('/struktur-organisasi') }}"
+                                class="text-blue-100 hover:text-white transition-colors text-sm">Struktur
+                                Organisasi</a></li>
+                        <li><a href="{{ url('/sejarah') }}"
+                                class="text-blue-100 hover:text-white transition-colors text-sm">Sejarah
+                                Bapperida</a>
                         </li>
-                        <li><a href="#" class="text-blue-100 hover:text-white transition-colors text-sm">Help
-                                Docs</a></li>
-                        <li><a href="#" class="text-blue-100 hover:text-white transition-colors text-sm">Privacy
-                                Policy</a></li>
-                        <li><a href="#" class="text-blue-100 hover:text-white transition-colors text-sm">Terms and
-                                Conditions</a></li>
+                        <li><a href="{{ url('/tugas-fungsi') }}"
+                                class="text-blue-100 hover:text-white transition-colors text-sm">Tugas dan
+                                Fungsi
+                            </a></li>
+                        <li><a href="{{ url('/pegawai') }}"
+                                class="text-blue-100 hover:text-white transition-colors text-sm">Profil
+                                Pegawai
+                            </a></li>
                     </ul>
                 </div>
 
@@ -98,41 +104,46 @@
                 <div class="text-white">
                     <!-- Account Section -->
                     <div class="mb-8">
-                        <h3 class="text-lg font-semibold mb-6">Account</h3>
-                        <ul class="space-y-3">
-                            <li><a href="#" class="text-blue-100 hover:text-white transition-colors text-sm">Sign
-                                    In</a></li>
-                            <li><a href="#" class="text-blue-100 hover:text-white transition-colors text-sm">Sign
-                                    Up</a></li>
-                            <li><a href="#" class="text-blue-100 hover:text-white transition-colors text-sm">Reset
-                                    Password</a></li>
-                        </ul>
-                    </div>
+                        <h3 class="text-lg font-semibold mb-6">Akun</h3>
+                        <ul class="space-y-1">
+                            <li>
+                                @guest
+                                    <a href="{{ route('login') }}"
+                                        class="text-blue-100 hover:text-white transition-colors text-sm">Sign
+                                        In</a>
+                                @else
+                                    <a href="{{ route('home') }}"
+                                        class="text-blue-100 hover:text-white transition-colors text-sm">Sign
+                                        In</a>
+                                    @endif
+                                </li>
+                            </ul>
+                        </div>
 
-                    <!-- Newsletter Section -->
-                    <div>
-                        <h3 class="text-lg font-semibold mb-4">Stay in Touch</h3>
-                        <p class="text-blue-100 text-sm mb-4">Subscribe now for exclusive insights and
-                            offers!</p>
+                        <!-- Newsletter Section -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4">Stay in Touch</h3>
+                            <p class="text-blue-100 text-sm mb-4">Subscribe now for exclusive insights and
+                                offers!</p>
 
-                        <div class="space-y-3">
-                            <input type="email" placeholder="Email Address"
-                                class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent">
-                            <button
-                                class="w-full bg-[#CCFF00] hover:bg-white text-[#006FFF] font-semibold py-2 px-4 rounded-lg transition-colors">
-                                Subscribe Now
-                            </button>
+                            <div class="space-y-3">
+                                <input type="email" placeholder="Email Address"
+                                    class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent">
+                                <button
+                                    class="w-full bg-[#CCFF00] hover:bg-white text-[#006FFF] font-semibold py-2 px-4 rounded-lg transition-colors">
+                                    Subscribe Now
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Copyright -->
-            <div class="mt-12 pt-8 border-t border-white/20">
-                <p class="text-center text-blue-100 text-sm">
-                    © 2025 Bapperida . All Rights Reserved.
-                </p>
+                <!-- Copyright -->
+                <div class="mt-12 pt-8 border-t border-white/20">
+                    <p class="text-center text-blue-100 text-sm">
+                        © {{ date('Y') }} Bapperida . All Rights Reserved.
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
-</footer>
+    </footer>

@@ -15,6 +15,43 @@
                  'routes' => ['berita.public.home', 'berita.public.show'],
                  'title' => 'Berita dan Informasi',
                  'subtitle' => 'Update Terkini Seputar Kegiatan BAPPERIDA',
+                 'description' =>
+                     'Dapatkan informasi terbaru mengenai kegiatan, program, dan inovasi dari BAPPERIDA Kabupaten Merauke.',
+             ],
+             [
+                 'routes' => ['struktur-organisasi'],
+                 'title' => 'Struktur Organisasi',
+                 'subtitle' => 'Struktur Organisasi BAPPERIDA',
+                 'description' =>
+                     'Kenali struktur organisasi BAPPERIDA Kabupaten Merauke untuk memahami peran dan tanggung jawab setiap unit kerja dalam mendukung pembangunan daerah.',
+             ],
+             [
+                 'routes' => ['pegawai'],
+                 'title' => 'Daftar Pegawai',
+                 'subtitle' => 'Daftar Pegawai BAPPERIDA',
+                 'description' =>
+                     'Temui tim profesional di balik BAPPERIDA Kabupaten Merauke yang berdedikasi untuk perencanaan dan pembangunan daerah.',
+             ],
+             [
+                 'routes' => ['sejarah'],
+                 'title' => 'Sejarah',
+                 'subtitle' => 'Sejarah BAPPERIDA',
+                 'description' =>
+                     'Pelajari perjalanan sejarah BAPPERIDA Kabupaten Merauke dalam mendukung pembangunan daerah dari masa ke masa.',
+             ],
+             [
+                 'routes' => ['tugas-fungsi'],
+                 'title' => 'Tugas dan Fungsi',
+                 'subtitle' => 'Tugas dan Fungsi BAPPERIDA',
+                 'description' =>
+                     'Pahami tugas dan fungsi utama BAPPERIDA Kabupaten Merauke dalam perencanaan pembangunan daerah yang berkelanjutan.',
+             ],
+             [
+                 'routes' => ['visi-misi'],
+                 'title' => 'Visi dan Misi',
+                 'subtitle' => 'Visi dan Misi BAPPERIDA',
+                 'description' =>
+                     'Jelajahi visi dan misi BAPPERIDA Kabupaten Merauke dalam mewujudkan pembangunan daerah yang inklusif dan berkelanjutan.',
              ],
          ];
 
@@ -22,6 +59,8 @@
          $hero = collect($heroGroups)->first(fn($group) => in_array($currentRoute, $group['routes'])) ?? [
              'title' => 'Selamat Datang',
              'subtitle' => 'Badan Perencanaan Daerah Kabupaten Merauke',
+             'description' =>
+                 'Bersama BAPPERIDA Kabupaten Merauke, wujudkan pembangunan berkelanjutan, inklusif, dan berbasis potensi lokal.',
          ];
          if ($currentRoute === 'documents.by_category') {
              // Ambil model Kategori langsung dari parameter rute
@@ -55,11 +94,12 @@
          style="padding-top: 15rem;">
          <h1 class="text-white text-4xl md:text-5xl font-extrabold max-w-4xl leading-tight">
              {{ $hero['title'] }}
-             <span class="block mt-2">{{ $hero['subtitle'] }}</span>
          </h1>
+         <h2 class="text-white text-2xl md:text-2xl font-extrabold max-w-4xl leading-tight">
+             {{ $hero['subtitle'] }}
+         </h2>
          <p class="mt-4 text-[#CCFF00] text-lg max-w-2xl">
-             Bersama BAPPERIDA Kabupaten Merauke, wujudkan pembangunan berkelanjutan, inklusif, dan berbasis potensi
-             lokal.
+             {{ $hero['description'] ?? 'Bersama BAPPERIDA Kabupaten Merauke, wujudkan pembangunan berkelanjutan, inklusif, dan berbasis potensi lokal.' }}
          </p>
 
          <form class="mt-8 w-full max-w-lg">

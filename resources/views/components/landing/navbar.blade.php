@@ -1,173 +1,219 @@
-<nav id="main-nav" class="fixed top-0 left-0 right-0 z-50 py-4 backdrop-blur-md bg-white/10 border-b border-white/20">
+<nav id="main-nav"
+    class="fixed top-0 left-0 right-0 z-50 py-3 backdrop-blur-md bg-[#0044A9]/50 border-b border-white/20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-3">
+        <div class="flex items-center justify-between h-16">
+            {{-- Logo --}}
+            <a href="{{ url('/') }}" class="flex items-center space-x-3">
                 <img class="h-12 w-auto" src="{{ asset('assets/LogoKabMerauke.png') }}" alt="Logo BAPPERIDA" />
                 <div class="flex flex-col">
-                    <span class="text-white text-xl font-bold leading-tight">BAPPERIDA</span><span
-                        class="text-white text-xs font-light leading-tight">Kab. Merauke</span>
+                    <span class="text-white text-xl font-bold leading-tight">BAPPERIDA</span>
+                    <span class="text-white text-xs font-light leading-tight">Kab. Merauke</span>
                 </div>
-            </div>
+            </a>
+
+            {{-- Menu Desktop --}}
             <div class="hidden md:flex items-center space-x-2">
                 <a href="{{ url('/') }}"
-                    class="text-[#006FFF] font-semibold bg-[#CCFF00] rounded-md px-3 py-1 text-sm">Beranda</a>
-                <div class="relative group">
-                    <button
-                        class="flex items-center text-white bg-transparent rounded-md px-3 py-1 text-sm transition-colors duration-300 hover:bg-[#CCFF00]/50">
-                        <span>Tentang</span>
-                        <svg class="ml-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                    </button>
-                    <div
-                        class="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 invisible opacity-0 transform scale-95 transition-all duration-200 ease-in-out group-hover:visible group-hover:opacity-100 group-hover:scale-100">
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#CCFF00]">Visi &
-                            Misi</a>
-                        <a href="#" class="block px-4 py-2 text-sm taext-gray-700 hover:bg-[#CCFF00]">Struktur
-                            Organisasi</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#CCFF00]">Sejarah
-                            Bapperida</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#CCFF00]">Tugas &
-                            Fungsi</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#CCFF00]">Profil
-                            Pegawai</a>
-                    </div>
-                </div>
-                <div class="relative group">
-                    <button
-                        class="flex items-center text-white bg-transparent rounded-md px-3 py-1 text-sm transition-colors duration-300 hover:bg-[#CCFF00]/50">
-                        <span>Produk</span>
-                        <svg class="ml-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                    </button>
-                    <div
-                        class="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 invisible opacity-0 transform scale-95 transition-all duration-200 ease-in-out group-hover:visible group-hover:opacity-100 group-hover:scale-100">
-                        {{-- Loop dinamis dari data kategori --}}
-                        @if ($kategoriDocuments->isNotEmpty())
-                            @foreach ($kategoriDocuments as $kategori)
-                                {{-- Arahkan ke route 'documents.by_category' dengan parameter ID dan slug --}}
-                                <a href="{{ route('documents.by_category', ['kategori' => $kategori->id, 'slug' => Str::slug($kategori->nama_kategori)]) }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#CCFF00]">
-                                    {{ $kategori->nama_kategori }}
-                                </a>
-                            @endforeach
-                        @else
-                            <span class="block px-4 py-2 text-sm text-gray-400">Tidak ada kategori</span>
-                        @endif
-                    </div>
-                </div>
-                <div class="relative group">
+                    class="rounded-md px-3 py-1 text-sm font-semibold transition-colors duration-300
+                        {{ request()->url() == url('/') ? 'bg-lime-400 text-blue-600' : 'text-white hover:bg-[#CCFF00]/50' }}">
+                    Beranda
+                </a>
 
-                    <button
-                        class="flex items-center text-white bg-transparent rounded-md px-3 py-1 text-sm transition-colors duration-300 hover:bg-[#CCFF00]/50">
-                        <span>PPM</span>
-                        <svg class="ml-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                    </button>
-                    <div
-                        class="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 invisible opacity-0 transform scale-95 transition-all duration-200 ease-in-out group-hover:visible group-hover:opacity-100 group-hover:scale-100">
-                        <a href="#"
-                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#CCFF00]">Pembangunan</a>
-                        <a href="#"
-                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#CCFF00]">Pemerintahan</a>
-                    </div>
-                </div>
-                <div class="relative group">
-                    <button
-                        class="flex items-center text-white bg-transparent rounded-md px-3 py-1 text-sm transition-colors duration-300 hover:bg-[#CCFF00]/50">
-                        <span>Riset & Inovasi</span>
-                        <svg class="ml-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                    </button>
-                    <div
-                        class="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 invisible opacity-0 transform scale-95 transition-all duration-200 ease-in-out group-hover:visible group-hover:opacity-100 group-hover:scale-100">
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#CCFF00]">Riset</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#CCFF00]">Inovasi</a>
-                    </div>
-                </div>
-                <div class="relative group">
-                    <button
-                        class="flex items-center text-white bg-transparent rounded-md px-3 py-1 text-sm transition-colors duration-300 hover:bg-[#CCFF00]/50">
-                        <span>Eko-Fispor</span>
-                        <svg class="ml-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                    </button>
+                @foreach ($menus as $menu)
+                    {{-- @php
+                        $isActive = isset($menu['route'])
+                            ? Route::currentRouteName() === $menu['route']
+                            : request()->url() == ($menu['url'] ?? '');
+                        $menuUrl = isset($menu['route']) ? route($menu['route']) : $menu['url'] ?? '#';
+                    @endphp --}}
+                    @php
+                        // Cek apakah item ini punya submenu
+                        $hasSubmenu = isset($menu['submenu']) && is_array($menu['submenu']);
 
-                    <div
-                        class="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 invisible opacity-0 transform scale-95 transition-all duration-200 ease-in-out group-hover:visible group-hover:opacity-100 group-hover:scale-100">
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#CCFF00]">DAK</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#CCFF00]">Ekonomi</a>
-                        <a href="#"
-                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#CCFF00]">Infrastruktur</a>
-                    </div>
-                </div>
-                <a href="#"
-                    class="text-white bg-transparent rounded-md px-3 py-1 text-sm transition-colors duration-300 hover:bg-[#CCFF00]/50">Galeri</a>
+                        // Tentukan apakah menu utama aktif
+                        $isActive = isset($menu['route'])
+                            ? Route::currentRouteName() === $menu['route']
+                            : request()->url() == ($menu['url'] ?? '');
+
+                        // Jika tidak aktif, periksa apakah ada submenu yang aktif
+                        if (!$isActive && $hasSubmenu) {
+                            foreach ($menu['submenu'] as $submenu) {
+                                $submenuActive = isset($submenu['route'])
+                                    ? Route::currentRouteName() === $submenu['route']
+                                    : request()->url() == ($submenu['url'] ?? '');
+
+                                if ($submenuActive) {
+                                    $isActive = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Tentukan URL menu utama
+                        $menuUrl = isset($menu['route']) ? route($menu['route']) : $menu['url'] ?? '#';
+                    @endphp
+
+                    @if (isset($menu['submenu']))
+                        {{-- Dropdown Desktop --}}
+                        <div class="relative group hidden md:block">
+                            <button
+                                class="flex items-center rounded-md px-3 py-1 text-sm transition duration-300
+                                    {{ $isActive ? 'bg-lime-400 text-blue-600' : 'text-white hover:bg-[#CCFF00]/50' }}">
+                                <span>{{ $menu['label'] }}</span>
+                                <svg class="ml-2 h-4 w-4 {{ $isActive ? 'text-blue-600' : 'text-white' }}"
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <div
+                                class="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20
+                                invisible opacity-0 transform scale-95 transition-all duration-200 ease-in-out
+                                group-hover:visible group-hover:opacity-100 group-hover:scale-100 dropdown">
+                                @foreach ($menu['submenu'] as $submenu)
+                                    @php
+                                        $submenuUrl = $submenu['url'] ?? '#';
+                                        $submenuActive = request()->is(ltrim($submenuUrl, '/'));
+                                    @endphp
+                                    <a href="{{ $submenu['url'] }}"
+                                        class="block px-4 py-2 text-sm  {{ $submenuActive ? 'bg-lime-400 text-blue-600' : ' text-grey-700 hover:bg-[#CCFF00]' }}">
+                                        {{ $submenu['label'] }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @else
+                        {{-- Menu Biasa --}}
+                        <a href="{{ $menuUrl }}"
+                            class="rounded-md px-3 py-1 text-sm font-semibold transition duration-300
+                                {{ $isActive ? 'bg-lime-400 text-blue-600' : 'text-white hover:bg-[#CCFF00]/50' }}">
+                            {{ $menu['label'] }}
+                        </a>
+                    @endif
+                @endforeach
             </div>
-            <a href="{{ route('berita.public.home') }}"
-                class="text-white bg-transparent rounded-md px-3 py-1 text-sm transition-colors duration-300 hover:bg-[#CCFF00]/50">Berita</a>
-            <div>
+
+            {{-- Tombol Login / Dashboard --}}
+            <div class="hidden md:block">
                 @guest
                     <a href="{{ route('login') }}"
-                        class="bg-lime-400 text-blue-600 px-6 py-2 rounded-md text-sm font-semibold hover:bg-lime-600 transition-colors">Login</a>
+                        class="bg-lime-400 text-blue-600 px-6 py-2 rounded-md text-sm font-semibold hover:bg-lime-500 transition-colors">
+                        Login
+                    </a>
                 @else
                     <a href="{{ route('home') }}"
-                        class="bg-lime-400 text-blue-600 px-6 py-2 rounded-md text-sm font-semibold hover:bg-lime-600 transition-colors">Dashboard</a>
+                        class="bg-lime-400 text-blue-600 px-6 py-2 rounded-md text-sm font-semibold hover:bg-lime-500 transition-colors">
+                        Dashboard
+                    </a>
                 @endguest
+            </div>
+
+            {{-- Tombol Menu Mobile --}}
+            <div class="md:hidden flex items-center">
+                <button id="mobile-menu-button" class="p-2 rounded-md text-white hover:bg-white/30 focus:outline-none">
+                    <svg id="icon-open" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                    <svg id="icon-close" class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
         </div>
     </div>
-</nav>
-{{-- menu samping --}}
-<div id="side-nav" class="fixed top-1/2 right-4 transform -translate-y-1/2 z-50 flex items-center">
 
-    <div id="side-search-bar" class="relative">
-        <input type="text" placeholder="Ketik pencarian..."
-            class="w-full bg-white/90 text-gray-800 placeholder-gray-500 rounded-full pl-5 pr-12 py-3 focus:outline-none focus:ring-2 focus:ring-[#CCFF00]">
-        <button type="submit"
-            class="absolute right-2 top-1/2 -translate-y-1/2 bg-[#CCFF00] text-[#006FFF] p-2 rounded-full hover:bg-yellow-400 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24"
-                stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-        </button>
+    {{-- Menu Mobile --}}
+    <div id="mobile-menu" class="hidden md:hidden bg-[#0044A9]/50">
+        <div class="px-4 pt-4 pb-3 space-y-2">
+            <a href="{{ url('/') }}"
+                class="block rounded-md px-3 py-2 text-base font-semibold
+                {{ request()->url() == url('/') ? 'bg-lime-400 text-blue-600' : 'text-white hover:text-blue-600  hover:bg-lime-400' }}">
+                Beranda
+            </a>
+
+            {{-- Loop Menu Mobile menggunakan Alpine --}}
+            @foreach ($menus as $menu)
+                @php
+                    $isActive = isset($menu['route'])
+                        ? Route::currentRouteName() === $menu['route']
+                        : request()->url() == ($menu['url'] ?? '');
+                    $menuUrl = isset($menu['route']) ? route($menu['route']) : $menu['url'] ?? '#';
+                @endphp
+
+                @if (isset($menu['submenu']))
+                    <div x-data="{ open: false }" class="md:hidden">
+                        <button @click.stop="open = !open"
+                            class="w-full flex justify-between items-center px-3 py-2 rounded-md text-white text-base font-medium hover:text-blue-600  hover:bg-lime-400 ">
+                            <span>{{ $menu['label'] }}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" :class="open ? 'rotate-180 transform' : ''"
+                                class="h-5 w-5 transition-transform duration-200" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+
+                        <div x-show="open" x-transition:enter="transition ease-out duration-150"
+                            x-transition:enter-start="opacity-0 -translate-y-2"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-100"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 -translate-y-2"
+                            class="pl-6 space-y-1 bg-white p-3 rounded-lg">
+                            @foreach ($menu['submenu'] as $submenu)
+                                @php
+                                    $submenuUrl = $submenu['url'] ?? '#';
+                                    $submenuActive = request()->is(ltrim($submenuUrl, '/'));
+                                @endphp
+                                <a href="{{ $submenu['url'] }}"
+                                    class="block px-3 py-2 text-sm  {{ $submenuActive ? 'bg-lime-400 ' : 'hover:bg-[#CCFF00]' }} rounded-md">
+                                    {{ $submenu['label'] }}
+                                </a>
+                            @endforeach
+
+                        </div>
+                    </div>
+                @else
+                    <a href="{{ $menuUrl }}"
+                        class="block rounded-md px-3 py-2 text-base font-medium {{ $isActive ? 'bg-lime-400 text-blue-600' : 'text-white hover:text-blue-600 hover:bg-lime-400' }}">
+                        {{ $menu['label'] }}
+                    </a>
+                @endif
+            @endforeach
+
+            {{-- Login / Dashboard --}}
+            @guest
+                <a href="{{ route('login') }}"
+                    class="block w-full bg-lime-400 text-blue-600 px-3 py-2 rounded-md text-base font-semibold hover:text-blue-600  hover:bg-lime-500">
+                    Login
+                </a>
+            @else
+                <a href="{{ route('home') }}"
+                    class="block w-full bg-lime-400 text-blue-600 px-3 py-2 rounded-md text-base font-semibold hover:bg-lime-500">
+                    Dashboard
+                </a>
+            @endguest
+        </div>
     </div>
-
+</nav>
+<div id="side-nav" class="hidden md:flex fixed top-1/2 right-4 transform -translate-y-1/2 z-50 items-center">
     <div class="flex flex-col items-center space-y-2 bg-white/20 backdrop-blur-md p-2 rounded-full shadow-lg ml-2">
-
         <button id="toggle-search-btn"
             class="group relative flex justify-center items-center w-12 h-12 bg-white text-blue-600 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24"
                 stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <span
                 class="absolute right-full mr-3 px-3 py-1.5 bg-gray-800 text-white text-xs font-semibold rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                 Pencarian
             </span>
         </button>
-
         <a href="#"
             class="group relative flex justify-center items-center w-12 h-12 bg-white text-blue-600 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24"
@@ -207,33 +253,18 @@
         </a>
     </div>
 </div>
-@push('scripts')
-    <script>
-        /* === SIDE NAV SELALU MUNCUL === */
-        document.addEventListener('DOMContentLoaded', () => {
-            const sideNav = document.getElementById('side-nav');
-            if (sideNav) sideNav.classList.add('visible');
+{{-- Script toggle mobile menu --}}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const btn = document.getElementById("mobile-menu-button");
+        const menu = document.getElementById("mobile-menu");
+        const iconOpen = document.getElementById("icon-open");
+        const iconClose = document.getElementById("icon-close");
+
+        btn.addEventListener("click", () => {
+            menu.classList.toggle("hidden");
+            iconOpen.classList.toggle("hidden");
+            iconClose.classList.toggle("hidden");
         });
-    </script>
-
-    <script>
-        /* === SIDE SEARCH TOGGLE === */
-        document.addEventListener('DOMContentLoaded', () => {
-            const toggleButton = document.getElementById('toggle-search-btn');
-            const searchBar = document.getElementById('side-search-bar');
-            const searchInput = searchBar.querySelector('input');
-
-            toggleButton.addEventListener('click', (event) => {
-                event.stopPropagation();
-                searchBar.classList.toggle('visible');
-                if (searchBar.classList.contains('visible')) searchInput.focus();
-            });
-
-            document.addEventListener('click', (event) => {
-                if (!searchBar.contains(event.target) && !toggleButton.contains(event.target)) {
-                    searchBar.classList.remove('visible');
-                }
-            });
-        });
-    </script>
-@endpush
+    });
+</script>

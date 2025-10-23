@@ -7,27 +7,41 @@
     {{-- navbar --}}
     {{-- <x-landing.navbar></x-landing.navbar> --}}
     @php
+        $kategoriDocuments = \App\Models\KategoriDocument::orderBy('id', 'asc')->get();
+        $productMenus = [];
+
+        if ($kategoriDocuments->isNotEmpty()) {
+            foreach ($kategoriDocuments as $kategori) {
+                $productMenus[] = [
+                    'label' => $kategori->nama_kategori,
+                    'url' => route('documents.by_category', [
+                        'kategori' => $kategori->id,
+                        'slug' => Str::slug($kategori->nama_kategori),
+                    ]),
+                ];
+            }
+        } else {
+            // Jika kosong, bisa beri placeholder atau biarkan array kosong
+            $productMenus[] = [
+                'label' => 'Tidak ada kategori',
+                'url' => '#',
+            ];
+        }
+
         $menus = [
-            ['label' => 'Beranda', 'url' => url('/')],
             [
                 'label' => 'Tentang',
                 'submenu' => [
-                    ['label' => 'Visi & Misi', 'url' => '#'],
-                    ['label' => 'Struktur Organisasi', 'url' => '#'],
-                    ['label' => 'Sejarah Bapperida', 'url' => '#'],
-                    ['label' => 'Tugas & Fungsi', 'url' => '#'],
-                    ['label' => 'Profil Pegawai', 'url' => '#'],
+                    ['label' => 'Visi & Misi', 'url' => '/visi-misi'],
+                    ['label' => 'Struktur Organisasi', 'url' => '/struktur-organisasi'],
+                    ['label' => 'Sejarah Bapperida', 'url' => '/sejarah'],
+                    ['label' => 'Tugas & Fungsi', 'url' => '/tugas-fungsi'],
+                    ['label' => 'Profil Pegawai', 'url' => '/pegawai'],
                 ],
             ],
             [
                 'label' => 'Produk',
-                'submenu' => [
-                    ['label' => 'RKPD n-1', 'url' => '#'],
-                    ['label' => 'RPJMD', 'url' => '#'],
-                    ['label' => 'RPJPD', 'url' => '#'],
-                    ['label' => 'LKPJ', 'url' => '#'],
-                    ['label' => 'Dokumen Lainnya', 'url' => '#'],
-                ],
+                'submenu' => $productMenus,
             ],
             [
                 'label' => 'PPM',
@@ -46,6 +60,7 @@
                 ],
             ],
             ['label' => 'Galeri', 'url' => '#'],
+            ['label' => 'Berita', 'route' => 'berita.public.home'],
         ];
     @endphp
     <x-landing.navbar :menus="$menus" />

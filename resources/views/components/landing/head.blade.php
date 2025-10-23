@@ -16,9 +16,11 @@
             }
         }
     </script>
+    <!-- Alpine.js v3 -->
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <style>
         /* Transisi halus untuk dropdown */
-        .group .dropdown {
+        /* .group .dropdown {
             opacity: 0;
             transform: scale(0.95);
             transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
@@ -29,7 +31,7 @@
             opacity: 1;
             transform: scale(1);
             pointer-events: auto;
-        }
+        } */
 
         /* Kelas untuk Animasi Scroll - PENYEMPURNAAN */
         .reveal-on-scroll {
@@ -61,9 +63,9 @@
         }
 
         /* Menerapkan animasi ke navbar */
-        #main-nav {
+        /* #main-nav {
             animation: slide-down 0.7s ease-in-out;
-        }
+        } */
 
         /* Mendefinisikan animasi bernama "fadeInUp" */
         @keyframes fadeInUp {
