@@ -78,22 +78,22 @@
                 <div class="text-white">
                     <h3 class="text-lg font-semibold mb-6">Tentang</h3>
                     <ul class="space-y-2">
-                        <li><a href="{{ url('/visi-misi') }}"
+                        <li><a href="{{ url('/about/visi-misi') }}"
                                 class="text-blue-100 hover:text-white transition-colors text-sm">Visi dan
                                 Misi</a>
                         </li>
-                        <li><a href="{{ url('/struktur-organisasi') }}"
+                        <li><a href="{{ url('/about/struktur-organisasi') }}"
                                 class="text-blue-100 hover:text-white transition-colors text-sm">Struktur
                                 Organisasi</a></li>
-                        <li><a href="{{ url('/sejarah') }}"
+                        <li><a href="{{ url('/about/sejarah') }}"
                                 class="text-blue-100 hover:text-white transition-colors text-sm">Sejarah
                                 Bapperida</a>
                         </li>
-                        <li><a href="{{ url('/tugas-fungsi') }}"
+                        <li><a href="{{ url('/about/tugas-fungsi') }}"
                                 class="text-blue-100 hover:text-white transition-colors text-sm">Tugas dan
                                 Fungsi
                             </a></li>
-                        <li><a href="{{ url('/pegawai') }}"
+                        <li><a href="{{ url('/about/pegawai') }}"
                                 class="text-blue-100 hover:text-white transition-colors text-sm">Profil
                                 Pegawai
                             </a></li>

@@ -1,30 +1,8 @@
 <x-landing.layout>
-    {{-- Bagian tombol tab Berita/Informasi --}}
-    <section class="flex w-full items-center justify-center p-8 -mt-[450px]">
-        <div class="flex justify-center items-center mb-8">
-            <div class="inline-flex items-center bg-[#0044A9] rounded-full p-1">
-                <button id="tab-berita"
-                    class="tab-button bg-[#CBFE04] text-black text-base font-semibold rounded-full px-8 py-2 transition-colors duration-300 focus:outline-none">
-                    Berita
-                </button>
-                <button id="tab-informasi"
-                    class="tab-button text-white text-base font-semibold rounded-full px-8 py-2 transition-colors duration-300 focus:outline-none">
-                    Informasi
-                </button>
-            </div>
-        </div>
-    </section>
-    <div class="hidden lg:block flex-1 mx-8">
-        <div class="h-px bg-gradient-to-r from-transparent via-blue-800/30 to-transparent"></div>
-    </div>
-
     {{-- Bagian daftar berita --}}
-    <section class="py-16 px-4 md:px-8 lg:px-16 -mt-[50px]">
+    <section id="first-section" class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-[300px]">
         <div class="max-w-7xl mx-auto">
-            <h2 class="text-4xl font-bold text-gray-800 mb-12">Berita</h2>
-
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
                 {{-- Perulangan untuk menampilkan setiap berita --}}
                 @forelse ($beritas as $berita)
                     <div
@@ -80,7 +58,7 @@
                 @empty
                     {{-- Pesan jika tidak ada berita --}}
                     <div class="col-span-1 md:col-span-2 lg:col-span-3 text-center py-16">
-                        <p class="text-gray-500 text-lg">Saat ini belum ada berita yang dipublikasikan.</p>
+                        <p class="text-gray-500 text-lg">Saat ini belum ada kontent yang dipublikasikan.</p>
                     </div>
                 @endforelse
 

@@ -334,25 +334,20 @@
                 <h2 class="text-3xl font-bold text-[#004299]">Statistik Pengunjung</h2>
                 <div class="w-24 h-1 bg-[#CCFF00] mx-auto mt-4 rounded-full"></div>
             </div>
-            <div class="mt-16 grid grid-cols-1 gap-x-8 gap-y-16 text-center sm:grid-cols-2 lg:grid-cols-4">
+            <div class="mt-16 grid grid-cols-1 gap-x-8 gap-y-16 text-center sm:grid-cols-2 lg:grid-cols-3">
 
                 <div class="flex flex-col gap-y-4">
-                    <p class="text-5xl font-bold tracking-tight text-blue-600">6,353</p>
+                    <p class="text-5xl font-bold tracking-tight text-blue-600">{{ number_format($pageView) }}</p>
                     <p class="text-sm font-semibold leading-6 text-gray-600 uppercase">Jumlah Pengunjung</p>
                 </div>
 
                 <div class="flex flex-col gap-y-4">
-                    <p class="text-5xl font-bold tracking-tight text-blue-600">3,500</p>
+                    <p class="text-5xl font-bold tracking-tight text-blue-600">{{ number_format($pageViewToday) }}</p>
                     <p class="text-sm font-semibold leading-6 text-gray-600 uppercase">Pengunjung Hari Ini</p>
                 </div>
 
                 <div class="flex flex-col gap-y-4">
-                    <p class="text-5xl font-bold tracking-tight text-blue-600">1,007</p>
-                    <p class="text-sm font-semibold leading-6 text-gray-600 uppercase">Pengunjung Aktif</p>
-                </div>
-
-                <div class="flex flex-col gap-y-4">
-                    <p class="text-5xl font-bold tracking-tight text-blue-600">3,993</p>
+                    <p class="text-5xl font-bold tracking-tight text-blue-600">{{ number_format($pageViewUrl) }}</p>
                     <p class="text-sm font-semibold leading-6 text-gray-600 uppercase">Jumlah Halaman
                         Dikunjungi</p>
                 </div>

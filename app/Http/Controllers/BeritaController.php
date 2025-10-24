@@ -178,20 +178,13 @@ class BeritaController extends Controller
                     $captionToSave = $itemData['caption'] ?? null;
 
                     if ($itemData['type'] === 'image') {
-                        // Cek apakah ada file baru yang diupload untuk item gambar ini
                         if ($request->hasFile("items.{$index}.file")) {
-                            // Upload file baru
                             $contentToSave = $request->file("items.{$index}.file")->store('berita/items', 'public');
-                            // Hapus gambar lama dari storage jika ada dan bukan gambar yang baru diupload
                             if (in_array($itemData['content'], $oldImagePaths) && $itemData['content'] !== $contentToSave) {
                                 Storage::disk('public')->delete($itemData['content']);
                             }
                         } else {
-                            // Jika tidak ada upload file baru, gunakan content yang sudah ada (path gambar lama)
-                            // Jika content kosong, berarti user ingin menghapus gambar
                             if (empty($contentToSave)) {
-                                // Jika tidak ada content lama, dan tidak ada file baru, berarti gambar dihapus
-                                // Pastikan untuk menghapus file lama dari storage jika ada
                                 if (in_array($itemData['content'], $oldImagePaths)) {
                                     Storage::disk('public')->delete($itemData['content']);
                                 }
@@ -209,7 +202,6 @@ class BeritaController extends Controller
                 }
             }
 
-            // Hapus gambar lama yang tidak lagi ada di item-item baru
             foreach ($oldImagePaths as $oldPath) {
                 if ($oldPath && !BeritaItem::where('content', $oldPath)->exists()) {
                     Storage::disk('public')->delete($oldPath);
@@ -226,19 +218,17 @@ class BeritaController extends Controller
     public function destroy(Berita $berita)
     {
         DB::transaction(function () use ($berita) {
-            // 1. Hapus cover image
+
             if ($berita->cover_image) {
                 Storage::disk('public')->delete($berita->cover_image);
             }
 
-            // 2. Hapus semua gambar dari berita_items
             foreach ($berita->items as $item) {
                 if ($item->type === 'image' && $item->content) {
                     Storage::disk('public')->delete($item->content);
                 }
             }
 
-            // 3. Hapus record berita (items akan terhapus otomatis karena 'onDelete: cascade')
             $berita->delete();
         });
 
@@ -247,12 +237,10 @@ class BeritaController extends Controller
 
     public function home()
     {
-        // Ambil semua berita yang statusnya 'published'
-        // Urutkan dari yang terbaru
-        // Eager load relasi 'author' untuk efisiensi query
-        // Tampilkan 6 berita per halaman
+
         $beritas = Berita::with('author')
             ->where('status', 'published')
+            ->where('page', 'berita')
             ->latest()
             ->paginate(6);
 
@@ -265,21 +253,19 @@ class BeritaController extends Controller
      */
     public function show(Berita $berita)
     {
-        // Pastikan hanya berita yang statusnya 'published' yang bisa diakses publik.
-        // Jika tidak, tampilkan halaman 404 Not Found.
+
         if ($berita->status !== 'published') {
             abort(404);
         }
 
-        // Ambil 3 berita terbaru lainnya (selain berita yang sedang dibuka)
-        // untuk ditampilkan di bagian "Baca Juga".
+
         $beritaTerkait = Berita::where('status', 'published')
-            ->where('id', '!=', $berita->id) // Exclude the current article
+            ->where('id', '!=', $berita->id)
+            ->where('page', 'berita')
             ->latest()
             ->take(3)
             ->get();
 
-        // Kirim data berita utama dan berita terkait ke view.
         return view('landing_page.berita_detail', compact('berita', 'beritaTerkait'));
     }
 }

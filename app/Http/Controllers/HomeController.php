@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Berita;
 use App\Models\KategoriDocument;
 use Illuminate\Http\Request;
 
@@ -48,5 +49,40 @@ class HomeController extends Controller
     public function visiMisi()
     {
         return view('landing_page.about.visi_misi');
+    }
+    // riset dan inovasi
+    public function riset()
+    {
+        $beritas = Berita::with('author')
+            ->where('status', 'published')
+            ->where('page', 'inovasi_riset')
+            ->latest()
+            ->paginate(6);
+
+        return view('landing_page.inovasi.riset', compact('beritas'));
+    }
+    public function inovasi()
+    {
+        return view('landing_page.inovasi.inovasi');
+    }
+    public function data()
+    {
+        $beritas = Berita::with('author')
+            ->where('status', 'published')
+            ->where('page', 'inovasi_data')
+            ->latest()
+            ->paginate(6);
+
+        return view('landing_page.inovasi.data', compact('beritas'));
+    }
+    public function kekayaanIntelektual()
+    {
+        $beritas = Berita::with('author')
+            ->where('status', 'published')
+            ->where('page', 'inovasi_kekayaan_intelektual')
+            ->latest()
+            ->paginate(6);
+
+        return view('landing_page.inovasi.kekayaan_intelektual', compact('beritas'));
     }
 }

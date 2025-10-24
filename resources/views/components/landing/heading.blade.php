@@ -19,39 +19,67 @@
                      'Dapatkan informasi terbaru mengenai kegiatan, program, dan inovasi dari BAPPERIDA Kabupaten Merauke.',
              ],
              [
-                 'routes' => ['struktur-organisasi'],
+                 'routes' => ['about.struktur-organisasi'],
                  'title' => 'Struktur Organisasi',
                  'subtitle' => 'Struktur Organisasi BAPPERIDA',
                  'description' =>
                      'Kenali struktur organisasi BAPPERIDA Kabupaten Merauke untuk memahami peran dan tanggung jawab setiap unit kerja dalam mendukung pembangunan daerah.',
              ],
              [
-                 'routes' => ['pegawai'],
+                 'routes' => ['about.pegawai'],
                  'title' => 'Daftar Pegawai',
                  'subtitle' => 'Daftar Pegawai BAPPERIDA',
                  'description' =>
                      'Temui tim profesional di balik BAPPERIDA Kabupaten Merauke yang berdedikasi untuk perencanaan dan pembangunan daerah.',
              ],
              [
-                 'routes' => ['sejarah'],
+                 'routes' => ['about.sejarah'],
                  'title' => 'Sejarah',
                  'subtitle' => 'Sejarah BAPPERIDA',
                  'description' =>
                      'Pelajari perjalanan sejarah BAPPERIDA Kabupaten Merauke dalam mendukung pembangunan daerah dari masa ke masa.',
              ],
              [
-                 'routes' => ['tugas-fungsi'],
+                 'routes' => ['about.tugas-fungsi'],
                  'title' => 'Tugas dan Fungsi',
                  'subtitle' => 'Tugas dan Fungsi BAPPERIDA',
                  'description' =>
                      'Pahami tugas dan fungsi utama BAPPERIDA Kabupaten Merauke dalam perencanaan pembangunan daerah yang berkelanjutan.',
              ],
              [
-                 'routes' => ['visi-misi'],
+                 'routes' => ['about.visi-misi'],
                  'title' => 'Visi dan Misi',
                  'subtitle' => 'Visi dan Misi BAPPERIDA',
                  'description' =>
                      'Jelajahi visi dan misi BAPPERIDA Kabupaten Merauke dalam mewujudkan pembangunan daerah yang inklusif dan berkelanjutan.',
+             ],
+             [
+                 'routes' => ['riset-inovasi.riset'],
+                 'title' => 'Publikasi Riset',
+                 'subtitle' => 'Data Publikasi Riset oleh BAPPERIDA',
+                 'description' =>
+                     'Temukan berbagai publikasi riset yang dihasilkan oleh BAPPERIDA Kabupaten Merauke untuk mendukung pembangunan daerah.',
+             ],
+             [
+                 'routes' => ['riset-inovasi.inovasi'],
+                 'title' => 'Pengajuan Inovasi',
+                 'subtitle' => 'Pengajuan Proposal Inovasi ke BAPPERIDA',
+                 'description' =>
+                     'Ajukan proposal inovasi Anda kepada BAPPERIDA Kabupaten Merauke untuk mendukung pembangunan daerah yang lebih baik.',
+             ],
+             [
+                 'routes' => ['riset-inovasi.data'],
+                 'title' => 'Data Riset dan Inovasi',
+                 'subtitle' => 'Data Riset dan Inovasi oleh BAPPERIDA',
+                 'description' =>
+                     'Akses berbagai data riset dan inovasi yang dikumpulkan oleh BAPPERIDA Kabupaten Merauke untuk mendukung pembangunan daerah.',
+             ],
+             [
+                 'routes' => ['riset-inovasi.kekayaan-intelektual'],
+                 'title' => 'Kekayaan Intelektual',
+                 'subtitle' => 'Kekayaan Intelektual oleh BAPPERIDA',
+                 'description' =>
+                     'Jelajahi berbagai kekayaan intelektual yang dimiliki oleh BAPPERIDA Kabupaten Merauke dalam mendukung pembangunan daerah.',
              ],
          ];
 

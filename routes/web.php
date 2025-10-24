@@ -36,12 +36,19 @@ Route::get('img/{path}', function ($path) {
 // })->name('welcome');
 
 Route::get('/', [HomeController::class, 'index'])->name('welcome');
-Route::get('/pegawai', [HomeController::class, 'pegawai'])->name('pegawai');
-Route::get('/sejarah', [HomeController::class, 'sejarah'])->name('sejarah');
-Route::get('/tugas-fungsi', [HomeController::class, 'tugasFungsi'])->name('tugas-fungsi');
-Route::get('/struktur-organisasi', [HomeController::class, 'strukturOrganisasi'])->name('struktur-organisasi');
-Route::get('/visi-misi', [HomeController::class, 'visiMisi'])->name('struktur-organisasi');
-
+Route::prefix('about')->name('about.')->group(function () {
+  Route::get('/pegawai', [HomeController::class, 'pegawai'])->name('pegawai');
+  Route::get('/sejarah', [HomeController::class, 'sejarah'])->name('sejarah');
+  Route::get('/tugas-fungsi', [HomeController::class, 'tugasFungsi'])->name('tugas-fungsi');
+  Route::get('/struktur-organisasi', [HomeController::class, 'strukturOrganisasi'])->name('struktur-organisasi');
+  Route::get('/visi-misi', [HomeController::class, 'visiMisi'])->name('visi-misi');
+});
+Route::prefix('riset-inovasi')->name('riset-inovasi.')->group(function () {
+  Route::get('/data', [HomeController::class, 'data'])->name('data');
+  Route::get('/riset', [HomeController::class, 'riset'])->name('riset');
+  Route::get('/inovasi', [HomeController::class, 'inovasi'])->name('inovasi');
+  Route::get('/kekayaan-intelektual', [HomeController::class, 'kekayaanIntelektual'])->name('kekayaan-intelektual');
+});
 
 Route::get('/berita', [BeritaController::class, 'home'])->name('berita.public.home');
 Route::get('/berita/{berita:slug}', [BeritaController::class, 'show'])->name('berita.public.show');

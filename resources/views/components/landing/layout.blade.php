@@ -32,11 +32,11 @@
             [
                 'label' => 'Tentang',
                 'submenu' => [
-                    ['label' => 'Visi & Misi', 'url' => '/visi-misi'],
-                    ['label' => 'Struktur Organisasi', 'url' => '/struktur-organisasi'],
-                    ['label' => 'Sejarah Bapperida', 'url' => '/sejarah'],
-                    ['label' => 'Tugas & Fungsi', 'url' => '/tugas-fungsi'],
-                    ['label' => 'Profil Pegawai', 'url' => '/pegawai'],
+                    ['label' => 'Visi & Misi', 'url' => '/about/visi-misi'],
+                    ['label' => 'Struktur Organisasi', 'url' => '/about/struktur-organisasi'],
+                    ['label' => 'Sejarah Bapperida', 'url' => '/about/sejarah'],
+                    ['label' => 'Tugas & Fungsi', 'url' => '/about/tugas-fungsi'],
+                    ['label' => 'Profil Pegawai', 'url' => '/about/pegawai'],
                 ],
             ],
             [
@@ -49,7 +49,12 @@
             ],
             [
                 'label' => 'Riset & Inovasi',
-                'submenu' => [['label' => 'Riset', 'url' => '#'], ['label' => 'Inovasi', 'url' => '#']],
+                'submenu' => [
+                    ['label' => 'Riset', 'url' => '/riset-inovasi/riset'],
+                    ['label' => 'Inovasi', 'url' => '/riset-inovasi/inovasi'],
+                    ['label' => 'Data', 'url' => '/riset-inovasi/data'],
+                    ['label' => 'Kekayaan Intelektual', 'url' => '/riset-inovasi/kekayaan-intelektual'],
+                ],
             ],
             [
                 'label' => 'Eko-Fispor',
