@@ -137,59 +137,58 @@ class BeritaController extends Controller
             'status' => 'required|in:published,draft',
             'items' => 'sometimes|array',
             'items.*.type' => 'required|in:text,image,video,embed,quote',
-            'items.*.content' => 'nullable|string', // Path lama gambar atau konten teks/URL
-            'items.*.file' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:2048', // Upload file baru
-            'items.*.caption' => 'nullable|string|max:255', // Caption untuk gambar
+            'items.*.content' => 'nullable|string',
+            'items.*.file' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:2048',
+            'items.*.caption' => 'nullable|string|max:255',
             'items.*.position' => 'required|integer',
         ]);
 
         DB::transaction(function () use ($validatedData, $request, $berita) {
             $updateData = [
                 'title' => $validatedData['title'],
-                // Regenerate slug to ensure uniqueness if title changes
                 'slug' => Str::slug($validatedData['title']) . '-' . Str::random(5),
                 'excerpt' => $validatedData['excerpt'],
                 'status' => $validatedData['status'],
             ];
 
-            // 1. Handle update cover image jika ada yang baru
             if ($request->hasFile('cover_image')) {
-                // Hapus gambar lama jika ada
                 if ($berita->cover_image) {
                     Storage::disk('public')->delete($berita->cover_image);
                 }
                 $updateData['cover_image'] = $request->file('cover_image')->store('berita/covers', 'public');
             }
 
-            // 2. Update record Berita utama
             $berita->update($updateData);
 
-            // 3. Sinkronisasi item berita:
-            // Ambil path gambar lama untuk item yang akan dihapus dari DB
-            $oldImagePaths = $berita->items->where('type', 'image')->pluck('content')->toArray();
+            $oldImagePaths = $berita->items->where('type', 'image')->pluck('content')->filter()->toArray(); // filter() untuk menghapus null/empty
 
-            // Hapus semua item lama dari berita ini
             $berita->items()->delete();
 
-            // Buat ulang item-item berdasarkan data form baru
             if (isset($validatedData['items'])) {
                 foreach ($validatedData['items'] as $index => $itemData) {
-                    $contentToSave = $itemData['content'] ?? null; // Ini akan berisi path lama jika ada
+                    // Gunakan null coalescing ?? untuk default value
+                    $contentToSave = $itemData['content'] ?? null;
                     $captionToSave = $itemData['caption'] ?? null;
+                    $oldContentPath = $itemData['content'] ?? null; // Simpan path lama sebelum ditimpa
 
                     if ($itemData['type'] === 'image') {
                         if ($request->hasFile("items.{$index}.file")) {
                             $contentToSave = $request->file("items.{$index}.file")->store('berita/items', 'public');
-                            if (in_array($itemData['content'], $oldImagePaths) && $itemData['content'] !== $contentToSave) {
-                                Storage::disk('public')->delete($itemData['content']);
+
+                            // PERBAIKAN 1: Cek apakah oldContentPath ada sebelum digunakan
+                            if (!empty($oldContentPath) && in_array($oldContentPath, $oldImagePaths) && $oldContentPath !== $contentToSave) {
+                                Storage::disk('public')->delete($oldContentPath);
                             }
                         } else {
+                            // Jika tidak ada file baru DAN path lama kosong (misal item baru ditambahkan), content tetap null
                             if (empty($contentToSave)) {
-                                if (in_array($itemData['content'], $oldImagePaths)) {
-                                    Storage::disk('public')->delete($itemData['content']);
+                                // PERBAIKAN 2: Cek apakah oldContentPath ada sebelum digunakan
+                                if (!empty($oldContentPath) && in_array($oldContentPath, $oldImagePaths)) {
+                                    Storage::disk('public')->delete($oldContentPath);
                                 }
                                 $contentToSave = null;
                             }
+                            // Jika tidak ada file baru TAPI path lama ADA, contentToSave sudah berisi path lama dari awal, tidak perlu diubah.
                         }
                     }
 
@@ -202,8 +201,10 @@ class BeritaController extends Controller
                 }
             }
 
+            // Hapus gambar lama yang tidak lagi direferensikan oleh item BARU
+            $newItemImagePaths = $berita->items()->where('type', 'image')->pluck('content')->filter()->toArray();
             foreach ($oldImagePaths as $oldPath) {
-                if ($oldPath && !BeritaItem::where('content', $oldPath)->exists()) {
+                if ($oldPath && !in_array($oldPath, $newItemImagePaths)) {
                     Storage::disk('public')->delete($oldPath);
                 }
             }
@@ -244,7 +245,7 @@ class BeritaController extends Controller
             ->latest()
             ->paginate(6);
 
-        return view('landing_page.berita', compact('beritas'));
+        return view('landing_page.berita.berita', compact('beritas'));
     }
 
     /**
@@ -266,6 +267,7 @@ class BeritaController extends Controller
             ->take(3)
             ->get();
 
-        return view('landing_page.berita_detail', compact('berita', 'beritaTerkait'));
+        // Kirim data berita utama dan berita terkait ke view.
+        return view('landing_page.berita.berita_detail', compact('berita', 'beritaTerkait'));
     }
 }

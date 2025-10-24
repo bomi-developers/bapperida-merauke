@@ -110,11 +110,23 @@
                             {{-- Tutup div flex untuk video sebelum menampilkan embed kustom, lalu buka lagi setelahnya jika ada video lagi --}}
                         </div>
                         <div class="my-8 w-full flex justify-center"> {{-- Menambahkan flex justify-center untuk menengahkan embed kustom --}}
-                            <div class="max-w-xl w-full"> {{-- Menambahkan max-w untuk kontrol lebar embed kustom --}}
+                            <div class="max-w-sm w-full"> {{-- Menambahkan max-w untuk kontrol lebar embed kustom --}}
                                 {!! $item->content !!}
                             </div>
                         </div>
                         <div class="flex flex-wrap justify-center gap-8 my-6">
+                        @break
+
+                        @case('image')
+                            <figure class="my-8">
+                                <img src="{{ asset('storage/' . $item->content) }}"
+                                    alt="{{ $item->caption ?: $berita->title }}"
+                                    class="w-full max-w-3xl mx-auto rounded-lg shadow-md object-contain" style="height:25rem">
+                                @if (!empty($item->caption))
+                                    <figcaption class="text-center text-sm text-gray-500 mt-2">{{ $item->caption }}
+                                    </figcaption>
+                                @endif
+                            </figure>
                         @break
 
                         {{-- Tipe 'image' sudah ditampilkan di carousel, jadi kita abaikan di sini --}}

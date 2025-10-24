@@ -30,14 +30,15 @@
                 [
                     'title' => 'Information',
                     'items' => [
-                        ['label' => 'Berita', 'icon' => 'bi bi-person-badge', 'route' => 'admin.berita.index'],
+                        ['label' => 'Berita', 'icon' => 'bi bi-person-lines-fill', 'route' => 'admin.berita.index'],
+                        ['label' => 'Galeri', 'icon' => 'bi bi-image', 'route' => 'admin.galeri.index'],
                     ],
                 ],
                 [
                     'title' => 'Document Management',
                     'items' => [
-                        ['label' => 'Kategori Dokumen', 'icon' => 'bi bi-person-badge', 'route' => 'admin.doctkategori.index'],
-                        ['label' => 'Dokumen', 'icon' => 'bi bi-person-badge', 'route' => 'admin.documents.index'],
+                        ['label' => 'Kategori Dokumen', 'icon' => 'bi bi-folder', 'route' => 'admin.doctkategori.index'],
+                        ['label' => 'Dokumen', 'icon' => 'bi bi-file-earmark', 'route' => 'admin.documents.index'],
                     ],
                 ],
                 [

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\BidangController;
+use App\Http\Controllers\GaleriController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ProfileDinasController;
 use App\Http\Controllers\KategoriDocumentController;
@@ -114,6 +115,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/document-kategori/{kategori}', [KategoriDocumentController::class, 'show'])->name('doctkategori.show');
     Route::put('/document-kategori/{kategori}', [KategoriDocumentController::class, 'update'])->name('doctkategori.update');
     Route::delete('/document-kategori/{kategori}', [KategoriDocumentController::class, 'destroy'])->name('doctkategori.destroy');
+    // galeri
+    Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri.index');
+    Route::post('/galeri', [GaleriController::class, 'store'])->name('galeri.store');
+    Route::get('/galeri/{galeri}', [GaleriController::class, 'show'])->name('galeri.show'); // Untuk AJAX edit
+    Route::put('/galeri/{galeri}', [GaleriController::class, 'update'])->name('galeri.update');
+    Route::delete('/galeri/{galeri}', [GaleriController::class, 'destroy'])->name('galeri.destroy');
     // logs login
     Route::get('login-logs', [PagesController::class, 'loginLogs'])->name('login-logs');
     Route::get('activity-logs', [PagesController::class, 'activityLogs'])->name('activity-logs');

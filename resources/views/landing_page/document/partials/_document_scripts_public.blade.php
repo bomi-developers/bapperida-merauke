@@ -108,17 +108,17 @@
                     showLainnyaWrapper.classList.remove('hidden');
                     let html = '';
                     if (lainnyaDataToShow.visi) html +=
-                        `<div><h5 class="font-semibold text-blue-400">Visi</h5><p class="mt-1 text-slate-300">${lainnyaDataToShow.visi}</p></div>`;
+                        `<div><h5 class="font-semibold text-gray-900">Visi</h5><p class="mt-1 text-slate-600">${lainnyaDataToShow.visi}</p></div>`;
                     if (lainnyaDataToShow.misi && lainnyaDataToShow.misi.length > 0) {
                         html +=
-                            `<div><h5 class="font-semibold text-blue-400">Misi</h5><ul class="list-decimal list-inside mt-2 space-y-1 text-slate-300">`;
+                            `<div><h5 class="font-semibold text-gray-900">Misi</h5><ul class="list-decimal list-inside mt-2 space-y-1 text-slate-600">`;
                         lainnyaDataToShow.misi.forEach(m => {
                             html += `<li>${m}</li>`;
                         });
                         html += `</ul></div>`;
                     }
                     if (lainnyaDataToShow.keterangan) html +=
-                        `<div><h5 class="font-semibold text-blue-400">Keterangan</h5><p class="mt-1 text-slate-300 whitespace-pre-wrap">${lainnyaDataToShow.keterangan}</p></div>`;
+                        `<div><h5 class="font-semibold text-gray-900">Keterangan</h5><p class="mt-1 text-slate-600 whitespace-pre-wrap">${lainnyaDataToShow.keterangan}</p></div>`;
                     showLainnyaContainer.innerHTML = html;
                 } else {
                     showLainnyaWrapper.classList.add('hidden');
