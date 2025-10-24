@@ -95,13 +95,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile-dinas', [ProfileDinasController::class, 'index'])->name('profile-dinas');
     Route::post('/profile-dinas', [ProfileDinasController::class, 'store'])->name('profile-dinas.store');
     // berita
-    Route::get('berita', [\App\Http\Controllers\HomeController::class, 'index'])->name('berita.index');
-    Route::get('berita/create', [\App\Http\Controllers\HomeController::class, 'create'])->name('berita.create');
-    Route::post('berita', [\App\Http\Controllers\HomeController::class, 'store'])->name('berita.store');
-    Route::get('berita/{berita}/edit', [\App\Http\Controllers\HomeController::class, 'edit'])->name('berita.edit');
-    Route::put('berita/{berita}', [\App\Http\Controllers\HomeController::class, 'update'])->name('berita.update');
-    Route::delete('berita/{berita}', [\App\Http\Controllers\HomeController::class, 'destroy'])->name('berita.destroy');
-    Route::get('berita/search', [\App\Http\Controllers\HomeController::class, 'search'])->name('berita.search');
+    Route::get('berita', [\App\Http\Controllers\BeritaController::class, 'index'])->name('berita.index');
+    Route::get('berita/create', [\App\Http\Controllers\BeritaController::class, 'create'])->name('berita.create');
+    Route::post('berita', [\App\Http\Controllers\BeritaController::class, 'store'])->name('berita.store');
+    Route::get('berita/{berita}/edit', [\App\Http\Controllers\BeritaController::class, 'edit'])->name('berita.edit');
+    Route::put('berita/{berita}', [\App\Http\Controllers\BeritaController::class, 'update'])->name('berita.update');
+    Route::delete('berita/{berita}', [\App\Http\Controllers\BeritaController::class, 'destroy'])->name('berita.destroy');
+    Route::get('berita/search', [\App\Http\Controllers\BeritaController::class, 'search'])->name('berita.search');
     // document
     Route::get('documents', [DocumentController::class, 'index'])->name('documents.index');
     Route::post('documents', [DocumentController::class, 'store'])->name('documents.store');

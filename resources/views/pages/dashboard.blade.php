@@ -5,46 +5,17 @@
     <main class="flex-1 overflow-x-hidden overflow-y-auto bg-slate-100 dark:bg-slate-900 p-6">
         <!-- Stat Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
-            <div class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-transparent">
-                <div class="flex items-center justify-between">
-                    <div class="text-2xl text-indigo-400"><i class="bi bi-eye-fill"></i></div>
-                </div>
-                <h3 class="text-3xl font-bold mt-4 text-gray-900 dark:text-white">$3.456K</h3>
-                <div class="flex items-center justify-between text-sm mt-1"><span
-                        class="text-gray-500 dark:text-slate-400">Total Views</span><span
-                        class="text-green-500 flex items-center gap-1">0.43% <i class="bi bi-arrow-up"></i></span></div>
-            </div>
-            <div class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-transparent">
-                <div class="flex items-center justify-between">
-                    <div class="text-2xl text-indigo-400"><i class="bi bi-cart-fill"></i></div>
-                </div>
-                <h3 class="text-3xl font-bold mt-4 text-gray-900 dark:text-white">$45.2K</h3>
-                <div class="flex items-center justify-between text-sm mt-1"><span
-                        class="text-gray-500 dark:text-slate-400">Total Profit</span><span
-                        class="text-green-500 flex items-center gap-1">4.35% <i class="bi bi-arrow-up"></i></span></div>
-            </div>
-            <div class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-transparent">
-                <div class="flex items-center justify-between">
-                    <div class="text-2xl text-indigo-400"><i class="bi bi-bag-fill"></i></div>
-                </div>
-                <h3 class="text-3xl font-bold mt-4 text-gray-900 dark:text-white">2.450</h3>
-                <div class="flex items-center justify-between text-sm mt-1"><span
-                        class="text-gray-500 dark:text-slate-400">Total Product</span><span
-                        class="text-green-500 flex items-center gap-1">2.59% <i class="bi bi-arrow-up"></i></span></div>
-            </div>
-            <div class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-transparent">
-                <div class="flex items-center justify-between">
-                    <div class="text-2xl text-indigo-400"><i class="bi bi-people-fill"></i></div>
-                </div>
-                <h3 class="text-3xl font-bold mt-4 text-gray-900 dark:text-white">3.456</h3>
-                <div class="flex items-center justify-between text-sm mt-1"><span
-                        class="text-gray-500 dark:text-slate-400">Total Users</span><span
-                        class="text-red-500 flex items-center gap-1">0.95% <i class="bi bi-arrow-down"></i></span></div>
-            </div>
+            <x-card.card1 icon="bi-eye-fill" value="{{ number_format($pageView) }}" title="Total Views" change="" />
+            <x-card.card1 icon="bi-eye-fill" color="purple" value="{{ number_format($pageViewToday) }}"
+                title="Total Views Today" change="" />
+            <x-card.card1 icon="bi-eye-fill" color="purple" value="{{ number_format($pageViewUrl) }}"
+                title="Total Views URL" change="" />
+            <x-card.card1 icon="bi-newspaper" color="purple" value="{{ $beritaCount }}" title="Total News Published"
+                change="" />
         </div>
 
         <!-- Charts Section -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        {{-- <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
             <div
                 class="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-transparent">
                 <div class="flex justify-between items-center mb-4">
@@ -71,10 +42,10 @@
                     <p class="text-slate-500">Bar Chart</p>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Table and Chats Section -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {{-- <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div
                 class="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-transparent">
                 <h4 class="font-bold text-gray-900 dark:text-white mb-4">Top Channels</h4>
@@ -156,7 +127,7 @@
                         </div>
                     </a></div>
             </div>
-        </div>
+        </div> --}}
     </main>
     <!-- ===== Main Content End ===== -->
 </x-layout>

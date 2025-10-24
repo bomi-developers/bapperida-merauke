@@ -1,26 +1,18 @@
- <!-- Modal -->
- <div id="formModal" class="fixed inset-0 hidden bg-black/50 flex items-center justify-center z-50 backdrop-blur">
-     <div class="bg-white dark:bg-boxdark p-6 rounded shadow w-1/2 relative">
-         <h3 id="modalTitle" class="text-lg font-bold mb-4 dark:text-white">Tambah Golongan</h3>
-         <form id="formGolongan">
-             @csrf
-             <input type="hidden" id="golongan_id" name="id">
-
-             <div class="mb-3">
-                 <label for="golongan" class="text-sm dark:text-white">Golongan</label>
-                 <input type="text" id="golongan" name="golongan"
-                     class="w-full px-3 py-2 border rounded dark:border-strokedark 
-                               dark:bg-boxdark dark:text-white focus:ring-2 focus:ring-primary outline-none">
-             </div>
-
-             <div class="flex justify-end gap-2 mt-4">
-                 <button type="button" onclick="closeForm()" class="px-3 py-1 bg-danger text-white rounded">
-                     Batal
-                 </button>
-                 <button type="submit" class="px-3 py-1 bg-primary text-white rounded">
-                     Simpan
-                 </button>
-             </div>
-         </form>
-     </div>
- </div>
+<x-modal id="formModal" title="Tambah Golongan">
+    <form id="formGolongan" class="space-y-4">
+        @csrf
+        <input type="hidden" id="golongan_id" name="id">
+        <x-input label="Nama Golongan" id="golongan" name="golongan" type="text" />
+        <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <button type="button" onclick="closeForm()"
+                class="px-4 py-2 text-sm font-medium rounded-lg border border-gray-300 dark:border-gray-600
+                       text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                Batal
+            </button>
+            <button type="submit"
+                class="px-4 py-2 text-sm font-medium rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white transition">
+                Simpan
+            </button>
+        </div>
+    </form>
+</x-modal>

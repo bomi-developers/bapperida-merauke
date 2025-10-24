@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Berita;
 use App\Models\WebsiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -15,6 +16,7 @@ class PagesController extends Controller
     {
         $data = [
             'title' => 'Dashboard',
+            'beritaCount' => number_format(Berita::where('status', 'published')->where('page', 'berita')->count()),
         ];
         return view('pages.dashboard', $data);
     }

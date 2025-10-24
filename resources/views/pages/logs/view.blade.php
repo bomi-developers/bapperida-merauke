@@ -64,13 +64,26 @@
                     <!-- Search -->
                     <form method="GET" action="{{ route('admin.view-logs') }}"
                         class="flex w-full md:w-auto md:flex-grow gap-2">
-                        <input type="text" name="search" value="{{ $search ?? '' }}"
-                            placeholder="Cari URL, IP, User..."
-                            class="w-full px-3 py-1 text-sm rounded border border-gray-300 dark:border-gray-600 
-                            bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 
-                            focus:ring-2 focus:ring-indigo-500 outline-none transition-colors duration-200" />
+
+                        <div class="relative w-full">
+                            <!-- Icon Search -->
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="bi bi-search"></i>
+                            </span>
+
+                            <!-- Input -->
+                            <input type="text" name="search" value="{{ $search ?? '' }}"
+                                placeholder="Cari URL, IP, User..."
+                                class="w-full pl-9 pr-3 py-1 text-sm rounded border border-gray-300 dark:border-gray-600 
+                   bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 
+                   focus:ring-2 focus:ring-indigo-500 outline-none transition-colors duration-200" />
+                        </div>
+
+                        <!-- Tombol -->
                         <button type="submit"
-                            class="px-3 py-1 text-sm rounded bg-indigo-600 text-white hover:bg-indigo-700 transition">Cari</button>
+                            class="px-3 py-1 text-sm rounded bg-indigo-600 text-white hover:bg-indigo-700 transition">
+                            Cari
+                        </button>
                     </form>
 
                     <!-- Filter -->
