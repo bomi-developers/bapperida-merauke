@@ -6,13 +6,13 @@
                     <div class="mb-12">
                         <h2 class="text-4xl font-bold text-blue-800 sm:text-5xl">VISI</h2>
                         <p class="mt-4 text-lg text-gray-700 text-justify">
-                            {!! $ProfileDinas->visi !!}
+                            {!! $ProfileDinas->visi ?? '' !!}
                         </p>
                     </div>
                     <div>
                         <h2 class="text-4xl font-bold text-blue-800 sm:text-5xl">MISI</h2>
                         <div class="mt-6 space-y-6 text-lg leading-8 text-gray-700">
-                            {!! $ProfileDinas->misi !!}
+                            {!! $ProfileDinas->misi ?? '' !!}
                         </div>
                     </div>
                 </div>

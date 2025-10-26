@@ -33,7 +33,7 @@ class GaleriController extends Controller
             'keterangan' => 'nullable|string',
             'items' => 'required|array|min:1', // Ubah dari 'files' ke 'items'
             'items.*.type' => ['required', Rule::in(['image', 'video', 'video_url'])],
-            'items.*.file' => 'required_if:items.*.type,image,video|file|mimes:jpg,jpeg,png,webp,mp4,mov,avi,wmv|max:51200', // Wajib jika tipe file
+            'items.*.file' => 'required_if:items.*.type,image,video|file|mimes:jpg,jpeg,png,webp,mp4,mov,avi,wmv,JPG|max:51200', // Wajib jika tipe file
             'items.*.url' => 'required_if:items.*.type,video_url|url', // Wajib jika tipe URL
             'items.*.caption' => 'nullable|string|max:255', // Caption opsional
         ], [

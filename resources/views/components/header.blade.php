@@ -181,6 +181,11 @@
                 url: "/admin/berita"
             },
             {
+                icon: "bi bi-image-fill",
+                name: "Galeri",
+                url: "/admin/galeri"
+            },
+            {
                 icon: "bi bi-folder-fill",
                 name: "Bidang",
                 url: "/admin/bidang"
