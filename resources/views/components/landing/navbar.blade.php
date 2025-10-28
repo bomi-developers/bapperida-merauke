@@ -1,7 +1,7 @@
-<nav id="main-nav"
-    class="fixed top-0 left-0 right-0 z-50 py-3 backdrop-blur-md bg-[#0044A9]/50 border-b border-white/20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
+<nav id="main-nav" class="fixed top-0 left-0 right-0 z-50">
+    <div
+        class="w-full mx-auto px-4 sm:px-6 lg:px-8 hidden md:block bg-[#0044A9]/50 border-b border-white/20 backdrop-blur-sm">
+        <div class="flex items-center justify-between py-3 max-w-7xl mx-auto ">
             {{-- Logo --}}
             <a href="{{ url('/') }}" class="flex items-center space-x-3">
                 <img class="h-12 w-auto" src="{{ asset('assets/LogoKabMerauke.png') }}" alt="Logo BAPPERIDA"
@@ -95,7 +95,6 @@
                 @endforeach
             </div>
 
-            {{-- Tombol Login / Dashboard --}}
             <div class="hidden md:block">
                 @guest
                     <a href="{{ route('login') }}"
@@ -109,35 +108,39 @@
                     </a>
                 @endguest
             </div>
-
-            {{-- Tombol Menu Mobile --}}
-            <div class="md:hidden flex items-center">
-                <button id="mobile-menu-button" class="p-2 rounded-md text-white hover:bg-white/30 focus:outline-none">
-                    <svg id="icon-open" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                    <svg id="icon-close" class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
         </div>
     </div>
 
-    {{-- Menu Mobile --}}
-    <div id="mobile-menu" class="hidden md:hidden bg-[#0044A9]/50">
-        <div class="px-4 pt-4 pb-3 space-y-2">
+
+    <!-- Floating Mobile Navbar -->
+    <div
+        class="fixed md:hidden top-4 left-1/2 -translate-x-1/2 z-80 w-[95%] max-w-xl
+    bg-blue-900/50 backdrop-blur-sm border border-white/20 rounded-full shadow-lg flex justify-between items-center px-4 py-2">
+
+        <!-- Logo -->
+        <a href="{{ url('/') }}" class="flex items-center gap-2">
+            <img src="{{ asset('assets/LogoKabMerauke.png') }}" alt="Logo" class="h-8 w-8 ">
+            <div class="flex flex-col">
+                <span class="text-white text-xl font-bold leading-tight">BAPPERIDA</span>
+                <span class="text-white text-xs font-light leading-tight">Kab. Merauke</span>
+            </div>
+        </a>
+
+        <!-- Tombol Menu (Hamburger) -->
+        <button id="menu-toggle" class="text-white text-3xl focus:outline-none transition-transform duration-300">
+            <i class="bi bi-list"></i>
+        </button>
+    </div>
+
+    <!-- Dropdown Menu -->
+    <div id="mobile-menu"
+        class="hidden md:hidden fixed top-20 left-1/2 -translate-x-1/2 w-[90%] max-w-md bg-blue-800/60 backdrop-blur-md rounded-2xl shadow-xl border border-white/20 overflow-hidden transition-all duration-300 ">
+        <div class="p-4 space-y-2">
             <a href="{{ url('/') }}"
-                class="block rounded-md px-3 py-2 text-base font-semibold
-                {{ request()->url() == url('/') ? 'bg-lime-400 text-blue-600' : 'text-white hover:text-blue-600  hover:bg-lime-400' }}">
+                class="block rounded-md px-3 py-2 text-base font-semibold {{ request()->url() == url('/') ? 'bg-lime-400 text-blue-600' : 'text-white hover:text-blue-600 hover:bg-lime-400' }}">
                 Beranda
             </a>
 
-            {{-- Loop Menu Mobile menggunakan Alpine --}}
             @foreach ($menus as $menu)
                 @php
                     $isActive = isset($menu['route'])
@@ -147,9 +150,9 @@
                 @endphp
 
                 @if (isset($menu['submenu']))
-                    <div x-data="{ open: false }" class="md:hidden">
-                        <button @click.stop="open = !open"
-                            class="w-full flex justify-between items-center px-3 py-2 rounded-md text-white text-base font-medium hover:text-blue-600  hover:bg-lime-400 ">
+                    <div x-data="{ open: false }">
+                        <button @click="open = !open"
+                            class="w-full flex justify-between items-center px-3 py-2 rounded-md text-white text-base font-medium hover:text-blue-600 hover:bg-lime-400">
                             <span>{{ $menu['label'] }}</span>
                             <svg xmlns="http://www.w3.org/2000/svg" :class="open ? 'rotate-180 transform' : ''"
                                 class="h-5 w-5 transition-transform duration-200" viewBox="0 0 24 24" fill="none"
@@ -159,24 +162,13 @@
                             </svg>
                         </button>
 
-                        <div x-show="open" x-transition:enter="transition ease-out duration-150"
-                            x-transition:enter-start="opacity-0 -translate-y-2"
-                            x-transition:enter-end="opacity-100 translate-y-0"
-                            x-transition:leave="transition ease-in duration-100"
-                            x-transition:leave-start="opacity-100 translate-y-0"
-                            x-transition:leave-end="opacity-0 -translate-y-2"
-                            class="pl-6 space-y-1 bg-white p-3 rounded-lg">
+                        <div x-show="open" x-transition class="pl-6 space-y-1 bg-white p-3 rounded-lg">
                             @foreach ($menu['submenu'] as $submenu)
-                                @php
-                                    $submenuUrl = $submenu['url'] ?? '#';
-                                    $submenuActive = request()->is(ltrim($submenuUrl, '/'));
-                                @endphp
                                 <a href="{{ $submenu['url'] }}"
-                                    class="block px-3 py-2 text-sm  {{ $submenuActive ? 'bg-lime-400 ' : 'hover:bg-[#CCFF00]' }} rounded-md">
+                                    class="block px-3 py-2 text-sm rounded-md hover:bg-lime-300/80">
                                     {{ $submenu['label'] }}
                                 </a>
                             @endforeach
-
                         </div>
                     </div>
                 @else
@@ -187,10 +179,9 @@
                 @endif
             @endforeach
 
-            {{-- Login / Dashboard --}}
             @guest
                 <a href="{{ route('login') }}"
-                    class="block w-full bg-lime-400 text-blue-600 px-3 py-2 rounded-md text-base font-semibold hover:text-blue-600  hover:bg-lime-500">
+                    class="block w-full bg-lime-400 text-blue-600 px-3 py-2 rounded-md text-base font-semibold hover:bg-lime-500">
                     Login
                 </a>
             @else
@@ -201,8 +192,11 @@
             @endguest
         </div>
     </div>
+
+    <!-- Script -->
+
 </nav>
-<div id="side-nav" class="hidden md:flex fixed top-1/2 right-4 transform -translate-y-1/2 z-50 items-center">
+<div id="side-nav" class="hidden md:flex fixed top-1/2 right-4 transform -translate-y-1/2 z-[500] items-center">
     <div class="flex flex-col items-center space-y-2 bg-white/20 backdrop-blur-md p-2 rounded-full shadow-lg ml-2">
         <button id="toggle-search-btn"
             class="group relative flex justify-center items-center w-12 h-12 bg-white text-blue-600 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300">
@@ -256,6 +250,15 @@
 </div>
 {{-- Script toggle mobile menu --}}
 <script>
+    document.getElementById('menu-toggle').addEventListener('click', () => {
+        const menu = document.getElementById('mobile-menu');
+        const icon = document.getElementById('menu-toggle').querySelector('i');
+        menu.classList.toggle('hidden');
+        icon.classList.toggle('bi-list');
+        icon.classList.toggle('bi-x-lg');
+    });
+</script>
+{{-- <script>
     document.addEventListener("DOMContentLoaded", () => {
         const btn = document.getElementById("mobile-menu-button");
         const menu = document.getElementById("mobile-menu");
@@ -268,4 +271,4 @@
             iconClose.classList.toggle("hidden");
         });
     });
-</script>
+</script> --}}
