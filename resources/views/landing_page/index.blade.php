@@ -155,7 +155,7 @@
                     <div class="swiper-slide w-3/4 md:w-1/2">
                         <a href="#"
                             class="block relative aspect-video rounded-2xl overflow-hidden group shadow-lg">
-                            <img src="assets/image1.png" alt="Berita 1"
+                            <img src="assets/image1.png" alt="Berita 1" loading="lazy"
                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                             <div class="absolute bottom-0 left-0 right-0 p-6">
@@ -168,7 +168,7 @@
                     <div class="swiper-slide w-3/4 md:w-1/2">
                         <a href="#"
                             class="block relative aspect-video rounded-2xl overflow-hidden group shadow-lg">
-                            <img src="Assets/image2.png" alt="Berita 2"
+                            <img src="Assets/image2.png" alt="Berita 2" loading="lazy"
                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                             <div class="absolute bottom-0 left-0 right-0 p-6">
@@ -180,7 +180,7 @@
                     <div class="swiper-slide w-3/4 md:w-1/2">
                         <a href="#"
                             class="block relative aspect-video rounded-2xl overflow-hidden group shadow-lg">
-                            <img src="assets/image3.png" alt="Berita 3"
+                            <img src="assets/image3.png" alt="Berita 3" loading="lazy"
                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                             <div class="absolute bottom-0 left-0 right-0 p-6">
@@ -192,7 +192,7 @@
                     <div class="swiper-slide w-3/4 md:w-1/2">
                         <a href="#"
                             class="block relative aspect-video rounded-2xl overflow-hidden group shadow-lg">
-                            <img src="assets/image4.png" alt="Berita 4"
+                            <img src="assets/image4.png" alt="Berita 4" loading="lazy"
                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                             <div class="absolute bottom-0 left-0 right-0 p-6">
@@ -204,7 +204,7 @@
                     <div class="swiper-slide w-3/4 md:w-1/2">
                         <a href="#"
                             class="block relative aspect-video rounded-2xl overflow-hidden group shadow-lg">
-                            <img src="Assets/image5.jpg" alt="Berita 4"
+                            <img src="Assets/image5.jpg" alt="Berita 4" loading="lazy"
                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                             <div class="absolute bottom-0 left-0 right-0 p-6">
@@ -216,7 +216,7 @@
                     <div class="swiper-slide w-3/4 md:w-1/2">
                         <a href="#"
                             class="block relative aspect-video rounded-2xl overflow-hidden group shadow-lg">
-                            <img src="assets/image6.jpg" alt="Berita 4"
+                            <img src="assets/image6.jpg" alt="Berita 4" loading="lazy"
                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                             <div class="absolute bottom-0 left-0 right-0 p-6">
@@ -243,7 +243,7 @@
                 <div class="relative rounded-2xl shadow-lg overflow-hidden group">
 
                     <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1470&auto=format&fit=crop"
-                        alt="Rapat Bapperida Papua Selatan"
+                        alt="Rapat Bapperida Papua Selatan" loading="lazy"
                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
 
                     <div class="absolute bottom-0 left-0 w-full p-5 bg-gradient-to-t from-black/80 to-transparent">
@@ -258,7 +258,7 @@
 
                 <div class="relative rounded-2xl shadow-lg overflow-hidden group">
                     <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1470&auto=format&fit=crop"
-                        alt="Rapat Bapperida Papua Selatan"
+                        alt="Rapat Bapperida Papua Selatan" loading="lazy"
                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
                     <div class="absolute bottom-0 left-0 w-full p-5 bg-gradient-to-t from-black/80 to-transparent">
                         <div class="flex flex-col">
@@ -272,7 +272,7 @@
 
                 <div class="relative rounded-2xl shadow-lg overflow-hidden group">
                     <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1470&auto=format&fit=crop"
-                        alt="Rapat Bapperida Papua Selatan"
+                        alt="Rapat Bapperida Papua Selatan" loading="lazy"
                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
                     <div class="absolute bottom-0 left-0 w-full p-5 bg-gradient-to-t from-black/80 to-transparent">
                         <div class="flex flex-col">
@@ -286,7 +286,7 @@
 
                 <div class="relative rounded-2xl shadow-lg overflow-hidden group">
                     <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1470&auto=format&fit=crop"
-                        alt="Rapat Bapperida Papua Selatan"
+                        alt="Rapat Bapperida Papua Selatan" loading="lazy"
                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
                     <div class="absolute bottom-0 left-0 w-full p-5 bg-gradient-to-t from-black/80 to-transparent">
                         <div class="flex flex-col">
@@ -300,7 +300,7 @@
 
                 <div class="relative rounded-2xl shadow-lg overflow-hidden group">
                     <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1470&auto=format&fit=crop"
-                        alt="Rapat Bapperida Papua Selatan"
+                        alt="Rapat Bapperida Papua Selatan" loading="lazy"
                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
                     <div class="absolute bottom-0 left-0 w-full p-5 bg-gradient-to-t from-black/80 to-transparent">
                         <div class="flex flex-col">
@@ -314,7 +314,7 @@
 
                 <div class="relative rounded-2xl shadow-lg overflow-hidden group">
                     <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1470&auto=format&fit=crop"
-                        alt="Rapat Bapperida Papua Selatan"
+                        alt="Rapat Bapperida Papua Selatan" loading="lazy"
                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
                     <div class="absolute bottom-0 left-0 w-full p-5 bg-gradient-to-t from-black/80 to-transparent">
                         <div class="flex flex-col">

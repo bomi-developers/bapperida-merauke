@@ -17,7 +17,7 @@
                     </div>
                 </div>
                 <div class="w-full lg:w-1/2 flex justify-center">
-                    <img src="{{ asset('assets/LogoKabMerauke.png') }}" alt="Logo Kabupaten Merauke"
+                    <img src="{{ asset('assets/LogoKabMerauke.png') }}" loading="lazy" alt="Logo Kabupaten Merauke"
                         class="max-w-md w-full h-auto rounded-lg object-cover">
                 </div>
             </div>

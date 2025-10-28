@@ -12,8 +12,13 @@ use App\Http\Controllers\GaleriController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ProfileDinasController;
 use App\Http\Controllers\KategoriDocumentController;
+use App\Http\Controllers\ProposalController;
+use App\Models\Notifikasi;
+use Carbon\Carbon;
 
 // cache control
+
+
 
 Route::get('img/{path}', function ($path) {
   $fullPath = public_path('img/' . $path);
@@ -36,6 +41,8 @@ Route::get('img/{path}', function ($path) {
 //   return redirect()->route('login');
 // })->name('welcome');
 
+
+
 Route::get('/', [HomeController::class, 'index'])->name('welcome');
 Route::prefix('about')->name('about.')->group(function () {
   Route::get('/pegawai', [HomeController::class, 'pegawai'])->name('pegawai');
@@ -49,6 +56,11 @@ Route::prefix('riset-inovasi')->name('riset-inovasi.')->group(function () {
   Route::get('/riset', [HomeController::class, 'riset'])->name('riset');
   Route::get('/inovasi', [HomeController::class, 'inovasi'])->name('inovasi');
   Route::get('/kekayaan-intelektual', [HomeController::class, 'kekayaanIntelektual'])->name('kekayaan-intelektual');
+  // proposal
+  // routes/web.php
+  Route::post('/proposal/store', [ProposalController::class, 'store'])->name('proposal.store');
+  // API untuk cek email
+  Route::get('/api/check-email', [ProposalController::class, 'checkEmail']);
 });
 
 Route::get('/berita', [BeritaController::class, 'home'])->name('berita.public.home');
@@ -61,6 +73,31 @@ Route::get('/documents/{document}/download', [DocumentController::class, 'downlo
 
 Auth::routes(['register' => false, 'verify' => false, 'reset' => false]);
 Route::middleware(['auth'])->group(function () {
+  // notifikasi
+  Route::get('/notifikasi/json', function () {
+    $notifs = Notifikasi::whereNull('read_at')->orderBy('created_at', 'desc')->limit(10)->get();
+    $count = Notifikasi::whereNull('read_at')->count();
+    return response()->json([
+      'count' => $count,
+      'notifikasi' => $notifs
+    ]);
+  });
+  Route::put('/notifikasi/{id}', function ($id) {
+    $notif = Notifikasi::find($id);
+
+    if (!$notif) {
+      return response()->json([
+        'success' => false,
+        'message' => 'Notifikasi tidak ditemukan'
+      ], 404);
+    }
+
+    // Update read_at menjadi timestamp hari ini
+    $notif->read_at = Carbon::now();
+    $notif->save();
+
+    return response()->json(['success' => true]);
+  });
   // dashboard page
   Route::get('/home', [PagesController::class, 'dashboard'])->name('home');
   // bidang
