@@ -11,12 +11,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Jobs\CompressBeritaImage;
 
 class BeritaController extends Controller
 {
-    /**
-     * Menampilkan daftar berita dengan fitur pencarian.
-     */
     public function index(Request $request)
     {
         $query = Berita::with('author')->latest();
@@ -43,7 +41,7 @@ class BeritaController extends Controller
                 $query->whereRaw('LOWER(title) LIKE ?', [strtolower($searchTerm) . '%']);
             }
 
-            $beritas = $query->limit(15)->get(); // Ambil 15 hasil teratas untuk live search
+            $beritas = $query->limit(15)->get();
 
             return response()->json([
                 'table_rows' => view('pages.berita._berita_rows', compact('beritas'))->render(),
@@ -68,38 +66,56 @@ class BeritaController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'excerpt' => 'required|string|max:500',
-            'cover_image' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'cover_image' => 'required|image|mimes:jpeg,png,jpg,webp|max:20480', // 20MB
             'status' => 'required|in:published,draft',
             'items' => 'required|array|min:1',
             'items.*.type' => 'required|in:text,image,video,embed,quote',
-            'items.*.content' => 'nullable|string', // Konten tekstual, atau path lama untuk gambar
-            'items.*.file' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:2048', // File upload baru
-            'items.*.caption' => 'nullable|string|max:255', // Caption untuk gambar
+            'items.*.content' => 'nullable|string',
+            'items.*.file' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:20480', // 20MB
+            'items.*.caption' => 'nullable|string|max:255',
             'items.*.position' => 'required|integer',
         ]);
 
         DB::transaction(function () use ($validatedData, $request) {
-            // 1. Handle upload cover image
-            $coverImagePath = $request->file('cover_image')->store('berita/covers', 'public');
 
-            // 2. Buat record Berita utama
+            $coverImagePath = null;
+            if ($request->hasFile('cover_image')) {
+                $coverFile = $request->file('cover_image');
+                $slug = Str::slug($validatedData['title']);
+                $coverExtension = $coverFile->getClientOriginalExtension();
+                $coverFilename = "covers-{$slug}-" . Str::random(5) . ".{$coverExtension}";
+
+                // Simpan file asli (ukuran besar)
+                $coverImagePath = $coverFile->storeAs('berita/covers', $coverFilename, 'public');
+
+                // Kirim tugas kompresi ke antrian (Queue)
+                CompressBeritaImage::dispatch($coverImagePath);
+            }
+
             $berita = Berita::create([
                 'user_id' => Auth::id(),
                 'title' => $validatedData['title'],
-                'slug' => Str::slug($validatedData['title']) . '-' . Str::random(5), // Tambahkan random untuk uniqueness
+                'slug' => Str::slug($validatedData['title']) . '-' . Str::random(5),
                 'excerpt' => $validatedData['excerpt'],
-                'cover_image' => $coverImagePath,
+                'cover_image' => $coverImagePath, // Simpan path asli
                 'status' => $validatedData['status'],
             ]);
 
-            // 3. Simpan setiap item berita
             foreach ($validatedData['items'] as $index => $itemData) {
                 $contentToSave = $itemData['content'] ?? null;
                 $captionToSave = $itemData['caption'] ?? null;
 
-                // Jika tipe item adalah gambar, handle upload file baru
                 if ($itemData['type'] === 'image' && $request->hasFile("items.{$index}.file")) {
-                    $contentToSave = $request->file("items.{$index}.file")->store('berita/items', 'public');
+                    $itemFile = $request->file("items.{$index}.file");
+                    $slug = Str::slug($validatedData['title']);
+                    $itemExtension = $itemFile->getClientOriginalExtension();
+                    $itemFilename = "item-{$slug}-{$index}-" . Str::random(5) . ".{$itemExtension}";
+
+                    // Simpan file asli (ukuran besar)
+                    $contentToSave = $itemFile->storeAs('berita/items', $itemFilename, 'public');
+
+                    // Kirim tugas kompresi ke antrian (Queue)
+                    CompressBeritaImage::dispatch($contentToSave);
                 }
 
                 $berita->items()->create([
@@ -120,30 +136,31 @@ class BeritaController extends Controller
      */
     public function edit(Berita $berita)
     {
-        // Load relasi 'items' untuk ditampilkan di form
         $berita->load('items');
         return view('pages.berita.edit', compact('berita'));
     }
 
     /**
      * Mengupdate berita beserta item-item kontennya.
+     * (PERBAIKAN: Logika duplikat dihapus dan diperbaiki)
      */
     public function update(Request $request, Berita $berita)
     {
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'excerpt' => 'required|string|max:500',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:20480', // 20MB
             'status' => 'required|in:published,draft',
             'items' => 'sometimes|array',
             'items.*.type' => 'required|in:text,image,video,embed,quote',
             'items.*.content' => 'nullable|string',
-            'items.*.file' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:2048',
+            'items.*.file' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:20480', // 20MB
             'items.*.caption' => 'nullable|string|max:255',
             'items.*.position' => 'required|integer',
         ]);
 
         DB::transaction(function () use ($validatedData, $request, $berita) {
+            // 1. Siapkan data update untuk Berita
             $updateData = [
                 'title' => $validatedData['title'],
                 'slug' => Str::slug($validatedData['title']) . '-' . Str::random(5),
@@ -151,46 +168,75 @@ class BeritaController extends Controller
                 'status' => $validatedData['status'],
             ];
 
+            // 2. Handle upload Cover Image baru
             if ($request->hasFile('cover_image')) {
+                // Hapus cover lama jika ada
                 if ($berita->cover_image) {
                     Storage::disk('public')->delete($berita->cover_image);
                 }
-                $updateData['cover_image'] = $request->file('cover_image')->store('berita/covers', 'public');
+
+                $coverFile = $request->file('cover_image');
+                $slug = Str::slug($validatedData['title']);
+                $coverExtension = $coverFile->getClientOriginalExtension();
+                $coverFilename = "covers-{$slug}-" . Str::random(5) . ".{$coverExtension}";
+
+                // Simpan file asli
+                $coverImagePath = $coverFile->storeAs('berita/covers', $coverFilename, 'public');
+
+                // Kirim tugas kompresi ke antrian
+                CompressBeritaImage::dispatch($coverImagePath);
+
+                $updateData['cover_image'] = $coverImagePath;
             }
 
+            // 3. Update data Berita
             $berita->update($updateData);
 
-            $oldImagePaths = $berita->items->where('type', 'image')->pluck('content')->filter()->toArray(); // filter() untuk menghapus null/empty
-
-            $berita->items()->delete();
+            // 4. Sinkronisasi Berita Items
+            $oldImagePaths = $berita->items->where('type', 'image')->pluck('content')->filter()->toArray();
+            $berita->items()->delete(); // Hapus semua item lama
 
             if (isset($validatedData['items'])) {
                 foreach ($validatedData['items'] as $index => $itemData) {
-                    // Gunakan null coalescing ?? untuk default value
+
+                    // Inisialisasi variabel untuk item ini
                     $contentToSave = $itemData['content'] ?? null;
                     $captionToSave = $itemData['caption'] ?? null;
-                    $oldContentPath = $itemData['content'] ?? null; // Simpan path lama sebelum ditimpa
+                    $oldContentPath = $itemData['content'] ?? null; // Simpan path lama (jika ada)
 
                     if ($itemData['type'] === 'image') {
+                        // Jika ada file BARU yang diupload untuk item ini
                         if ($request->hasFile("items.{$index}.file")) {
-                            $contentToSave = $request->file("items.{$index}.file")->store('berita/items', 'public');
+                            $itemFile = $request->file("items.{$index}.file");
+                            $slug = Str::slug($validatedData['title']);
+                            $itemExtension = $itemFile->getClientOriginalExtension();
+                            $itemFilename = "item-{$slug}-{$index}-" . Str::random(5) . ".{$itemExtension}";
 
-                            // PERBAIKAN 1: Cek apakah oldContentPath ada sebelum digunakan
+                            // Simpan file asli baru
+                            $contentToSave = $itemFile->storeAs('berita/items', $itemFilename, 'public');
+
+                            // Kirim tugas kompresi
+                            CompressBeritaImage::dispatch($contentToSave);
+
+                            // Hapus file gambar lama jika ada dan berbeda
                             if (!empty($oldContentPath) && in_array($oldContentPath, $oldImagePaths) && $oldContentPath !== $contentToSave) {
                                 Storage::disk('public')->delete($oldContentPath);
                             }
                         } else {
-                            // Jika tidak ada file baru DAN path lama kosong (misal item baru ditambahkan), content tetap null
+                            // Jika TIDAK ada file baru diupload
+                            // Cek apakah $contentToSave (path lama) kosong
                             if (empty($contentToSave)) {
-                                // PERBAIKAN 2: Cek apakah oldContentPath ada sebelum digunakan
+                                // Jika path lama ada, hapus file terkait
                                 if (!empty($oldContentPath) && in_array($oldContentPath, $oldImagePaths)) {
                                     Storage::disk('public')->delete($oldContentPath);
                                 }
-                                $contentToSave = null;
+                                $contentToSave = null; // Pastikan null di database
                             }
-                            // Jika tidak ada file baru TAPI path lama ADA, contentToSave sudah berisi path lama dari awal, tidak perlu diubah.
+                            // Jika $contentToSave TIDAK kosong, berarti itu adalah path lama yg ingin disimpan,
+                            // jadi biarkan saja.
                         }
                     }
+                    // Untuk tipe 'text', 'video', 'embed', 'quote', $contentToSave sudah benar.
 
                     $berita->items()->create([
                         'type' => $itemData['type'],
@@ -201,7 +247,7 @@ class BeritaController extends Controller
                 }
             }
 
-            // Hapus gambar lama yang tidak lagi direferensikan oleh item BARU
+            // 5. Hapus file gambar lama yang sudah tidak terpakai
             $newItemImagePaths = $berita->items()->where('type', 'image')->pluck('content')->filter()->toArray();
             foreach ($oldImagePaths as $oldPath) {
                 if ($oldPath && !in_array($oldPath, $newItemImagePaths)) {
@@ -219,55 +265,50 @@ class BeritaController extends Controller
     public function destroy(Berita $berita)
     {
         DB::transaction(function () use ($berita) {
-
             if ($berita->cover_image) {
                 Storage::disk('public')->delete($berita->cover_image);
             }
-
             foreach ($berita->items as $item) {
                 if ($item->type === 'image' && $item->content) {
                     Storage::disk('public')->delete($item->content);
                 }
             }
-
-            $berita->delete();
+            $berita->delete(); // Hapus berita, dan items akan terhapus via cascade
         });
-
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil dihapus!');
     }
 
+    // --- METODE PUBLIK ---
+
     public function home()
     {
-
         $beritas = Berita::with('author')
             ->where('status', 'published')
-            ->where('page', 'berita')
+            // ->where('page', 'berita') // Hati-hati, pastikan Anda punya kolom 'page' jika ini dipakai
             ->latest()
             ->paginate(6);
 
-        return view('landing_page.berita.berita', compact('beritas'));
+        // Pastikan view ini ada: 'landing_page.berita.berita'
+        return view('landing_page.berita', compact('beritas'));
     }
 
     /**
      * Menampilkan halaman detail satu berita.
-     * (Ini adalah langkah selanjutnya setelah halaman daftar berita selesai)
      */
     public function show(Berita $berita)
     {
-
-        if ($berita->status !== 'published') {
-            abort(404);
-        }
-
+        // Load relasi yang dibutuhkan
+        $berita->load(['items' => function ($query) {
+            $query->orderBy('position');
+        }, 'author']);
 
         $beritaTerkait = Berita::where('status', 'published')
             ->where('id', '!=', $berita->id)
-            ->where('page', 'berita')
+            // ->where('page', 'berita') // Hati-hati dengan kolom 'page'
             ->latest()
             ->take(3)
             ->get();
 
-        // Kirim data berita utama dan berita terkait ke view.
-        return view('landing_page.berita.berita_detail', compact('berita', 'beritaTerkait'));
+        return view('landing_page.berita_detail', compact('berita', 'beritaTerkait'));
     }
 }
