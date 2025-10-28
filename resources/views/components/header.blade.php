@@ -31,31 +31,21 @@
                 <div id="notification-dropdown"
                     class="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-700 rounded-lg shadow-xl hidden z-20 border border-gray-200 dark:border-slate-600">
                     <div class="p-3 border-b border-gray-200 dark:border-slate-600">
-                        <h5 class="text-sm font-medium text-gray-500 dark:text-slate-400">Notification</h5>
+                        <h5 class="text-sm font-medium text-gray-500 dark:text-slate-400">Notifikasi
+                            <span id="count-notifikasi" class="bg-red-500 text-white rounded-full px-2 py-1">
+                                0
+                            </span>
+                        </h5>
                     </div>
-                    <ul class="flex flex-col max-h-80 overflow-y-auto no-scrollbar">
-                        <li><a href="#"
-                                class="flex flex-col gap-1 p-3 border-b border-gray-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600">
-                                <p class="text-sm text-gray-800 dark:text-slate-200"><span class="font-semibold">Edit
-                                        your information in a swipe.</span> Sint
-                                    occaecat cupidatat non proident...</p>
-                                <p class="text-xs text-gray-500 dark:text-slate-400">12 May, 2025</p>
-                            </a></li>
-                        <li><a href="#"
-                                class="flex flex-col gap-1 p-3 border-b border-gray-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600">
-                                <p class="text-sm text-gray-800 dark:text-slate-200"><span class="font-semibold">It is
-                                        a long established fact</span> that a
-                                    reader will be distracted.</p>
-                                <p class="text-xs text-gray-500 dark:text-slate-400">24 Feb, 2025</p>
-                            </a></li>
-                        <li><a href="#"
-                                class="flex flex-col gap-1 p-3 hover:bg-slate-100 dark:hover:bg-slate-600">
-                                <p class="text-sm text-gray-800 dark:text-slate-200"><span class="font-semibold">There
-                                        are many variations</span> of passages
-                                    of Lorem Ipsum available...</p>
-                                <p class="text-xs text-gray-500 dark:text-slate-400">04 Jan, 2025</p>
-                            </a></li>
+                    <ul id="list-notifikasi-navbar" class="flex flex-col max-h-80 overflow-y-auto no-scrollbar">
+
                     </ul>
+                    <div class="p-3 border-b border-gray-200 dark:border-slate-600 text-center">
+                        <button type="button" id="btn-notifikasi"
+                            class="text-sm font-medium text-gray-500 dark:text-slate-400 ">
+                            Semua Notifikasi
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -151,8 +141,7 @@
     </div>
 </header>
 <!-- Overlay Search -->
-<div id="searchOverlay"
-    class="fixed inset-0 bg-black/60 backdrop-blur-md hidden flex items-center justify-center z-50">
+<div id="searchOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-md hidden flex items-center justify-center z-50">
 
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 w-full max-w-md relative">
         <input id="overlaySearchInput" type="text" placeholder="Cari menu..."
@@ -168,9 +157,112 @@
             class="absolute top-3 right-3 text-slate-400 hover:text-red-500 transition">✕</button>
     </div>
 </div>
+<x-modal id="modalTemplate" title="Semua Notifikasi">
+    <div class="max-h-96 overflow-y-auto no-scrollbar space-y-4">
+        <div id="list-notifikasi-modal" class="space-y-2">
+
+        </div>
+    </div>
+
+</x-modal>
 @push('scripts')
     <script>
-        // Data JSON untuk daftar menu dan URL
+        const btnNotif = document.getElementById('btn-notifikasi');
+        const modal = document.getElementById('modalTemplate');
+
+        btnNotif.addEventListener('click', () => {
+            modal.classList.remove('hidden');
+        });
+
+        function closeForm() {
+            modal.classList.add('hidden');
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeForm('modalTemplate');
+        });
+    </script>
+    <script>
+        const countNotif = document.getElementById('count-notifikasi');
+        const listNavbar = document.getElementById('list-notifikasi-navbar');
+        const listModal = document.getElementById('list-notifikasi-modal');
+
+        async function loadNotifikasi() {
+            const res = await fetch('/notifikasi/json');
+            const data = await res.json();
+            countNotif.textContent = data.count;
+
+            // ===== Navbar =====
+            listNavbar.innerHTML = '';
+            if (data.notifikasi.length === 0) {
+                listNavbar.innerHTML = `
+            <li>
+                <a href="#" class="flex flex-col gap-1 p-3 border-b border-gray-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600">
+                    <p class="text-sm text-gray-800 dark:text-slate-200">Belum ada notifikasi</p>
+                </a>
+            </li>`;
+            } else {
+                data.notifikasi.forEach(notif => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                <a href="#" class="flex flex-col gap-1 p-3 border-b border-gray-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600">
+                    <p class="text-sm text-gray-800 dark:text-slate-200">
+                        <span class="font-semibold">${notif.title}</span><br>${notif.message}
+                    </p>
+                    <p class="text-xs text-gray-500 dark:text-slate-400">${new Date(notif.created_at).toLocaleString()}</p>
+                </a>`;
+                    listNavbar.appendChild(li);
+                });
+            }
+
+            // ===== Modal =====
+            listModal.innerHTML = '';
+            if (data.notifikasi.length === 0) {
+                listModal.innerHTML = `
+            <li>
+                <a href="#" class="flex flex-col gap-1 p-3 border-b border-gray-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600">
+                    <p class="text-sm text-gray-800 dark:text-slate-200">Belum ada notifikasi</p>
+                </a>
+            </li>`;
+            } else {
+                data.notifikasi.forEach(notif => {
+                    const div = document.createElement('div');
+                    div.id = `notif-${notif.id}`;
+                    div.className =
+                        `relative p-4 bg-slate-100 dark:bg-slate-700 rounded-lg border-l-4 ${notif.read_at ? 'border-slate-400' : 'border-indigo-500'} flex justify-between items-start`;
+                    div.innerHTML = `
+                <div class="flex-1">
+                    <a href="#" class="font-semibold text-indigo-600 dark:text-white">${notif.title}</a>
+                    <p class="text-sm text-gray-600 dark:text-slate-300">${notif.message}</p>
+                    <p class="text-xs text-gray-500 dark:text-slate-400 mt-2">${new Date(notif.created_at).toLocaleString()}</p>
+                </div>
+                <button onclick="hapusNotifikasi(${notif.id})" class="ml-4 text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200 text-xl font-bold">
+                    <i class="bi bi-trash"></i>
+                </button>
+            `;
+                    listModal.appendChild(div);
+                });
+            }
+        }
+
+        async function hapusNotifikasi(id) {
+            const res = await fetch(`/notifikasi/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            });
+            const data = await res.json();
+            if (data.success) loadNotifikasi();
+        }
+
+        loadNotifikasi();
+
+        setInterval(loadNotifikasi, 30000);
+    </script>
+    </script>
+    <script>
         const menuData = [{
                 name: "Dashboard",
                 url: "/home"

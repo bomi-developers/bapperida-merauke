@@ -71,7 +71,9 @@
     <x-landing.navbar :menus="$menus" />
     {{-- hading for title --}}
     <x-landing.heading></x-landing.heading>
+    {{-- <div class="bg-gradient-to-b from-blue-100 to-white"> --}}
     {{ $slot }}
+    {{-- </div> --}}
     {{-- footer page --}}
     <x-landing.footer></x-landing.footer>
     {{-- more script --}}
