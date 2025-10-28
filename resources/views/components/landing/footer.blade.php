@@ -8,7 +8,7 @@
             <div class="flex items-center justify-between mb-12 pt-20" style="margin-top: 100pt;">
                 <div class="flex items-center space-x-4">
                     <!-- Logo Placeholder -->
-                    <img class="h-12 w-auto" src="/assets/LogoKabMerauke.png" alt="Logo BAPPERIDA" />
+                    <img class="h-12 w-auto" src="/assets/LogoKabMerauke.png" alt="Logo BAPPERIDA" loading="lazy" />
                     <div>
                         <h2 class="text-white text-2xl font-bold">BAPPERIDA</h2>
                         <p class="text-blue-100 text-sm">KAB. MERAUKE</p>

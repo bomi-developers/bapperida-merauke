@@ -4,7 +4,8 @@
         <div class="flex items-center justify-between h-16">
             {{-- Logo --}}
             <a href="{{ url('/') }}" class="flex items-center space-x-3">
-                <img class="h-12 w-auto" src="{{ asset('assets/LogoKabMerauke.png') }}" alt="Logo BAPPERIDA" />
+                <img class="h-12 w-auto" src="{{ asset('assets/LogoKabMerauke.png') }}" alt="Logo BAPPERIDA"
+                    loading="lazy" />
                 <div class="flex flex-col">
                     <span class="text-white text-xl font-bold leading-tight">BAPPERIDA</span>
                     <span class="text-white text-xs font-light leading-tight">Kab. Merauke</span>

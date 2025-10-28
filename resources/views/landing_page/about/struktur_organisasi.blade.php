@@ -4,7 +4,7 @@
             <img src="{{ $ProfileDinas->struktur_organisasi
                 ? asset('storage/' . $ProfileDinas->struktur_organisasi)
                 : asset('assets/LogoKabMerauke.png') }}"
-                alt="Struktur Organisasi BAPPERIDA Merauke"
+                loading="lazy" alt="Struktur Organisasi BAPPERIDA Merauke"
                 class="mx-auto w-full h-auto object-contain rounded-2xl shadow-lg">
         </div>
     </section>
