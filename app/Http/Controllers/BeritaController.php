@@ -284,12 +284,12 @@ class BeritaController extends Controller
     {
         $beritas = Berita::with('author')
             ->where('status', 'published')
-            // ->where('page', 'berita') // Hati-hati, pastikan Anda punya kolom 'page' jika ini dipakai
+            ->where('page', 'berita') // Hati-hati, pastikan Anda punya kolom 'page' jika ini dipakai
             ->latest()
             ->paginate(6);
 
         // Pastikan view ini ada: 'landing_page.berita.berita'
-        return view('landing_page.berita', compact('beritas'));
+        return view('landing_page.berita.berita', compact('beritas'));
     }
 
     /**

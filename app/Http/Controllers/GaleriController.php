@@ -12,10 +12,10 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Jobs\CompressGaleriItem;
 
 class GaleriController extends Controller
 {
-    // ... (index, show, destroy methods remain the same) ...
     public function index()
     {
         $galeris = Galeri::with('firstItem')->withCount('items')->latest()->get();
@@ -27,15 +27,14 @@ class GaleriController extends Controller
      */
     public function store(Request $request)
     {
-        // Tambahkan validasi untuk URL
         $validator = Validator::make($request->all(), [
             'judul' => 'required|string|max:255|unique:galeris,judul',
             'keterangan' => 'nullable|string',
-            'items' => 'required|array|min:1', // Ubah dari 'files' ke 'items'
+            'items' => 'required|array|min:1',
             'items.*.type' => ['required', Rule::in(['image', 'video', 'video_url'])],
             'items.*.file' => 'required_if:items.*.type,image,video|file|mimes:jpg,jpeg,png,webp,mp4,mov,avi,wmv,JPG|max:51200', // Wajib jika tipe file
-            'items.*.url' => 'required_if:items.*.type,video_url|url', // Wajib jika tipe URL
-            'items.*.caption' => 'nullable|string|max:255', // Caption opsional
+            'items.*.url' => 'required_if:items.*.type,video_url|url',
+            'items.*.caption' => 'nullable|string|max:255',
         ], [
             'items.required' => 'Minimal tambahkan satu item media.',
             'items.*.file.required_if' => 'File media wajib diunggah untuk tipe Foto/Video.',
@@ -53,6 +52,7 @@ class GaleriController extends Controller
 
         try {
             $galeri = DB::transaction(function () use ($validatedData, $request) {
+                // 1. Buat record album Galeri utama
                 $galeri = Galeri::create([
                     'judul' => $validatedData['judul'],
                     'keterangan' => $validatedData['keterangan'] ?? null,
@@ -60,23 +60,25 @@ class GaleriController extends Controller
 
                 $slug = Str::slug($galeri->judul);
 
+                // 2. Loop dan simpan setiap item media
                 foreach ($validatedData['items'] as $index => $itemData) {
                     $tipeFile = $itemData['type'];
                     $filePath = null;
                     $caption = $itemData['caption'] ?? null;
+                    $itemToDispatch = null; // Variabel untuk job kompresi
 
                     if ($tipeFile === 'image' || $tipeFile === 'video') {
-                        // Handle file upload
-                        $fileInputKey = "items.{$index}.file"; // Gunakan key asli dari form
+                        $fileInputKey = "items.{$index}.file"; // Key asli dari form
                         if ($request->hasFile($fileInputKey)) {
                             $file = $request->file($fileInputKey);
                             $shortCode = strtolower(Str::random(6));
                             $extension = $file->getClientOriginalExtension();
                             $filename = "{$slug}-{$index}-{$shortCode}.{$extension}";
+
+                            // Simpan file asli (ukuran besar)
                             $filePath = $file->storeAs('galeri', $filename, 'public');
                         } else {
-                            // Ini seharusnya tidak terjadi karena validasi, tapi sebagai fallback
-                            Log::error("File not found for index {$index} despite validation pass."); // Logging error
+                            Log::error("File not found for index {$index} despite validation pass.");
                             continue;
                         }
                     } elseif ($tipeFile === 'video_url') {
@@ -85,17 +87,23 @@ class GaleriController extends Controller
                     }
 
                     if ($filePath) {
-                        $galeri->items()->create([
+                        $newGaleriItem = $galeri->items()->create([
                             'file_path' => $filePath,
                             'tipe_file' => $tipeFile,
                             'caption' => $caption,
                         ]);
+
+                        // Jika item adalah GAMBAR (bukan video), kirim ke antrian kompresi
+                        if ($tipeFile === 'image') {
+                            CompressGaleriItem::dispatch($newGaleriItem);
+                        }
                     }
                 }
 
                 return $galeri;
             });
 
+            // Muat relasi yang dibutuhkan untuk respons JSON
             $galeri->load('firstItem')->loadCount('items');
 
             return response()->json([
@@ -112,6 +120,9 @@ class GaleriController extends Controller
         }
     }
 
+    /**
+     * Mengambil data satu album galeri beserta item-itemnya untuk modal edit.
+     */
     public function show(Galeri $galeri)
     {
         $galeri->load('items');
@@ -126,20 +137,16 @@ class GaleriController extends Controller
         $validator = Validator::make($request->all(), [
             'judul' => ['required', 'string', 'max:255', Rule::unique('galeris')->ignore($galeri->id)],
             'keterangan' => 'nullable|string',
-            // Item baru (opsional saat update)
             'items' => 'nullable|array',
             'items.*.type' => ['required', Rule::in(['image', 'video', 'video_url'])],
             'items.*.file' => 'required_if:items.*.type,image,video|file|mimes:jpg,jpeg,png,webp,mp4,mov,avi,wmv|max:51200',
             'items.*.url' => 'required_if:items.*.type,video_url|url',
             'items.*.caption' => 'nullable|string|max:255',
-            // Item lama yang dihapus
             'deleted_items' => 'nullable|array',
             'deleted_items.*' => 'integer|exists:galeri_items,id',
-            // Caption item lama yang mungkin diupdate
             'existing_captions' => 'nullable|array',
-            'existing_captions.*' => 'nullable|string|max:255', // Key adalah item ID
+            'existing_captions.*' => 'nullable|string|max:255',
         ], [
-            // ... pesan validasi ...
             'items.*.file.required_if' => 'File media wajib diunggah untuk tipe Foto/Video baru.',
             'items.*.url.required_if' => 'URL Video wajib diisi untuk tipe Link Video baru.',
         ]);
@@ -152,6 +159,7 @@ class GaleriController extends Controller
 
         try {
             DB::transaction(function () use ($validatedData, $request, $galeri) {
+                // 1. Update data album utama
                 $galeri->update([
                     'judul' => $validatedData['judul'],
                     'keterangan' => $validatedData['keterangan'] ?? null,
@@ -159,12 +167,11 @@ class GaleriController extends Controller
 
                 $slug = Str::slug($galeri->judul);
 
-                // Hapus item yang ditandai
+                // 2. Hapus item yang ditandai
                 if (!empty($validatedData['deleted_items'])) {
                     $itemsToDelete = GaleriItem::whereIn('id', $validatedData['deleted_items'])
                         ->where('galeri_id', $galeri->id)->get();
                     foreach ($itemsToDelete as $item) {
-                        // Hanya hapus file jika bukan URL
                         if ($item->tipe_file !== 'video_url' && $item->file_path) {
                             Storage::disk('public')->delete($item->file_path);
                         }
@@ -172,13 +179,15 @@ class GaleriController extends Controller
                     }
                 }
 
-                // Tambahkan item baru
+                // 3. Tambahkan item baru
                 if (isset($validatedData['items'])) {
                     foreach ($validatedData['items'] as $index => $itemData) {
                         $tipeFile = $itemData['type'];
                         $filePath = null;
                         $caption = $itemData['caption'] ?? null;
-                        $fileInputKey = "items.{$index}.file"; // Key asli dari form
+                        $fileInputKey = "items.{$index}.file";
+
+                        $itemToDispatch = null;
 
                         if ($tipeFile === 'image' || $tipeFile === 'video') {
                             if ($request->hasFile($fileInputKey)) {
@@ -186,6 +195,7 @@ class GaleriController extends Controller
                                 $shortCode = strtolower(Str::random(6));
                                 $extension = $file->getClientOriginalExtension();
                                 $filename = "{$slug}-{$index}-{$shortCode}-" . time() . ".{$extension}";
+                                // Simpan file asli
                                 $filePath = $file->storeAs('galeri', $filename, 'public');
                             } else {
                                 Log::error("Update: File not found for index {$index}.");
@@ -196,25 +206,31 @@ class GaleriController extends Controller
                         }
 
                         if ($filePath) {
-                            $galeri->items()->create([
+                            $newGaleriItem = $galeri->items()->create([
                                 'file_path' => $filePath,
                                 'tipe_file' => $tipeFile,
                                 'caption' => $caption,
                             ]);
+
+                            // Jika item baru adalah GAMBAR, kirim ke antrian
+                            if ($tipeFile === 'image') {
+                                CompressGaleriItem::dispatch($newGaleriItem);
+                            }
                         }
                     }
                 }
 
-                // Update caption item yang ada
+                // 4. Update caption item yang ada
                 if (isset($validatedData['existing_captions'])) {
                     foreach ($validatedData['existing_captions'] as $itemId => $caption) {
                         GaleriItem::where('id', $itemId)
-                            ->where('galeri_id', $galeri->id) // Pastikan milik album ini
+                            ->where('galeri_id', $galeri->id)
                             ->update(['caption' => $caption]);
                     }
                 }
             });
 
+            // Muat ulang relasi untuk respons JSON
             $galeri->load('firstItem')->loadCount('items');
 
             return response()->json([
@@ -222,41 +238,44 @@ class GaleriController extends Controller
                 'message' => 'Album galeri berhasil diperbarui!',
                 'data' => $galeri
             ]);
-        } catch (\Exception $e) { /* error handling */
+        } catch (\Exception $e) {
+            report($e);
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage()
+            ], 500);
         }
     }
 
-    // ... (destroy method - perlu update sedikit) ...
+    /**
+     * Menghapus album galeri.
+     */
     public function destroy(Galeri $galeri)
     {
         try {
             DB::transaction(function () use ($galeri) {
-                // 1. Hapus semua file terkait dari storage
+                // 1. Hapus semua file fisik dari storage
                 foreach ($galeri->items as $item) {
-                    // Hapus file HANYA jika bukan URL
                     if ($item->tipe_file !== 'video_url' && $item->file_path) {
                         Storage::disk('public')->delete($item->file_path);
                     }
                 }
 
-                // PERBAIKAN: Hapus semua item (child records) dari database secara manual
-                // Ini diperlukan karena onDelete('cascade') tidak aktif di database Anda
+                // 2. Hapus item dari database
                 $galeri->items()->delete();
 
-                // 2. Hapus record album (parent record)
-                // Sekarang ini akan berhasil karena semua child record sudah dihapus
+                // 3. Hapus album utama
                 $galeri->delete();
             });
 
-            // Kirim respons JSON sukses
             return response()->json(['success' => true, 'message' => 'Album galeri berhasil dihapus!']);
         } catch (\Exception $e) {
-            // PERBAIKAN: Kembalikan respons error dalam format JSON
-            Log::error('Gagal menghapus galeri: ' . $e->getMessage()); // Catat error di log
+            Log::error('Gagal menghapus galeri: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal menghapus album. Error: ' . $e->getMessage()
-            ], 500); // Kirim status 500 (Internal Server Error)
+            ], 500);
         }
     }
 }
+

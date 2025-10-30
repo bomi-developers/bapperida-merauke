@@ -32,7 +32,7 @@ class DocumentController extends Controller
             'judul' => 'required|string|max:255',
             'kategori_document_id' => 'required|exists:kategori_documents,id',
             'cover' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx|max:10240', // Maks 10MB
+            'file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx|max:102400', // Maks 10MB
             'lainnya' => 'nullable|json',
         ]);
 
@@ -88,7 +88,7 @@ class DocumentController extends Controller
             'judul' => 'required|string|max:255',
             'kategori_document_id' => 'required|exists:kategori_documents,id',
             'cover' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx|max:10240',
+            'file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx|max:102400',
             'lainnya' => 'nullable|json',
         ]);
 
