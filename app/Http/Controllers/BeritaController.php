@@ -304,11 +304,11 @@ class BeritaController extends Controller
 
         $beritaTerkait = Berita::where('status', 'published')
             ->where('id', '!=', $berita->id)
-            // ->where('page', 'berita') // Hati-hati dengan kolom 'page'
+            ->where('page', 'berita')
             ->latest()
             ->take(3)
             ->get();
 
-        return view('landing_page.berita_detail', compact('berita', 'beritaTerkait'));
+        return view('landing_page.berita.berita_detail', compact('berita', 'beritaTerkait'));
     }
 }

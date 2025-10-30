@@ -42,7 +42,7 @@
                     ],
                 ],
                 [
-                    'label' => 'Produk',
+                    'label' => 'Perencanaan',
                     'submenu' => $productMenus,
                 ],
                 // [

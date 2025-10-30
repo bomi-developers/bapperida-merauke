@@ -12,18 +12,7 @@ class ProposalInovasi extends Model
 
     protected $table = 'proposal_inovasi';
 
-    protected $fillable = [
-        'uuid',
-        'nama',
-        'judul',
-        'latar_belakang',
-        'email',
-        'no_hp',
-        'link_video',
-        'file',
-        'email_verified',
-        'status',
-    ];
+    protected $guarded = [];
 
     protected static function boot()
     {

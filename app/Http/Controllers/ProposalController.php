@@ -23,6 +23,14 @@ class ProposalController extends Controller
             'no_hp' => 'required',
             'file' => 'required|file|mimes:pdf,doc,docx|max:2048',
             'g-recaptcha-response' => 'required|captcha',
+            'ide_inovasi' => 'required',
+            'tujuan_inovasi' => 'required',
+            'target_perubahan' => 'required',
+            'stakeholder' => 'required',
+            'sdm' => 'required',
+            'penerima_manfaat' => 'required',
+            'kebaruan' => 'required',
+            'deskripsi_ide' => 'required',
         ], [
             'nama.required' => 'Nama wajib diisi.',
             'judul.required' => 'Judul wajib diisi.',
@@ -36,6 +44,14 @@ class ProposalController extends Controller
             'file.max' => 'Ukuran file maksimal 2MB.',
             'g-recaptcha-response.required' => 'Silakan verifikasi CAPTCHA terlebih dahulu.',
             'g-recaptcha-response.captcha' => 'Verifikasi CAPTCHA gagal, coba lagi.',
+            'ide_inovasi.required' => 'Ide inovasi wajib diisi',
+            'tujuan_inovasi.required' => 'tujuan inovasi wajib diisi',
+            'target_perubahan.required' => 'target perubahan wajib diisi',
+            'stakeholder.required' => 'stakeholder wajib diisi',
+            'sdm.required' => 'sumber daya manusia wajib diisi',
+            'penerima_manfaat.required' => 'penerima manfaat wajib diisi',
+            'kebaruan.required' => 'kebaruan wajib diisi',
+            'deskripsi_ide.required' => 'deskripsi singkat ide wajib diisi',
         ]);
 
         if ($validator->fails()) {
@@ -57,6 +73,15 @@ class ProposalController extends Controller
                 'no_hp' => $request->no_hp,
                 'link_video' => $request->link_video,
                 'file' => $path,
+                'ide_inovasi' => $request->ide_inovasi,
+                'tujuan_inovasi' => $request->tujuan_inovasi,
+                'target_perubahan' => $request->target_perubahan,
+                'stakeholder' => $request->stakeholder,
+                'sdm' => $request->sdm,
+                'penerima_manfaat' => $request->penerima_manfaat,
+                'kebaruan' => $request->kebaruan,
+                'deskripsi_ide' => $request->deskripsi_ide,
+                'keterangan' => $request->keterangan,
             ]);
 
             Notifikasi::create([
