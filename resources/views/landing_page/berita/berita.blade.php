@@ -1,92 +1,331 @@
 <x-landing.layout>
-    {{-- Bagian tombol tab Berita/Informasi --}}
-    <section class="flex w-full items-center justify-center p-8 -mt-[450px]">
-        <div class="flex justify-center items-center mb-8">
-            <div class="inline-flex items-center bg-[#0044A9] rounded-full p-1">
-                <button id="tab-berita"
-                    class="tab-button bg-[#CBFE04] text-black text-base font-semibold rounded-full px-8 py-2 transition-colors duration-300 focus:outline-none">
-                    Berita
-                </button>
-                <button id="tab-informasi"
-                    class="tab-button text-white text-base font-semibold rounded-full px-8 py-2 transition-colors duration-300 focus:outline-none">
-                    Informasi
-                </button>
-            </div>
-        </div>
-    </section>
-    <div class="hidden lg:block flex-1 mx-8">
-        <div class="h-px bg-gradient-to-r from-transparent via-blue-800/30 to-transparent"></div>
-    </div>
+    {{-- Dependensi Swiper CSS (diperlukan untuk carousel) --}}
+    @push('styles')
+        <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    @endpush
 
-    {{-- Bagian daftar berita --}}
-    <section class="py-16 px-4 md:px-8 lg:px-16 -mt-[50px]">
+    <section class="py-16 px-4 md:px-8 lg:px-16 -mt-[450px]">
         <div class="max-w-7xl mx-auto">
-            <h2 class="text-4xl font-bold text-gray-800 mb-12">Berita</h2>
+            <div class="flex justify-center mb-8">
+                <div class="bg-blue-500 text-white rounded-2xl px-6 py-3 shadow-md inline-block">
+                    <h2 class="text-2xl font-bold text-center">Berita Populer</h2>
+                </div>
+            </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            @if ($beritaPopuler->isEmpty())
+                <div class="p-8 text-center text-gray-500 bg-white rounded-lg shadow">
+                    Belum ada berita populer.
+                </div>
+            @else
+                <!-- Wrapper konseptual, BUKAN swiper-container -->
+                <div class="popular-news-slider relative">
 
-                {{-- Perulangan untuk menampilkan setiap berita --}}
-                @forelse ($beritas as $berita)
-                    <div
-                        class="bg-white rounded-2xl shadow-lg flex flex-col transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/20">
-                        {{-- Gambar Cover --}}
-                        <a href="{{ route('berita.public.show', $berita) }}">
-                            <img src="{{ $berita->cover_image ? asset('storage/' . $berita->cover_image) : 'https://placehold.co/600x400/e2e8f0/667eea?text=Berita' }}"
-                                alt="Cover Berita {{ $berita->title }}" class="w-full h-48 object-cover rounded-t-2xl">
-                        </a>
-                        <div class="p-5 flex flex-col flex-grow">
-                            {{-- Judul Berita --}}
-                            <h3 class="text-lg font-bold text-blue-800 mb-2 leading-tight">
-                                <a href="{{ route('berita.public.show', $berita) }}" class="hover:underline">
-                                    {{ $berita->title }}
-                                </a>
-                            </h3>
-                            {{-- Penulis dan Tanggal --}}
-                            <p class="text-xs text-gray-500 mb-3">
-                                Oleh {{ $berita->author->name ?? 'Admin' }} /
-                                {{ $berita->created_at->isoFormat('dddd, D MMMM YYYY') }}
-                            </p>
-                            {{-- Excerpt / Ringkasan --}}
-                            <p class="text-sm text-gray-700 mb-4 leading-relaxed flex-grow">
-                                {{ $berita->excerpt }}
-                            </p>
+                    <div id="popular-card-wrapper"
+                        class="bg-blue-800 rounded-xl overflow-hidden shadow-2xl transition-colors duration-500 ease-in-out">
+                        <div class="flex flex-col md:flex-row p-8 md:p-12 items-center gap-y-8 md:gap-x-12">
 
-                            {{-- Tombol Bagikan --}}
+                            <div class="w-full md:w-5/12 flex-shrink-0">
+                                <div
+                                    class="swiper-container swiper-image-slider aspect-video rounded-lg overflow-hidden shadow-inner">
+                                    <div class="swiper-wrapper">
+                                        @foreach ($beritaPopuler as $populer)
+                                            <div class="swiper-slide">
+                                                <a href="{{ route('berita.public.show', $populer) }}"
+                                                    class="block w-full h-full">
+
+                                                    <div
+                                                        class="relative w-full h-full bg-black flex items-center justify-center">
+                                                        {{-- 1. Latar Belakang Buram --}}
+                                                        <div class="absolute inset-0 bg-cover bg-center"
+                                                            style="background-image: url('{{ $populer->cover_image ? asset('storage/' . $populer->cover_image) : 'https://placehold.co/800x600/e2e8f0/e2e8f0' }}'); filter: blur(20px) brightness(0.8); transform: scale(1.1);">
+                                                        </div>
+                                                        {{-- 2. Gambar Utama (Contain) --}}
+                                                        <img src="{{ $populer->cover_image ? asset('storage/' . $populer->cover_image) : 'https://placehold.co/800x600/e2e8f0/667eea?text=Berita' }}"
+                                                            alt="{{ $populer->title }}"
+                                                            class="relative z-10 max-w-full max-h-full object-contain">
+                                                    </div>
+
+                                                </a>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+
                             <div
-                                class="flex items-center justify-between text-sm text-gray-600 border-t border-gray-200 pt-3 mt-auto">
-                                <span>Bagikan :</span>
-                                <div class="flex items-center space-x-3 text-gray-500">
-                                    {{-- Tambahkan link share sosial media di sini jika perlu --}}
-                                    <a href="#" class="hover:text-green-500">
-                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                            <path
-                                                d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.886-.001 2.269.655 4.383 1.908 6.161l-1.217 4.432 4.515-1.185z" />
-                                        </svg>
-                                    </a>
-                                    <a href="#" class="hover:text-blue-600">
-                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                            <path
-                                                d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v2.385z" />
-                                        </svg>
-                                    </a>
+                                class="w-full md:w-7/12 pt-8 md:pt-0 md:pl-12 flex flex-col justify-center text-white relative overflow-hidden">
+                                <div class="swiper-container swiper-text-slider">
+                                    <div class="swiper-wrapper">
+                                        @foreach ($beritaPopuler as $populer)
+                                            <div class="swiper-slide">
+                                                <h3 class="text-2xl md:text-3xl font-bold leading-tight mb-3">
+                                                    <a href="{{ route('berita.public.show', $populer) }}"
+                                                        class="hover:underline">
+                                                        {{ $populer->title }}
+                                                    </a>
+                                                </h3>
+                                                <p class="text-sm text-gray-300 mb-4">
+                                                    Oleh {{ $populer->author->name ?? 'Admin' }} /
+                                                    {{ $populer->created_at->isoFormat('D MMMM YYYY') }}
+                                                </p>
+                                                <p
+                                                    class="text-sm md:text-base text-gray-200 mb-6 leading-relaxed hidden md:block">
+                                                    {{ Str::limit($populer->excerpt, 150) }}
+                                                </p>
+                                                <div class="mt-auto">
+                                                    <a href="{{ route('berita.public.show', $populer) }}"
+                                                        class="inline-block bg-yellow-400 text-blue-800 font-semibold px-6 py-3 rounded-md text-sm hover:bg-yellow-500 transition-colors">
+                                                        Baca Selengkapnya
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                @empty
-                    {{-- Pesan jika tidak ada berita --}}
-                    <div class="col-span-1 md:col-span-2 lg:col-span-3 text-center py-16">
-                        <p class="text-gray-500 text-lg">Saat ini belum ada berita yang dipublikasikan.</p>
-                    </div>
-                @endforelse
 
-            </div>
-
-            {{-- Link Paginasi --}}
-            <div class="mt-12">
-                {{ $beritas->links() }}
-            </div>
-
+                    <div class="swiper-pagination popular-pagination relative mt-4"></div>
+                </div>
+            @endif
         </div>
     </section>
+
+    <section class="py-16 px-4 md:px-8 lg:px-16">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                <h2 class="text-3xl font-bold text-gray-800">Berita Terkini</h2>
+
+                <div class="w-full md:w-auto flex flex-col md:flex-row gap-2">
+                    <!-- Input Pencarian -->
+                    <div class="relative w-full md:w-64">
+                        <label for="search-input" class="sr-only">Cari</label>
+                        <input type="text" id="search-input"
+                            class="py-2 px-4 ps-10 block w-full border-gray-300 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                            placeholder="Cari judul berita...">
+                        <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
+                            <i class="bi bi-search text-gray-400"></i>
+                        </div>
+                    </div>
+                    <!-- Filter Urutkan -->
+                    <div class="w-full md:w-auto">
+                        <select id="sort-filter"
+                            class="py-2 px-3 pe-9 block w-full border-gray-300 shadow-sm rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option selected value="terbaru">Urutkan: Paling Baru</option>
+                            <option value="terlama">Urutkan: Paling Lama</option>
+                        </select>
+                    </div>
+                    <!-- Filter Tanggal -->
+                    <div class="w-full md:w-auto">
+                        <input type="date" id="tanggal-filter"
+                            class="py-2 px-3 block w-full border-gray-300 shadow-sm rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 text-gray-500">
+                    </div>
+                </div>
+            </div>
+
+            {{-- Grid untuk kartu berita (sekarang di dalam container) --}}
+            <div id="berita-terkini-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {{-- Muat data awal menggunakan partial view --}}
+                @include('landing_page.berita._berita_terkini_grid', ['beritaTerkini' => $beritaTerkini])
+            </div>
+
+            {{-- Link Paginasi (di dalam container) --}}
+            <div id="pagination-container" class="mt-12 pagination">
+                {{ $beritaTerkini->links() }}
+            </div>
+        </div>
+    </section>
+
+    @push('scripts')
+        {{-- Swiper JS --}}
+        <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+        <script>
+            // Inisialisasi Swiper untuk Berita Populer
+            if (document.querySelector('.popular-news-slider')) {
+
+                // Definisikan palet warna (Tailwind Blue-800, Green-800, Purple-800, Sky-800, Indigo-800)
+                const colors = ['#1e3a8a', '#065f46', '#581c87', '#075985', '#3730a3'];
+                const cardWrapper = document.getElementById('popular-card-wrapper');
+
+                // Inisialisasi Swiper Teks (Hanya Mengikuti)
+                const swiperText = new Swiper('.swiper-text-slider', {
+                    loop: true,
+                    allowTouchMove: false, // Tidak bisa di-swipe manual
+                    effect: 'fade', // Efek fade untuk teks
+                    speed: 1000, // Kecepatan transisi 1000ms (1 detik)
+                    fadeEffect: {
+                        crossFade: true
+                    },
+                });
+
+                // Inisialisasi Swiper Gambar (Kontrol Utama)
+                const swiperImage = new Swiper('.swiper-image-slider', {
+                    loop: true,
+                    speed: 1000, // Kecepatan transisi 1000ms (1 detik)
+                    autoplay: {
+                        delay: 5000,
+                        disableOnInteraction: false,
+                    },
+                    pagination: {
+                        el: '.popular-pagination', // Kontrol pagination ditaruh di sini
+                        clickable: true,
+                        renderBullet: function(index, className) {
+                            // Gunakan dot abu-abu untuk background terang
+                            return '<span class="' + className +
+                                ' bg-gray-400 w-2.5 h-2.5 rounded-full mx-1 cursor-pointer"></span>';
+                        }
+                    },
+                    effect: 'slide', // Efek slide untuk gambar
+                });
+
+                // Link Keduanya
+                swiperImage.controller.control = swiperText;
+                swiperText.controller.control = swiperImage;
+
+                // Tambahkan event listener untuk mengubah warna card
+                swiperImage.on('slideChange', function() {
+                    if (cardWrapper) {
+                        const realIndex = swiperImage.realIndex; // Indeks slide yang sebenarnya (0, 1, 2, 3, 4)
+                        const nextColor = colors[realIndex % colors.length]; // Ambil warna dari palet
+                        cardWrapper.style.backgroundColor = nextColor; // Ganti warna background
+                    }
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const searchInput = document.getElementById('search-input');
+                const sortFilter = document.getElementById('sort-filter');
+                const tanggalFilter = document.getElementById('tanggal-filter');
+                const gridContainer = document.getElementById('berita-terkini-container');
+                const paginationContainer = document.getElementById('pagination-container');
+
+                let debounceTimer;
+
+                // PERBAIKAN: Fungsi fetchBerita sekarang menerima nomor halaman
+                function fetchBerita(page = 1) {
+                    const search = searchInput.value;
+                    const sort = sortFilter.value;
+                    const tanggal = tanggalFilter.value;
+
+                    // Selalu gunakan rute 'berita.public.search'
+                    const params = new URLSearchParams({
+                        search: search,
+                        sort: sort,
+                        tanggal: tanggal,
+                        page: page // Tambahkan parameter halaman
+                    });
+                    const fetchUrl = `{{ route('berita.public.search') }}?${params.toString()}`;
+
+                    // Tampilkan loading
+                    gridContainer.innerHTML =
+                        `<div class="col-span-1 md:col-span-2 lg:col-span-4 text-center py-16"><i class="bi bi-arrow-repeat text-4xl text-gray-400 animate-spin"></i><p class="mt-2 text-gray-500">Memuat berita...</p></div>`;
+                    paginationContainer.innerHTML = ''; // Kosongkan paginasi
+
+                    fetch(fetchUrl, {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Accept': 'application/json',
+                            }
+                        })
+                        .then(response => {
+                            if (!response.ok) { // Cek jika respons tidak OK (misal 404, 500)
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            gridContainer.innerHTML = data.html;
+                            paginationContainer.innerHTML = data.pagination;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching berita:', error);
+                            gridContainer.innerHTML =
+                                `<div class="col-span-1 md:col-span-2 lg:col-span-4 text-center py-16"><p class="text-red-500">Gagal memuat berita. Silakan coba lagi.</p></div>`;
+                        });
+                }
+
+                // Event listener untuk input pencarian (dengan debounce)
+                searchInput.addEventListener('input', () => {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(() => {
+                        fetchBerita(1); // Selalu reset ke halaman 1 saat filter
+                    }, 500);
+                });
+
+                // Event listener untuk dropdown sort dan tanggal
+                sortFilter.addEventListener('change', () => fetchBerita(1)); // Selalu reset ke halaman 1
+                tanggalFilter.addEventListener('change', () => fetchBerita(1)); // Selalu reset ke halaman 1
+
+                // PERBAIKAN: Event listener untuk paginasi
+                paginationContainer.addEventListener('click', function(e) {
+                    let target = e.target;
+                    // Klik bisa terjadi di <span> atau <svg> di dalam <a>
+                    if (target.tagName !== 'A') {
+                        target = target.closest('a');
+                    }
+
+                    // Cek apakah yang diklik adalah link paginasi yang valid
+                    if (target && target.tagName === 'A' && (target.hasAttribute('rel') || target.getAttribute(
+                            'href').includes('page='))) {
+                        e.preventDefault(); // Mencegah reload halaman
+                        const urlString = target.getAttribute('href');
+                        if (urlString) {
+                            try {
+                                const urlObj = new URL(urlString);
+                                const page = urlObj.searchParams.get('page'); // Ekstrak nomor halaman
+                                if (page) {
+                                    fetchBerita(page); // Panggil fetchBerita DENGAN nomor halaman
+                                }
+                            } catch (error) {
+                                console.error('Error parsing pagination URL:', error);
+                            }
+                        }
+                    }
+                });
+            });
+        </script>
+
+        {{-- Style untuk social icon kecil dan paginasi --}}
+        <style>
+            .social-icon-small {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                color: #6b7280;
+                /* gray-500 */
+                transition: all 0.2s ease-in-out;
+            }
+
+            .social-icon-small:hover {
+                transform: scale(1.1);
+            }
+
+            .social-icon-small.whatsapp:hover {
+                color: #10b981;
+            }
+
+            .social-icon-small.facebook:hover {
+                color: #3b82f6;
+            }
+
+            .social-icon-small.twitter:hover {
+                color: #1f2937;
+            }
+
+            /* Styling untuk Swiper pagination dot yang baru */
+            .popular-pagination .swiper-pagination-bullet {
+                background-color: #9ca3af;
+                /* gray-400 */
+            }
+
+            .popular-pagination .swiper-pagination-bullet-active {
+                background-color: #2563eb !important;
+                /* blue-600 */
+            }
+        </style>
+    @endpush
 </x-landing.layout>

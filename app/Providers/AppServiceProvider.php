@@ -10,6 +10,7 @@ use App\Models\PageView;
 use App\Models\ProfileDinas;
 use Carbon\Carbon;
 use Pest\Plugins\Profile;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Paginator::useTailwind();
         View::composer('*', function ($view) {
             $websiteSettings = WebsiteSetting::first();
             $ProfileDinas = ProfileDinas::first();

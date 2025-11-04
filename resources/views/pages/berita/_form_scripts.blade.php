@@ -1,4 +1,8 @@
-{{-- Pastikan ini di-load di layout utama Anda --}}
+{{-- Load Trix Editor JS & CSS (Pastikan ini ada) --}}
+<link rel="stylesheet" href="https://unpkg.com/trix@2.0.0/dist/trix.css">
+<script src="https://unpkg.com/trix@2.0.0/dist/trix.umd.min.js"></script>
+
+{{-- Library untuk drag-and-drop --}}
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
 <script>
@@ -34,10 +38,29 @@
             // Generate the appropriate input based on the item type
             switch (type) {
                 case 'text':
-                    // contentHtml =
-                    //     `<textarea name="items[${uniqueId}][content]" class="form-input block w-full" rows="5" placeholder="Tulis paragraf di sini..." required>${content}</textarea>`;
-                    contentHtml = `<x-form.trix label="Content" id="tugas_fungsi" name="items[${uniqueId}][content]"
-                                :value="''" />`;
+                    // ==========================================================
+                    // === PERBAIKAN DI SINI ===
+                    // ==========================================================
+                    // Kita buat HTML mentah untuk Trix Editor, bukan komponen Blade
+                    // Kita gunakan uniqueId untuk membuat ID unik
+                    const trixId = `trix-content-${uniqueId}`;
+
+                    contentHtml = `
+                        <div class="trix-editor-wrapper">
+                            {{-- Input hidden ini yang akan menyimpan konten HTML --}}
+                            {{-- Perhatikan 'name' dan 'id' yang sekarang menggunakan uniqueId --}}
+                            <input id="${trixId}" type="hidden" name="items[${uniqueId}][content]" value="${escapeHtml(content)}">
+                            
+                            {{-- Tag Trix Editor yang terhubung ke input via 'input' attribute --}}
+                            <trix-editor 
+                                input="${trixId}" 
+                                class="trix-content border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
+                            ></trix-editor>
+                        </div>
+                    `;
+                    // ==========================================================
+                    // === AKHIR PERBAIKAN ===
+                    // ==========================================================
                     break;
                 case 'quote':
                     contentHtml =
@@ -85,7 +108,30 @@
             `;
 
             itemsContainer.appendChild(wrapper);
+
+            // Inisialisasi Trix Editor untuk item baru
+            if (type === 'text') {
+                const editor = wrapper.querySelector('trix-editor');
+                if (editor) {
+                    // Trix v2: Set HTML ke editor
+                    // Ini penting untuk halaman edit agar konten lama dimuat
+                    editor.editor.loadHTML(content);
+                }
+            }
+
             updatePositions();
+        }
+
+        // Fungsi untuk meng-escape HTML (keamanan)
+        function escapeHtml(unsafe) {
+            if (unsafe === null || unsafe === undefined) return '';
+            // Ganti ' dengan &#039; agar tidak merusak string value="..."
+            return unsafe.toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
         }
 
         /**
@@ -98,15 +144,20 @@
                 if (positionInput) {
                     positionInput.value = index;
                 }
+
+                // Update name attributes untuk memastikan index konsisten
+                const uniqueId = item.getAttribute('data-id');
+                item.querySelectorAll('[name^="items["]').forEach(input => {
+                    const oldName = input.getAttribute('name');
+                    // Ganti ID lama (jika ada) dengan ID unik yang benar
+                    const newName = oldName.replace(/items\[.*?\]/, `items[${uniqueId}]`);
+                    input.setAttribute('name', newName);
+                });
             });
         }
 
         // --- EVENT LISTENERS ---
 
-        // =================================================================
-        // PERBAIKAN: Menambahkan pengecekan sebelum menambah event listener
-        // =================================================================
-        // Ini mencegah script berhenti jika salah satu tombol tidak ada di HTML.
         if (addTextButton) addTextButton.addEventListener('click', () => createItemElement('text'));
         if (addImageButton) addImageButton.addEventListener('click', () => createItemElement('image'));
         if (addVideoButton) addVideoButton.addEventListener('click', () => createItemElement('video'));
@@ -135,6 +186,7 @@
         });
 
         // --- INITIALIZATION ---
+        // Inisialisasi item yang sudah ada (untuk halaman edit)
         if (typeof existingItems !== 'undefined' && Array.isArray(existingItems)) {
             existingItems.sort((a, b) => a.position - b.position);
             existingItems.forEach(item => {
@@ -147,6 +199,19 @@
 </script>
 
 <style>
+    /* Style Trix Editor (dari file trix.blade.php Anda) */
+    trix-editor {
+        min-height: 200px;
+        background-color: #fff;
+        /* Pastikan background putih di light mode */
+    }
+
+    .dark trix-editor {
+        background-color: #1f2937;
+        color: #f9fafb;
+        border-color: #374151;
+    }
+
     /* Membuat ikon di dalam tombol tidak bisa diklik */
     .remove-item i {
         pointer-events: none;

@@ -83,6 +83,8 @@
                             <div class="flex flex-wrap gap-2 mt-4 border-t border-gray-200 dark:border-gray-700 pt-4">
                                 <button type="button" id="add-text" class="btn-add-item"><i
                                         class="bi bi-textarea-t mr-2"></i> Tambah Teks</button>
+                                {{-- <button type="button" id="add-quote" class="btn-add-item"><i --}}
+                                        {{-- class="bi bi-chat-left-quote-fill mr-2"></i> Tambah Kutipan</button> --}}
                                 <button type="button" id="add-image" class="btn-add-item"><i
                                         class="bi bi-image mr-2"></i> Tambah Gambar</button>
                                 <button type="button" id="add-video" class="btn-add-item"><i
@@ -107,8 +109,8 @@
                         </div>
                         <div>
                             <label for="cover_image" class="form-label">Cover Image (Opsional)</label>
-                            <input type="file" id="cover_image" name="cover_image" class="form-input block w-full"
-                                accept="image/*">
+                            <input type="file" id="cover_image" name="cover_image"
+                                class="form-input block w-full" accept="image/*">
                             <img src="{{ asset('storage/' . $berita->cover_image) }}" alt="Cover saat ini"
                                 class="rounded-lg mt-4 w-full h-auto object-cover">
                         </div>

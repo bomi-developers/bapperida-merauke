@@ -64,7 +64,9 @@ Route::prefix('riset-inovasi')->name('riset-inovasi.')->group(function () {
 });
 
 Route::get('/berita', [BeritaController::class, 'home'])->name('berita.public.home');
+Route::get('/berita/search', [BeritaController::class, 'searchPublic'])->name('berita.public.search');
 Route::get('/berita/{berita:slug}', [BeritaController::class, 'show'])->name('berita.public.show');
+
 Route::get('/dokumen/kategori/{kategori}/{slug}', [DocumentController::class, 'showByCategory'])
   ->name('documents.by_category');
 Route::get('/dokumen/search', [DocumentController::class, 'searchPublic'])->name('documents.search_public');

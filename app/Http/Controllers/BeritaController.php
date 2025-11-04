@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Berita;
 use App\Models\BeritaItem;
-use App\Models\KategoriDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +14,9 @@ use App\Jobs\CompressBeritaImage;
 
 class BeritaController extends Controller
 {
+    /**
+     * Menampilkan daftar berita dengan fitur pencarian.
+     */
     public function index(Request $request)
     {
         $query = Berita::with('author')->latest();
@@ -99,6 +101,7 @@ class BeritaController extends Controller
                 'excerpt' => $validatedData['excerpt'],
                 'cover_image' => $coverImagePath, // Simpan path asli
                 'status' => $validatedData['status'],
+                // views_count akan default ke 0
             ]);
 
             foreach ($validatedData['items'] as $index => $itemData) {
@@ -142,7 +145,6 @@ class BeritaController extends Controller
 
     /**
      * Mengupdate berita beserta item-item kontennya.
-     * (PERBAIKAN: Logika duplikat dihapus dan diperbaiki)
      */
     public function update(Request $request, Berita $berita)
     {
@@ -280,16 +282,26 @@ class BeritaController extends Controller
 
     // --- METODE PUBLIK ---
 
+    /**
+     * Menampilkan halaman daftar berita (home).
+     */
     public function home()
     {
-        $beritas = Berita::with('author')
+        // 1. Ambil 5 Berita Terpopuler (berdasarkan views_count)
+        $beritaPopuler = Berita::with('author')
             ->where('status', 'published')
-            ->where('page', 'berita') // Hati-hati, pastikan Anda punya kolom 'page' jika ini dipakai
-            ->latest()
-            ->paginate(6);
+            ->orderBy('views_count', 'desc')
+            ->take(5) // Ambil 5 berita
+            ->get();
 
-        // Pastikan view ini ada: 'landing_page.berita.berita'
-        return view('landing_page.berita.berita', compact('beritas'));
+        // 2. Ambil Berita Terkini (dengan paginasi, misal 8 per halaman)
+        $beritaTerkini = Berita::with('author')
+            ->where('status', 'published')
+            ->latest() // Urutkan berdasarkan yang terbaru
+            ->paginate(8); // Tampilkan 8 berita per halaman
+
+        // 3. Kirim kedua data ke view
+        return view('landing_page.berita.berita', compact('beritaPopuler', 'beritaTerkini'));
     }
 
     /**
@@ -297,18 +309,70 @@ class BeritaController extends Controller
      */
     public function show(Berita $berita)
     {
+        $isAdmin = Auth::check() && Auth::user()->role === 'admin';
+        if ($berita->status !== 'published' && !$isAdmin) {
+            abort(404);
+        }
+
+        // 1. TAMBAHKAN VIEW COUNT
+        // Hanya tambahkan jika bukan admin yang melihat
+        if (!$isAdmin) {
+            $berita->increment('views_count');
+        }
+
         // Load relasi yang dibutuhkan
         $berita->load(['items' => function ($query) {
             $query->orderBy('position');
         }, 'author']);
 
-        $beritaTerkait = Berita::where('status', 'published')
-            ->where('id', '!=', $berita->id)
-            ->where('page', 'berita')
-            ->latest()
-            ->take(3)
+        // 2. AMBIL BERITA TERKINI (untuk sidebar)
+        $beritaTerkini = Berita::where('status', 'published')
+            ->where('id', '!=', $berita->id) // Kecualikan berita saat ini
+            ->latest() // Urutkan dari yang terbaru
+            ->take(5) // Ambil 5 berita
             ->get();
 
-        return view('landing_page.berita.berita_detail', compact('berita', 'beritaTerkait'));
+        // 3. AMBIL BERITA TERPOPULER (untuk "Baca Juga")
+        $beritaTerpopuler = Berita::where('status', 'published')
+            ->where('id', '!=', $berita->id) // Kecualikan berita saat ini
+            ->orderBy('views_count', 'desc') // Urutkan berdasarkan views_count
+            ->take(6) // Ambil 3 berita
+            ->get();
+
+        return view('landing_page.berita.berita_detail', compact('berita', 'beritaTerkini', 'beritaTerpopuler'));
+    }
+
+    public function searchPublic(Request $request)
+    {
+        if (!$request->ajax()) {
+            return abort(404);
+        }
+
+        $query = Berita::with('author')->where('status', 'published');
+
+        // 1. Filter Pencarian Judul
+        if ($request->filled('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        // 2. Filter Tanggal
+        if ($request->filled('tanggal')) {
+            $query->whereDate('created_at', $request->tanggal);
+        }
+
+        // 3. Filter Urutan
+        if ($request->input('sort') === 'terlama') {
+            $query->orderBy('created_at', 'asc');
+        } else {
+            $query->orderBy('created_at', 'desc'); // Default: Paling Baru
+        }
+
+        $beritaTerkini = $query->paginate(8); // Samakan dengan jumlah paginasi di home()
+
+        // Kembalikan HTML yang sudah di-render
+        return response()->json([
+            'html' => view('landing_page.berita._berita_terkini_grid', compact('beritaTerkini'))->render(),
+            'pagination' => $beritaTerkini->appends($request->except('page'))->links()->toHtml(),
+        ]);
     }
 }
