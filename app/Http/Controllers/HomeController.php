@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Berita;
 use App\Models\KategoriDocument;
+use App\Models\LendingPage;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -26,7 +27,9 @@ class HomeController extends Controller
     public function index()
     {
         $data = [
-            'dokumen' => KategoriDocument::withCount('documents')->get(),
+            'dokumen' => KategoriDocument::all(),
+            'Str' => new \Illuminate\Support\Str(),
+            'LendingPage' => LendingPage::with('template')->get()->sortBy('order'),
         ];
         return view('landing_page.index', $data);
     }

@@ -332,6 +332,16 @@
                 name: "Profile",
                 url: "/admin/profile"
             },
+            {
+                icon: "bi bi-gear",
+                name: "Lending Page Setting",
+                url: "/admin/lending-page"
+            },
+            {
+                icon: "bi bi-code-slash",
+                name: "Template Editor",
+                url: "/admin/lending-page/template"
+            },
         ];
 
         const searchInput = document.getElementById('searchInput');
@@ -368,13 +378,12 @@
             if (tag === "input" || tag === "textarea") return;
 
             if (e.key === "/") {
-                e.preventDefault(); // cegah muncul karakter '/'
+                e.preventDefault();
                 searchOverlay.classList.remove("hidden");
                 overlaySearchInput.focus();
                 renderResults(menuData);
             }
             if (e.key === "Escape") {
-                // Tutup overlay dengan ESC
                 searchOverlay.classList.add('hidden');
                 overlaySearchInput.value = '';
                 searchResults.innerHTML = '';

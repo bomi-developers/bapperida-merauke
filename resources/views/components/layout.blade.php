@@ -37,13 +37,18 @@
                 [
                     'title' => 'Document Management',
                     'items' => [
-                        ['label' => 'Kategori Dokumen', 'icon' => 'bi bi-folder', 'route' => 'admin.doctkategori.index'],
+                        [
+                            'label' => 'Kategori Dokumen',
+                            'icon' => 'bi bi-folder',
+                            'route' => 'admin.doctkategori.index',
+                        ],
                         ['label' => 'Dokumen', 'icon' => 'bi bi-file-earmark', 'route' => 'admin.documents.index'],
                     ],
                 ],
                 [
                     'title' => 'Settings',
                     'items' => [
+                        ['label' => 'Landing Setting', 'icon' => 'bi-gear', 'route' => 'admin.lending.index'],
                         ['label' => 'Akun Setting', 'icon' => 'bi-person-badge', 'route' => 'profile'],
                         ['label' => 'Profile Dinas', 'icon' => 'bi-info-circle-fill', 'route' => 'website-setting'],
                     ],
@@ -91,7 +96,7 @@
     <x-toast></x-toast>
     {{-- script components layout --}}
     <x-script></x-script>
-    
+
     @stack('scripts')
 </body>
 

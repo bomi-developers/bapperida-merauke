@@ -12,9 +12,14 @@ use App\Http\Controllers\GaleriController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ProfileDinasController;
 use App\Http\Controllers\KategoriDocumentController;
+use App\Http\Controllers\LendingPageController;
 use App\Http\Controllers\ProposalController;
+use App\Models\KategoriDocument;
+use App\Models\LendingPage;
 use App\Models\Notifikasi;
+use App\Models\Template;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Blade;
 
 // cache control
 
@@ -104,6 +109,91 @@ Route::middleware(['auth'])->group(function () {
   Route::get('/home', [PagesController::class, 'dashboard'])->name('home');
   // bidang
   Route::prefix('admin')->name('admin.')->group(function () {
+    // template
+    Route::get('/template/{id}', function ($id) {
+      $template = Template::find($id);
+      $dokumen = KategoriDocument::all();
+
+      if (!$template) {
+        abort(404, 'Template tidak ditemukan');
+      }
+      // Render isi Blade dinamis dengan variabel $dokumen
+      $renderedContent = Blade::render($template->content, [
+        'dokumen' => $dokumen,
+        'Str' => new \Illuminate\Support\Str(),
+      ]);
+
+      $html = "
+          <!DOCTYPE html>
+          <html lang='en'>
+          <head>
+              <meta charset='UTF-8'>
+              <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+              <title>Template Preview</title>
+              <script src='https://cdn.tailwindcss.com'></script>
+              <style>
+                  body { background-color: #f9fafb; padding: 2rem; }
+              </style>
+          </head>
+          <body >
+            <div >
+              {$renderedContent}
+              </div>
+          </body>
+          </html>
+          ";
+
+      return response($html)
+        ->header('Content-Type', 'text/html; charset=UTF-8')
+        ->header('X-Frame-Options', 'SAMEORIGIN')
+        ->header('Referrer-Policy', 'no-referrer')
+        ->header('X-Content-Type-Options', 'nosniff')
+        ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+    });
+    Route::get('/template-preview/all', function () {
+      $pages = LendingPage::with('template')->where('is_active', true)->orderBy('order')->get();
+      $dokumen = KategoriDocument::all();
+
+      $htmlContent = '';
+      foreach ($pages as $page) {
+        if ($page->template) {
+          $htmlContent .= Blade::render($page->template->content, [
+            'dokumen' => $dokumen,
+            'Str' => new \Illuminate\Support\Str(),
+          ]);
+        }
+      }
+      $html = "
+          <!DOCTYPE html>
+          <html lang='en'>
+          <head>
+              <meta charset='UTF-8'>
+              <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+              <title>Template Preview</title>
+              <script src='https://cdn.tailwindcss.com'></script>
+              <style>
+                  body { background-color: #f9fafb; padding: 2rem; }
+              </style>
+          </head>
+          <body>
+              {$htmlContent}
+          </body>
+          </html>
+          ";
+
+      return response($html)
+        ->header('Content-Type', 'text/html; charset=UTF-8')
+        ->header('X-Frame-Options', 'SAMEORIGIN')
+        ->header('Referrer-Policy', 'no-referrer')
+        ->header('X-Content-Type-Options', 'nosniff')
+        ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+    });
+    // lending page
+    Route::get('/lending-page', [LendingPageController::class, 'index'])->name('lending.index');
+    Route::get('/lending-page/template', [LendingPageController::class, 'template'])->name('lending.template');
+    Route::post('/lending-page', [LendingPageController::class, 'store'])->name('lending.store');
+    Route::post('/lending-page/{id}', [LendingPageController::class, 'update'])->name('lending.update');
+    Route::delete('/lending-page/{id}', [LendingPageController::class, 'destroy'])->name('lending.destroy');
     // bidang
     Route::get('bidang', [\App\Http\Controllers\BidangController::class, 'index'])->name('bidang.index');
     Route::get('bidang/data', [\App\Http\Controllers\BidangController::class, 'getData'])->name('bidang.data');

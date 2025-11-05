@@ -15,7 +15,7 @@
                     </p>
 
                     <img src="{{ asset('tailadmin/src/images/illustration/illustration-03.svg') }}" alt="Illustration"
-                        class="mt-12 w-full max-w-sm">
+                        class="mt-12 w-sm h-60">
                 </div>
 
                 <!-- Bagian Kanan (Form) -->

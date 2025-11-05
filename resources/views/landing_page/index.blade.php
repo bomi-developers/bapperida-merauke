@@ -21,6 +21,14 @@
         </div>
     </section>
 
+    @foreach ($LendingPage as $item)
+        {!! Blade::render($item->template->content, [
+            'dokumen' => $dokumen ?? [],
+            'Str' => new \Illuminate\Support\Str(),
+        ]) !!}
+    @endforeach
+
+    {{-- 
     <section class="relative py-24 overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
             <div class="reveal-on-scroll">
@@ -66,9 +74,9 @@
 
             </div>
         </div>
-    </section>
+    </section> --}}
 
-    <section>
+    {{-- <section>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
             <div class="bg-white rounded-2xl shadow-lg p-12 reveal-on-scroll">
                 <div class="text-center">
@@ -141,9 +149,9 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
-    <section class="py-24 overflow-hidden">
+    {{-- <section class="py-24 overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 reveal-on-scroll">
             <div class="text-center">
                 <h2 class="text-3xl font-bold text-[#004299]">Berita Terkini</h2>
@@ -229,9 +237,9 @@
                 <div class="swiper-pagination mt-8 relative"></div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
-    <section class="py-24 overflow-hidden p-8 md:p-16  bg-[url('Assets/Gradient1.svg')] bg-cover bg-center">
+    {{-- <section class="py-24 overflow-hidden p-8 md:p-16  bg-[url('Assets/Gradient1.svg')] bg-cover bg-center">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 reveal-on-scroll p-8 md:p-16">
             <div class="text-center">
                 <h2 class="text-3xl font-bold text-[#004299]">Galeri</h2>
@@ -326,9 +334,9 @@
                     </div>
                 </div>
             </div>
-    </section>
+    </section> --}}
 
-    <section class="py-24 overflow-hidden p-8 md:p-16">
+    {{-- <section class="py-24 overflow-hidden p-8 md:p-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 reveal-on-scroll p-8 md:p-16">
             <div class="text-center">
                 <h2 class="text-3xl font-bold text-[#004299]">Statistik Pengunjung</h2>
@@ -352,5 +360,5 @@
                         Dikunjungi</p>
                 </div>
 
-    </section>
+    </section> --}}
 </x-landing.layout>
