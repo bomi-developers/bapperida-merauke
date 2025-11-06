@@ -1,10 +1,16 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     const pageUrl = "{{ route('admin.bidang.data') }}";
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true,
+    });
+
     let deleteId = null;
 
-
-    console.log(document.getElementById('modalTitle'));
-    // 🔹 Load Data
     function loadData(url = pageUrl) {
         const search = document.getElementById('search').value;
         fetch(`${url}?search=${search}`)
@@ -14,7 +20,7 @@
                     <table class="w-full table-auto border-collapse">
                         <thead>
                             <tr class="bg-gray-100 dark:bg-gray-800 text-left text-sm font-semibold">
-                                <th class="px-4 py-3 text-gray-700 dark:text-gray-200 w-16">No</th>
+                                <th class="px-4 py-3 text-gray-700 dark:text-gray-200 w-16">#</th>
                                 <th class="px-4 py-3 text-gray-700 dark:text-gray-200">Nama Bidang</th>
                                 <th class="px-4 py-3 text-gray-700 dark:text-gray-200">Deskripsi</th>
                                 <th class="px-4 py-3 text-gray-700 dark:text-gray-200 text-center w-32">Aksi</th>
@@ -79,7 +85,20 @@
             })
             .catch(err => {
                 console.error('Error loading data:', err);
-                showToast('Gagal memuat data', false);
+                // showToast('Gagal memuat data', false);
+                // Toast.fire({
+                //     icon: 'error',
+                //     title: 'Gagal Memuat Data'
+                // });
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Memuat Data',
+                    toast: false,
+                    position: 'center',
+                    timer: 5000,
+                    showConfirmButton: true
+                });
+
             });
     }
 
@@ -130,12 +149,20 @@
             .then(res => res.json())
             .then(res => {
                 closeForm();
-                showToast(res.message, true);
+                // showToast(res.message, true);
+                Toast.fire({
+                    icon: 'success',
+                    title: res.message
+                });
                 loadData();
             })
             .catch(err => {
-                console.error('Error saving data:', err);
-                showToast('Terjadi kesalahan saat menyimpan', false);
+                // console.error('Error saving data:', err);
+                // showToast('Terjadi kesalahan saat menyimpan', false);
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Gagal menyimpan Data'
+                });
             });
     });
 
@@ -160,19 +187,25 @@
                 })
                 .then(res => res.json())
                 .then(res => {
-                    showToast(res.message, true);
+                    // showToast(res.message, true);
+                    Toast.fire({
+                        icon: 'success',
+                        title: res.message
+                    });
                     loadData();
                 })
                 .catch(err => {
                     console.error('Error deleting data:', err);
-                    showToast('Gagal menghapus data', false);
+                    // showToast('Gagal menghapus data', false);
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Gagal menghapus Data'
+                    });
                 });
         }
     });
 
-    // 🔹 Search realtime
     document.getElementById('search').addEventListener('input', () => loadData());
 
-    // 🔹 Initial Load
     loadData();
 </script>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bidang;
 use Illuminate\Http\Request;
 use App\Models\Pegawai;
 use App\Models\Golongan;
@@ -13,12 +14,13 @@ class PegawaiController extends Controller
     {
         $golongan = Golongan::all();
         $jabatan = Jabatan::all();
-        return view('pages.pegawai.index', compact('golongan', 'jabatan'));
+        $bidang = Bidang::all();
+        return view('pages.pegawai.index', compact('golongan', 'jabatan', 'bidang'));
     }
 
     public function getData(Request $request)
     {
-        $query = Pegawai::with(['golongan', 'jabatan']);
+        $query = Pegawai::with(['golongan', 'jabatan', 'bidang']);
 
         if ($request->search) {
             $query->where('nama', 'like', "%{$request->search}%")
@@ -38,6 +40,7 @@ class PegawaiController extends Controller
             'nik' => 'nullable|max:50|unique:pegawais,nik',
             'id_golongan' => 'required|exists:golongans,id',
             'id_jabatan' => 'required|exists:jabatans,id',
+            'id_bidang' => 'required|exists:bidangs,id',
         ]);
 
         $pegawai = Pegawai::create($request->all());
@@ -53,6 +56,7 @@ class PegawaiController extends Controller
             'nik' => "nullable|string|max:50|unique:pegawais,nik,{$pegawai->id}",
             'id_golongan' => 'required|exists:golongans,id',
             'id_jabatan' => 'required|exists:jabatans,id',
+            'id_bidang' => 'required|exists:bidangs,id',
         ]);
 
         $pegawai->update($request->all());

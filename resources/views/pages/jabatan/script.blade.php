@@ -11,6 +11,7 @@
                         <table class="w-full text-sm text-left text-gray-600 dark:text-gray-300">
                             <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-200 sticky top-0 z-10">
                                 <tr>
+                                     <th class="px-4 py-3">#</th>
                                     <th class="px-4 py-3">Nama Jabatan</th>
                                     <th class="px-4 py-3 text-center">Aksi</th>
                                 </tr>
@@ -18,9 +19,10 @@
                             <tbody>`;
 
                 if (res.data.length > 0) {
-                    res.data.forEach(b => {
+                    res.data.forEach((b, i) => {
                         html += `
                             <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition">
+                                <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">${i + 1}</td>
                                 <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">${b.jabatan}</td>
                                 <td class="px-4 py-3 text-center">
                                     <div class="flex justify-center gap-3">

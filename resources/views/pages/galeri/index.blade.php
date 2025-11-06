@@ -16,10 +16,11 @@
         {{-- =================================== --}}
         <form method="GET" action="{{ route('admin.galeri.index') }}" class="mb-5">
             <div class="flex">
-                <input type="text" id="searchInput" name="search" placeholder="Ketik judul album..." 
-                       value="{{ request('search') }}" {{-- Tampilkan query pencarian sebelumnya --}}
-                       class="w-full sm:w-80 px-4 py-2.5 text-sm border border-gray-300 dark:border-gray-700 rounded-l-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200" />
-                <button type="submit" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-r-lg text-sm flex items-center">
+                <input type="text" id="searchInput" name="search" placeholder="Ketik judul album..."
+                    value="{{ request('search') }}" {{-- Tampilkan query pencarian sebelumnya --}}
+                    class="w-full sm:w-80 px-4 py-2.5 text-sm border border-gray-300 dark:border-gray-700 rounded-l-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200" />
+                <button type="submit"
+                    class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-r-lg text-sm flex items-center">
                     <i class="bi bi-search mr-2"></i>
                     Cari
                 </button>
@@ -44,7 +45,63 @@
                     </thead>
                     {{-- PERBAIKAN: Ganti @forelse dengan @include --}}
                     <tbody id="galeri-table-body">
-                        @include('pages.galeri.partials._galeri_rows', ['galeris' => $galeris])
+                        {{-- Render baris awal dari data album --}}
+                        @forelse ($galeris as $album)
+                            <tr id="galeri-row-{{ $album->id }}"
+                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                {{-- PERBAIKAN: Tambahkan <td> untuk Cover --}}
+                                <td class="px-6 py-4">
+                                    @if ($album->firstItem)
+                                        @if ($album->firstItem->tipe_file == 'image')
+                                            <img src="{{ asset('storage/' . $album->firstItem->file_path) }}"
+                                                alt="Cover" class="w-16 h-12 object-cover rounded-md">
+                                        @elseif($album->firstItem->tipe_file == 'video' || $album->firstItem->tipe_file == 'video_url')
+                                            <div
+                                                class="w-16 h-12 bg-gray-700 rounded-md flex items-center justify-center">
+                                                <i class="bi bi-film text-2xl text-gray-400"></i>
+                                            </div>
+                                        @endif
+                                    @else
+                                        <div
+                                            class="w-16 h-12 bg-gray-200 dark:bg-gray-700 rounded-md flex items-center justify-center">
+                                            <i class="bi bi-image-alt text-2xl text-gray-400 dark:text-gray-500"></i>
+                                        </div>
+                                    @endif
+                                </td>
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                                    {{ $album->judul }}</th>
+                                <td class="px-6 py-4 text-gray-600 dark:text-gray-400">{{ $album->items_count }} Item
+                                </td>
+                                <td class="px-6 py-4 text-gray-600 dark:text-gray-400">
+                                    {{ $album->created_at->format('d M Y') }}</td>
+                                <td class="px-6 py-4 text-center">
+                                    <div class="flex items-center justify-center space-x-4">
+                                        <button
+                                            class="show-btn font-medium text-green-600 dark:text-green-500 hover:bg-green-200 dark:hover:bg-green-800 rounded-full w-8 h-8"
+                                            title="Detail" data-id="{{ $album->id }}"><i
+                                                class="bi bi-eye-fill text-lg"></i></button>
+                                        <button
+                                            class="edit-btn font-medium text-indigo-600 dark:text-indigo-500 hover:bg-indigo-200 dark:hover:bg-indigo-800 rounded-full w-8 h-8"
+                                            title="Edit" data-id="{{ $album->id }}">
+                                            <i class="bi bi-pencil-square text-lg"></i>
+                                        </button>
+                                        <button
+                                            class="delete-btn font-medium text-red-600 dark:text-red-500  hover:bg-red-200 dark:hover:bg-red-800 rounded-full w-8 h-8"
+                                            title="Hapus" data-id="{{ $album->id }}">
+                                            <i class="bi bi-trash text-lg"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr id="no-data-row">
+                                {{-- PERBAIKAN: Ubah colspan menjadi 5 --}}
+                                <td colspan="5" class="text-center py-12">
+                                    <p class="text-gray-500 dark:text-gray-400">Belum ada album galeri yang ditambahkan.
+                                    </p>
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

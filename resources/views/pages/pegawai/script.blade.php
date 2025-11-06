@@ -12,34 +12,34 @@
                         <table class="w-full text-sm text-left text-gray-600 dark:text-gray-300">
                             <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-200 sticky top-0 z-10">
                                 <tr>
+                                    <th class="px-4 py-3">#</th>
+                                    <th class="px-4 py-3"></th>
                                     <th class="px-4 py-3">Nama</th>
-                                    <th class="px-4 py-3">NIP</th>
-                                    <th class="px-4 py-3">NIK</th>
+                                    <th class="px-4 py-3">Bidang</th>
                                     <th class="px-4 py-3">Golongan</th>
-                                    <th class="px-4 py-3">Jabatan</th>
                                     <th class="px-4 py-3 text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>`;
 
                 if (res.data.length > 0) {
-                    res.data.forEach(b => {
-                        html += `
+                    res.data.forEach((b, i) => {
+                        html += `f
                             <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition">
-                                <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">${b.nama}</td>
-                                <td class="px-4 py-3 text-gray-700 dark:text-gray-200">${b.nip ?? '-'}</td>
-                                <td class="px-4 py-3 text-gray-700 dark:text-gray-200">${b.nik ?? '-'}</td>
+                                <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">${i +1}</td>
+                                <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100"><i class="bi bi-person-bounding-box text-2xl text-indigo-600 dark:text-indigo-400"></i></td>
+                                <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100"><b>${b.nama}</b><br><small class="bg-indigo-200 dark:bg-indigo-600 px-2 py-1 text-indigo-800 dark:text-indigo-200 rounded-xl">${b.nip ?? '-'}</small></td>
+                                <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100"><b>${b.bidang?.nama_bidang ?? '-'}</b><br><small class="bg-indigo-200 dark:bg-indigo-600 px-2 py-1 text-indigo-800 dark:text-indigo-200 rounded-xl">${b.jabatan?.jabatan ?? '-'}</small></td>
                                 <td class="px-4 py-3 text-gray-700 dark:text-gray-200">${b.golongan?.golongan ?? '-'}</td>
-                                <td class="px-4 py-3 text-gray-700 dark:text-gray-200">${b.jabatan?.jabatan ?? '-'}</td>
                                 <td class="px-4 py-3 text-center">
                                     <div class="flex justify-center gap-3">
                                         <button onclick='editPegawai(${JSON.stringify(b)})'
-                                            class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition"
+                                            class="p-2 rounded-lg text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900 hover:text-indigo-800 dark:hover:text-indigo-300 transition"
                                             title="Edit">
                                             <i class="bi bi-pencil-square text-lg"></i>
                                         </button>
                                         <button onclick="deletePegawai(${b.id})"
-                                            class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 transition"
+                                            class="p-2 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900 hover:text-red-800 dark:hover:text-red-300 transition"
                                             title="Hapus">
                                             <i class="bi bi-trash text-lg"></i>
                                         </button>
@@ -100,6 +100,7 @@
         document.getElementById('alamat').value = data.alamat ?? '';
         document.getElementById('id_jabatan').value = data.id_jabatan ?? '';
         document.getElementById('id_golongan').value = data.id_golongan ?? '';
+        document.getElementById('id_bidang').value = data.id_bidang ?? '';
         document.getElementById('formModal').classList.remove('hidden');
     }
 
@@ -121,6 +122,7 @@
             alamat: document.getElementById('alamat').value,
             id_golongan: document.getElementById('id_golongan').value,
             id_jabatan: document.getElementById('id_jabatan').value,
+            id_bidang: document.getElementById('id_bidang').value,
         };
 
         fetch(url, {

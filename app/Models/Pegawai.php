@@ -12,7 +12,8 @@ class Pegawai extends Model
         'nik',
         'alamat',
         'id_jabatan',
-        'id_golongan'
+        'id_golongan',
+        'id_bidang',
     ];
 
     public function jabatan()
@@ -23,5 +24,9 @@ class Pegawai extends Model
     public function golongan()
     {
         return $this->belongsTo(Golongan::class, 'id_golongan');
+    }
+    public function bidang()
+    {
+        return $this->belongsTo(Bidang::class, 'id_bidang');
     }
 }

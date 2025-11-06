@@ -1,64 +1,36 @@
 <x-layout>
     <x-header />
 
-
-    <main class="p-6">
-        <!-- Header Section -->
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">
-                Manajemen Bidang
-            </h2>
+    <div class="w-full mx-auto p-6 transition-colors duration-300 bg-gray-50 dark:bg-gray-900 overflow-auto">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">Daftar Bidang</h2>
             <button onclick="openCreateForm()"
-                class="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow-md transition-colors duration-200">
-                <i class="bi bi-plus-circle"></i>
-                <span>Tambah Bidang</span>
+                class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200">
+                + Tambah Bidang
             </button>
         </div>
 
-        <!-- Notifikasi -->
-        @if (session('success'))
-            <div id="success-alert"
-                class="mb-4 p-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                role="alert">
-                {{ session('success') }}
+        <!-- Search -->
+        <div class="mb-6">
+            <div class="relative w-full md:w-1/3">
+                <!-- Icon -->
+                <i class="bi bi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+
+                <!-- Input -->
+                <input type="text" id="search" placeholder="Cari golongan..."
+                    class="w-full pl-10 pr-4 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-700 
+             bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 
+             focus:ring-2 focus:ring-indigo-500 outline-none transition-colors duration-200" />
             </div>
-        @endif
-
-        <!-- Search Input -->
-        <div class="mb-5">
-            <input type="text" id="searchInput" placeholder="Ketik untuk mencari bidang..."
-                class="w-full sm:w-80 px-4 py-2.5 text-sm border border-gray-300 dark:border-gray-700 rounded-lg
-                       bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
-                       focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200" />
         </div>
 
-        <!-- Table Container -->
-        {{-- <section
-            class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md overflow-hidden">
-            <div class="max-w-full overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">Nama Bidang</th>
-                            <th scope="col" class="px-6 py-3">Keterangan</th>
-                            <th scope="col" class="px-6 py-3 text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bidangTableBody">
-        @include('pages.bidang._bidang_rows', ['bidangs' => $bidangs])
-        </tbody>
-        </table>
-
-        <div id="paginationLinks" class="p-4">
-            {{ $bidangs->links() }}
+        <!-- Table -->
+        <div
+            class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg overflow-hidden transition-colors duration-300">
+            <div id="bidang-table" class="max-w-full overflow-x-auto p-6"></div>
         </div>
-        </div>
-        </section> --}}
-        <section
-            class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md overflow-hidden">
-            <div class="max-w-full overflow-x-auto" id="bidang-table"></div>
-        </section>
-    </main>
+    </div>
 
     @include('pages.bidang.modal')
 </x-layout>

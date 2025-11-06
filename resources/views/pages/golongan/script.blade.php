@@ -1,9 +1,17 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     let pageUrl = "{{ route('admin.golongan.data') }}";
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true,
+    });
 
     function loadData(url = pageUrl) {
         const search = document.getElementById('search').value;
-        fetch(`${url}?search=${encodeURIComponent(search)}`)
+        fetch(`${url}?search=${search}`)
             .then(res => res.json())
             .then(res => {
                 let html = `
@@ -11,6 +19,7 @@
                         <table class="w-full text-sm text-left text-gray-600 dark:text-gray-300">
                             <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-200 sticky top-0 z-10">
                                 <tr>
+                                    <th class="px-4 py-3">#</th>
                                     <th class="px-4 py-3">Nama Golongan</th>
                                     <th class="px-4 py-3 text-center">Aksi</th>
                                 </tr>
@@ -18,9 +27,10 @@
                             <tbody>`;
 
                 if (res.data.length > 0) {
-                    res.data.forEach(g => {
+                    res.data.forEach((g, i) => {
                         html += `
                             <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition">
+                                <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">${i + 1}</td>
                                 <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">${g.golongan}</td>
                                 <td class="px-4 py-3 text-center">
                                     <div class="flex justify-center gap-3">
@@ -71,7 +81,17 @@
                 html += `</div>`;
                 document.getElementById('golongan-table').innerHTML = html;
             })
-            .catch(err => console.error(err));
+            .catch(err => {
+                console.error(err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Memuat Data',
+                    toast: false,
+                    position: 'center',
+                    timer: 5000,
+                    showConfirmButton: true
+                });
+            });
     }
 
     function openCreateForm() {

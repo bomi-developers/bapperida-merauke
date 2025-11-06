@@ -21,7 +21,7 @@ class BidangController extends Controller
                 ->orWhere('deskripsi', 'like', '%' . $request->search . '%');
         }
 
-        $bidangs = $query->orderBy('created_at', 'desc')->paginate(5);
+        $bidangs = $query->orderBy('created_at', 'desc')->paginate(20);
 
         return response()->json($bidangs);
     }

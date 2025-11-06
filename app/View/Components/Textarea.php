@@ -12,13 +12,15 @@ class Textarea extends Component
     public $id;
     public $name;
     public $rows;
+    public $textarea;
 
-    public function __construct($label = '', $id = '', $name = '', $rows = 3)
+    public function __construct($label = '', $id = '', $name = '', $rows = 3, $textarea = '')
     {
         $this->label = $label;
         $this->id = $id ?: $name;
         $this->name = $name;
         $this->rows = $rows;
+        $this->rows = $textarea;
     }
 
     public function render()

@@ -3,17 +3,14 @@
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
         <form id="galeri-form" enctype="multipart/form-data" class="flex flex-col flex-grow min-h-0">
             <!-- Header Modal -->
-            <div
-                class="p-5 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center flex-shrink-0">
-                <h3 id="modal-title" class="text-xl font-semibold text-gray-900 dark:text-white"></h3>
-                <button type="button"
-                    class="close-modal-btn text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
-                    <i class="bi bi-x-lg"></i>
-                </button>
+            <div class="pt-5 pb-2 px-5 dark:border-gray-700 flex justify-between items-center flex-shrink-0">
+                <h3 id="modal-title" class="text-xl font-semibold mb-5 text-gray-900 dark:text-white"></h3>
+                <button
+                    class="close-modal-btn   text-red-800 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800 rounded-full w-8 h-8 flex items-center justify-center">&times;</button>
             </div>
 
             <!-- Konten Modal (Scrollable) -->
-            <div class="flex-grow overflow-y-auto p-6 space-y-4"
+            <div class="flex-grow overflow-y-auto px-5 space-y-4"
                 style="scrollbar-width: thin; scrollbar-color: #A0AEC0 #E2E8F0;">
                 {{-- Hidden fields --}}
                 <input type="hidden" name="_method" id="method-field">
@@ -74,7 +71,6 @@
             <!-- Footer Modal -->
             <div
                 class="p-4 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-2 flex-shrink-0">
-                <button type="button" class="btn-secondary close-modal-btn">Batal</button>
                 <button type="submit" id="save-btn" class="btn-primary">Simpan</button>
             </div>
         </form>

@@ -1,7 +1,7 @@
 <x-layout>
     <x-header />
 
-    <div class="w-full mx-auto p-6 transition-colors duration-300 bg-gray-50 dark:bg-gray-900 overflow-auto">
+    <div class="w-full mx-auto p-6 transition-colors duration-300  overflow-auto">
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">Data Pegawai</h2>
