@@ -82,6 +82,13 @@
                  'description' =>
                      'Jelajahi berbagai kekayaan intelektual yang dimiliki oleh BAPPERIDA Kabupaten Merauke dalam mendukung pembangunan daerah.',
              ],
+             [
+                 'routes' => ['galeri.public.index'],
+                 'title' => 'Galeri',
+                 'subtitle' => 'Galeri oleh BAPPERIDA',
+                 'description' =>
+                     'Jelajahi berbagai koleksi galeri yang dimiliki oleh BAPPERIDA Kabupaten Merauke dalam mendukung pembangunan daerah.',
+             ],
          ];
 
          $currentRoute = Route::currentRouteName();

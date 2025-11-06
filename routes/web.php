@@ -72,6 +72,9 @@ Route::get('/berita', [BeritaController::class, 'home'])->name('berita.public.ho
 Route::get('/berita/search', [BeritaController::class, 'searchPublic'])->name('berita.public.search');
 Route::get('/berita/{berita:slug}', [BeritaController::class, 'show'])->name('berita.public.show');
 
+Route::get('/galeri', [GaleriController::class, 'indexPublic'])->name('galeri.public.index');
+Route::get('/galeri/search', [GaleriController::class, 'searchPublic'])->name('galeri.public.search');
+
 Route::get('/dokumen/kategori/{kategori}/{slug}', [DocumentController::class, 'showByCategory'])
   ->name('documents.by_category');
 Route::get('/dokumen/search', [DocumentController::class, 'searchPublic'])->name('documents.search_public');
@@ -247,7 +250,7 @@ Route::middleware(['auth'])->group(function () {
     // galeri
     Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri.index');
     Route::post('/galeri', [GaleriController::class, 'store'])->name('galeri.store');
-    Route::get('/galeri/{galeri}', [GaleriController::class, 'show'])->name('galeri.show'); // Untuk AJAX edit
+    Route::get('/galeri/{galeri}', [GaleriController::class, 'show'])->name('galeri.show'); 
     Route::put('/galeri/{galeri}', [GaleriController::class, 'update'])->name('galeri.update');
     Route::delete('/galeri/{galeri}', [GaleriController::class, 'destroy'])->name('galeri.destroy');
     // logs login

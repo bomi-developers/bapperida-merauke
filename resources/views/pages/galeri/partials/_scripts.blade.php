@@ -17,6 +17,7 @@
         const galeriIdField = document.getElementById('galeri-id-field');
         const judulInput = document.getElementById('judul');
         const keteranganInput = document.getElementById('keterangan');
+        const isHighlightedCheckbox = document.getElementById('is_highlighted'); // Ambil Checkbox
         // Containers for items
         const existingItemsContainer = document.getElementById('existing-items-container');
         const newItemsContainer = document.getElementById('new-items-container');
@@ -33,7 +34,7 @@
         const noItemsMessage = document.getElementById('no-items-message');
 
         // --- Elements for Loading Modal ---
-        const loadingModal = document.getElementById('loading-modal'); // Modal loading sederhana
+        const loadingModal = document.getElementById('loading-modal');
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         let newItemCounter = 0;
@@ -44,7 +45,6 @@
         const closeModal = () => modal.classList.add('hidden');
         const openShowModal = () => showModalEl.classList.remove('hidden');
         const closeShowModal = () => showModalEl.classList.add('hidden');
-        // --- Fungsi untuk modal loading sederhana ---
         const openLoadingModal = () => {
             if (loadingModal) loadingModal.classList.remove('hidden');
         };
@@ -71,6 +71,7 @@
             newItemsContainer.innerHTML = '';
             deletedItemsContainer.innerHTML = '';
             newItemCounter = 0;
+            if (isHighlightedCheckbox) isHighlightedCheckbox.checked = false; // Reset checkbox
         };
 
         // --- Render Table Row (Updated) ---
@@ -91,12 +92,18 @@
                     `<div class="w-16 h-12 bg-gray-200 dark:bg-gray-700 rounded-md flex items-center justify-center"><i class="bi bi-image-alt text-2xl text-gray-400 dark:text-gray-500"></i></div>`;
             }
 
+            // Tentukan status badge berdasarkan data
+            const statusBadge = galeri.is_highlighted ?
+                `<span class="px-2 py-1 text-xs font-medium rounded-full bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300">Pilihan</span>` :
+                `<span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Normal</span>`;
+
             return `
                 <tr id="galeri-row-${galeri.id}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td class="px-6 py-4">${coverHtml}</td>
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">${galeri.judul}</th>
                     <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${itemCount} Item</td>
                     <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${new Date(galeri.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                    <td class="px-6 py-4">${statusBadge}</td> {{-- Kolom Status --}}
                     <td class="px-6 py-4 text-center">
                         <div class="flex items-center justify-center space-x-4">
                             <button class="show-btn font-medium text-green-600 dark:text-green-500 hover:underline" title="Detail" data-id="${galeri.id}"><i class="bi bi-eye-fill text-base"></i></button>
@@ -186,8 +193,40 @@
                 const fileInput = itemDiv.querySelector('input[type="file"]');
                 const previewContainer = itemDiv.querySelector('.item-preview');
                 const iconClass = type === 'image' ? 'bi-image' : 'bi-film';
+
                 fileInput.addEventListener('change', (event) => {
-                    /* Preview logic */ });
+                    const file = event.target.files[0];
+                    const maxSize = 50 * 1024 * 1024; // 50MB in bytes
+
+                    if (file) {
+                        if (file.size > maxSize) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'File Terlalu Besar',
+                                text: `Ukuran file (${(file.size / 1024 / 1024).toFixed(2)} MB) melebihi batas 50MB.`,
+                            });
+                            event.target.value = null;
+                            previewContainer.innerHTML =
+                                `<div class="placeholder"><i class="bi ${iconClass} text-2xl"></i></div>`;
+                            return;
+                        }
+
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            if (type === 'image') {
+                                previewContainer.innerHTML =
+                                    `<img src="${e.target.result}" alt="Preview">`;
+                            } else {
+                                previewContainer.innerHTML =
+                                    `<div class="video-placeholder"><i class="bi bi-film text-xl text-gray-400 dark:text-gray-500"></i></div>`;
+                            }
+                        }
+                        reader.readAsDataURL(file);
+                    } else {
+                        previewContainer.innerHTML =
+                            `<div class="placeholder"><i class="bi ${iconClass} text-2xl"></i></div>`;
+                    }
+                });
             }
         };
 
@@ -259,6 +298,8 @@
                         const galeri = await response.json();
                         judulInput.value = galeri.judul;
                         keteranganInput.value = galeri.keterangan || '';
+                        isHighlightedCheckbox.checked = galeri.is_highlighted; // Set nilai checkbox
+
                         existingItemsContainer.innerHTML = '';
                         if (galeri.items && galeri.items.length > 0) {
                             existingItemsContainer.classList.remove('hidden');
@@ -296,9 +337,15 @@
                                         }
                                     });
 
-                                responseText = await response
-                            .text(); // Selalu baca sebagai teks dulu
-                                const res = JSON.parse(responseText); // Coba parse
+                                responseText = await response.text();
+
+                                if (!responseText) {
+                                    throw new Error(
+                                        'Respons server kosong. Periksa log server.'
+                                        );
+                                }
+
+                                const res = JSON.parse(responseText);
 
                                 if (!response.ok || !res.success) throw new Error(res
                                     .message || 'Gagal menghapus');
@@ -312,14 +359,13 @@
                                         .children.length === 1 && tableBody
                                         .firstElementChild.id === 'no-data-row')) {
                                     tableBody.innerHTML =
-                                        `<tr id="no-data-row"><td colspan="5" class="text-center py-12"><p class="text-gray-500 dark:text-gray-400">Belum ada album galeri yang ditambahkan.</p></td></tr>`;
+                                        `<tr id="no-data-row"><td colspan="6" class="text-center py-12"><p class="text-gray-500 dark:text-gray-400">Belum ada album galeri yang ditambahkan.</p></td></tr>`;
                                 }
                             } catch (error) {
-                                // Tangani jika parsing JSON gagal (respons bukan JSON)
                                 console.error("Error deleting galeri:", error,
                                     "Response Text:", responseText);
                                 let errorMsg = error.message;
-                                if (error instanceof SyntaxError) { // JSON.parse gagal
+                                if (error instanceof SyntaxError) {
                                     errorMsg =
                                         'Gagal menghapus. Respons server tidak valid.';
                                 }
@@ -333,9 +379,6 @@
                 }
 
 
-                // =======================================================
-                // === PERBAIKAN: MENAMBAHKAN KEMBALI LOGIKA SHOW MODAL ===
-                // =======================================================
                 if (target.classList.contains('show-btn')) {
                     try {
                         const response = await fetch(`{{ url('admin/galeri') }}/${id}`);
@@ -352,12 +395,11 @@
                                 const itemElement = document.createElement('div');
                                 itemElement.className =
                                     'aspect-square rounded-lg overflow-hidden relative group border border-slate-700 bg-black';
-
                                 let mediaElement = '';
                                 if (item.tipe_file === 'image') {
                                     mediaElement =
                                         `<img src="{{ asset('storage') }}/${item.file_path}" alt="${item.caption || galeri.judul}" class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105">`;
-                                } else if (item.tipe_file === 'video') { // Video Upload
+                                } else if (item.tipe_file === 'video') {
                                     mediaElement = `
                                         <div class="w-full h-full flex items-center justify-center cursor-pointer video-placeholder-show">
                                             <i class="bi bi-play-circle-fill text-5xl text-white/70 group-hover:text-white transition-colors"></i>
@@ -367,7 +409,7 @@
                                              Browser Anda tidak mendukung tag video.
                                         </video>
                                     `;
-                                } else if (item.tipe_file === 'video_url') { // Video URL
+                                } else if (item.tipe_file === 'video_url') {
                                     const getYouTubeId = (url) => {
                                         if (!url) return null;
                                         const regExp =
@@ -385,8 +427,6 @@
                                             `<div class="w-full h-full flex items-center justify-center text-slate-500 text-xs text-center p-2">URL Video tidak valid atau tidak didukung: ${item.file_path}</div>`;
                                     }
                                 }
-
-
                                 itemElement.innerHTML = mediaElement;
                                 if (item.caption) {
                                     itemElement.innerHTML +=
@@ -433,6 +473,11 @@
                 // Kumpulkan data teks
                 formData.append('judul', judulInput.value);
                 formData.append('keterangan', keteranganInput.value);
+
+                // PERBAIKAN: Tambahkan status checkbox
+                if (isHighlightedCheckbox.checked) {
+                    formData.append('is_highlighted', '1');
+                }
 
                 if (isUpdate) {
                     formData.append('_method', 'PUT');
@@ -481,33 +526,22 @@
                     }
                 });
 
-                // --- VALIDASI KLIEN DIPERBARUI ---
-                const existingItemCount = existingItemsContainer.querySelectorAll(
-                    '.existing-item-preview').length;
-                const deletedItemCount = deletedItemsContainer.querySelectorAll(
-                    'input[name="deleted_items[]"]').length;
-
-                // Hitung item baru yang valid (punya file ATAU url)
-                const validNewItemCount = Array.from(newItemInputs).filter(itemDiv => {
-                    const fileInput = itemDiv.querySelector('input[type="file"]');
-                    const urlInput = itemDiv.querySelector('input[type="url"]');
-                    return (fileInput && fileInput.files.length > 0) || (urlInput &&
-                        urlInput.value.trim() !== '');
-                }).length;
-
-                // Hitung jumlah item yang tersisa setelah dihapus
-                const remainingExistingItems = existingItemCount - deletedItemCount;
-                // Hitung total item final
-                const totalFinalItemCount = remainingExistingItems + validNewItemCount;
-
-                // PERBAIKAN: Hapus validasi ini seperti yang Anda minta
+                // --- VALIDASI KLIEN DIHAPUS (SESUAI PERMINTAAN) ---
+                // const existingItemCount = existingItemsContainer.querySelectorAll('.existing-item-preview').length;
+                // const deletedItemCount = deletedItemsContainer.querySelectorAll('input[name="deleted_items[]"]').length;
+                // const validNewItemCount = Array.from(newItemInputs).filter(itemDiv => {
+                //      const fileInput = itemDiv.querySelector('input[type="file"]');
+                //      const urlInput = itemDiv.querySelector('input[type="url"]');
+                //      return (fileInput && fileInput.files.length > 0) || (urlInput && urlInput.value.trim() !== ''); 
+                // }).length;
+                // const totalFinalItemCount = existingItemCount - deletedItemCount + validNewItemCount;
                 // if (totalFinalItemCount === 0) {
                 //     Swal.fire('Error', 'Album harus memiliki setidaknya satu file media.', 'error');
                 //     saveBtn.innerHTML = originalButtonText;
                 //     saveBtn.disabled = false;
                 //     return;
                 // }
-                // --- AKHIR VALIDASI DIPERBARUI ---
+                // --- AKHIR VALIDASI DIHAPUS ---
 
                 console.log('Submitting FormData:');
                 for (let [key, value] of formData.entries()) {

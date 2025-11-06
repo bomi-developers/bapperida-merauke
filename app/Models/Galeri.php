@@ -20,6 +20,11 @@ class Galeri extends Model
     protected $fillable = [
         'judul',
         'keterangan',
+        'is_highlighted',
+    ];
+
+    protected $casts = [
+        'is_highlighted' => 'boolean',
     ];
 
     /**

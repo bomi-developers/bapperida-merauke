@@ -66,7 +66,7 @@
                 //         ['label' => 'Infrastruktur', 'url' => '#'],
                 //     ],
                 // ],
-                ['label' => 'Galeri', 'url' => '#'],
+                ['label' => 'Galeri', 'route' => 'galeri.public.index'],
                 ['label' => 'Berita', 'route' => 'berita.public.home'],
             ];
         @endphp

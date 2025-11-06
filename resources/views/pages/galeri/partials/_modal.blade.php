@@ -31,6 +31,14 @@
                     <textarea id="keterangan" name="keterangan" class="form-input w-full" rows="3"></textarea>
                 </div>
 
+                <div class="mb-4">
+                    <label class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-200">
+                        <input type="checkbox" name="is_highlighted" id="is_highlighted" 
+                               class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600">
+                        <span>Jadikan Album Pilihan (Highlight Album)</span>
+                    </label>
+                </div>
+
                 {{-- Container untuk Item Media (Dinamis) --}}
                 <div>
                     <label class="form-label">Item Media</label>
@@ -52,6 +60,9 @@
                             <button type="button" id="add-video-url-item" class="btn-add-item"><i
                                     class="bi bi-link-45deg mr-2"></i> Tambah Link Video</button>
                         </div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-3">
+                            Catatan: Ukuran file maksimum untuk foto atau video adalah 50MB.
+                        </p>
                     </div>
                 </div>
 

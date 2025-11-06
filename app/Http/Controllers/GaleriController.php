@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers; // Sesuai dengan file Anda
 
 use App\Models\Galeri;
 use App\Models\GaleriItem;
@@ -12,13 +12,28 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use App\Jobs\CompressGaleriItem;
+use App\Jobs\CompressGaleriItem; // Pastikan ini di-import
 
 class GaleriController extends Controller
 {
-    public function index()
+    // ==================================================================
+    //                  FUNGSI ADMIN
+    // ==================================================================
+
+    /**
+     * Menampilkan halaman manajemen galeri (album).
+     */
+    public function index(Request $request)
     {
-        $galeris = Galeri::with('firstItem')->withCount('items')->latest()->get();
+        $query = Galeri::with('firstItem')->withCount('items');
+
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where('judul', 'like', $searchTerm . '%');
+        }
+
+        $galeris = $query->latest()->paginate(10);
+
         return view('pages.galeri.index', compact('galeris'));
     }
 
@@ -27,14 +42,16 @@ class GaleriController extends Controller
      */
     public function store(Request $request)
     {
+        // Validasi untuk item dinamis
         $validator = Validator::make($request->all(), [
             'judul' => 'required|string|max:255|unique:galeris,judul',
             'keterangan' => 'nullable|string',
-            'items' => 'required|array|min:1',
+            'is_highlighted' => 'nullable|boolean', // Validasi untuk highlight
+            'items' => 'required|array|min:1', // Harus ada minimal 1 item
             'items.*.type' => ['required', Rule::in(['image', 'video', 'video_url'])],
             'items.*.file' => 'required_if:items.*.type,image,video|file|mimes:jpg,jpeg,png,webp,mp4,mov,avi,wmv,JPG|max:51200', // Wajib jika tipe file
-            'items.*.url' => 'required_if:items.*.type,video_url|url',
-            'items.*.caption' => 'nullable|string|max:255',
+            'items.*.url' => 'required_if:items.*.type,video_url|url', // Wajib jika tipe URL
+            'items.*.caption' => 'nullable|string|max:255', // Caption opsional
         ], [
             'items.required' => 'Minimal tambahkan satu item media.',
             'items.*.file.required_if' => 'File media wajib diunggah untuk tipe Foto/Video.',
@@ -56,6 +73,7 @@ class GaleriController extends Controller
                 $galeri = Galeri::create([
                     'judul' => $validatedData['judul'],
                     'keterangan' => $validatedData['keterangan'] ?? null,
+                    'is_highlighted' => $request->has('is_highlighted'), // Simpan status highlight
                 ]);
 
                 $slug = Str::slug($galeri->judul);
@@ -65,17 +83,15 @@ class GaleriController extends Controller
                     $tipeFile = $itemData['type'];
                     $filePath = null;
                     $caption = $itemData['caption'] ?? null;
-                    $itemToDispatch = null; // Variabel untuk job kompresi
 
                     if ($tipeFile === 'image' || $tipeFile === 'video') {
-                        $fileInputKey = "items.{$index}.file"; // Key asli dari form
+                        // Handle file upload
+                        $fileInputKey = "items.{$index}.file"; // Gunakan key asli dari form
                         if ($request->hasFile($fileInputKey)) {
                             $file = $request->file($fileInputKey);
                             $shortCode = strtolower(Str::random(6));
                             $extension = $file->getClientOriginalExtension();
                             $filename = "{$slug}-{$index}-{$shortCode}.{$extension}";
-
-                            // Simpan file asli (ukuran besar)
                             $filePath = $file->storeAs('galeri', $filename, 'public');
                         } else {
                             Log::error("File not found for index {$index} despite validation pass.");
@@ -93,7 +109,7 @@ class GaleriController extends Controller
                             'caption' => $caption,
                         ]);
 
-                        // Jika item adalah GAMBAR (bukan video), kirim ke antrian kompresi
+                        // Jika item adalah GAMBAR, kirim ke antrian kompresi
                         if ($tipeFile === 'image') {
                             CompressGaleriItem::dispatch($newGaleriItem);
                         }
@@ -126,7 +142,7 @@ class GaleriController extends Controller
     public function show(Galeri $galeri)
     {
         $galeri->load('items');
-        return response()->json($galeri);
+        return response()->json($galeri); // Model 'Galeri' sudah punya $casts['is_highlighted']
     }
 
     /**
@@ -137,7 +153,8 @@ class GaleriController extends Controller
         $validator = Validator::make($request->all(), [
             'judul' => ['required', 'string', 'max:255', Rule::unique('galeris')->ignore($galeri->id)],
             'keterangan' => 'nullable|string',
-            'items' => 'nullable|array',
+            'is_highlighted' => 'nullable|boolean', // Validasi untuk highlight
+            'items' => 'nullable|array', // Item baru opsional saat update
             'items.*.type' => ['required', Rule::in(['image', 'video', 'video_url'])],
             'items.*.file' => 'required_if:items.*.type,image,video|file|mimes:jpg,jpeg,png,webp,mp4,mov,avi,wmv|max:51200',
             'items.*.url' => 'required_if:items.*.type,video_url|url',
@@ -145,10 +162,11 @@ class GaleriController extends Controller
             'deleted_items' => 'nullable|array',
             'deleted_items.*' => 'integer|exists:galeri_items,id',
             'existing_captions' => 'nullable|array',
-            'existing_captions.*' => 'nullable|string|max:255',
+            'existing_captions.*' => 'nullable|string|max:255', // Key adalah item ID
         ], [
             'items.*.file.required_if' => 'File media wajib diunggah untuk tipe Foto/Video baru.',
             'items.*.url.required_if' => 'URL Video wajib diisi untuk tipe Link Video baru.',
+            'items.*.file.max' => 'Ukuran file tidak boleh melebihi 50MB.',
         ]);
 
         if ($validator->fails()) {
@@ -163,6 +181,7 @@ class GaleriController extends Controller
                 $galeri->update([
                     'judul' => $validatedData['judul'],
                     'keterangan' => $validatedData['keterangan'] ?? null,
+                    'is_highlighted' => $request->has('is_highlighted'), // Simpan status highlight
                 ]);
 
                 $slug = Str::slug($galeri->judul);
@@ -172,6 +191,7 @@ class GaleriController extends Controller
                     $itemsToDelete = GaleriItem::whereIn('id', $validatedData['deleted_items'])
                         ->where('galeri_id', $galeri->id)->get();
                     foreach ($itemsToDelete as $item) {
+                        // Hanya hapus file jika bukan URL
                         if ($item->tipe_file !== 'video_url' && $item->file_path) {
                             Storage::disk('public')->delete($item->file_path);
                         }
@@ -185,7 +205,7 @@ class GaleriController extends Controller
                         $tipeFile = $itemData['type'];
                         $filePath = null;
                         $caption = $itemData['caption'] ?? null;
-                        $fileInputKey = "items.{$index}.file";
+                        $fileInputKey = "items.{$index}.file"; // Key asli dari form
 
                         $itemToDispatch = null;
 
@@ -224,7 +244,7 @@ class GaleriController extends Controller
                 if (isset($validatedData['existing_captions'])) {
                     foreach ($validatedData['existing_captions'] as $itemId => $caption) {
                         GaleriItem::where('id', $itemId)
-                            ->where('galeri_id', $galeri->id)
+                            ->where('galeri_id', $galeri->id) // Pastikan milik album ini
                             ->update(['caption' => $caption]);
                     }
                 }
@@ -261,7 +281,7 @@ class GaleriController extends Controller
                     }
                 }
 
-                // 2. Hapus item dari database
+                // 2. Hapus item dari database (seharusnya otomatis jika cascade, tapi kita lakukan manual)
                 $galeri->items()->delete();
 
                 // 3. Hapus album utama
@@ -277,5 +297,102 @@ class GaleriController extends Controller
             ], 500);
         }
     }
-}
 
+    /**
+     * Menampilkan halaman utama galeri publik.
+     */
+    public function indexPublic(Request $request)
+    {
+        // 1. Data untuk Carousel (Ambil 5 album yang di-highlight)
+        $galeriPopuler = Galeri::with('firstItem')
+            ->where('is_highlighted', true) // Ambil yang di-highlight
+            ->latest()
+            ->take(5)
+            ->get();
+
+        if ($galeriPopuler->isEmpty()) {
+            $galeriPopuler = Galeri::with('firstItem')
+                ->latest() // Ambil yang terbaru
+                ->take(3)  // Ambil 3 saja
+                ->get();
+        }
+
+        // 2. Data untuk Filter (Tahun)
+        $years = GaleriItem::select(DB::raw('YEAR(created_at) as year'))
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->pluck('year');
+
+        // 3. Data Awal untuk Grid (Default: Semua Album)
+        $items = Galeri::with('firstItem')->withCount('items')->latest()->paginate(12);
+
+        $currentFilterType = 'album';
+
+        return view('landing_page.galeri.galeri', compact('galeriPopuler', 'years', 'items', 'currentFilterType'));
+    }
+
+    /**
+     * Menangani pencarian AJAX dan filter untuk galeri publik.
+     */
+    public function searchPublic(Request $request)
+    {
+        if (!$request->ajax()) {
+            abort(404);
+        }
+
+        $search = $request->input('search');
+        $sort = $request->input('sort', 'terbaru');
+        $tanggal = $request->input('tanggal'); // Ini adalah tanggal spesifik (atau tahun, tergantung view)
+        $type = $request->input('type', 'album');
+
+        $currentFilterType = $type;
+        $items = null;
+
+        if ($type === 'album') {
+            $query = Galeri::with('firstItem')->withCount('items');
+            if ($search) {
+                $query->where('judul', 'like', '%' . $search . '%');
+            }
+            if ($tanggal) {
+                // Jika input tanggal adalah tahun (YYYY), gunakan whereYear
+                if (strlen($tanggal) == 4 && is_numeric($tanggal)) {
+                    $query->whereYear('created_at', $tanggal);
+                } else {
+                    // Jika input tanggal adalah tanggal penuh (YYYY-MM-DD)
+                    $query->whereDate('created_at', $tanggal);
+                }
+            }
+        } else {
+            $query = GaleriItem::with('galeri');
+            $query->where('tipe_file', $type);
+            if ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('caption', 'like', '%' . $search . '%')
+                        ->orWhereHas('galeri', function ($q_galeri) use ($search) {
+                            $q_galeri->where('judul', 'like', '%' . $search . '%');
+                        });
+                });
+            }
+            if ($tanggal) {
+                if (strlen($tanggal) == 4 && is_numeric($tanggal)) {
+                    $query->whereYear('created_at', $tanggal);
+                } else {
+                    $query->whereDate('created_at', $tanggal);
+                }
+            }
+        }
+
+        if ($sort === 'terlama') {
+            $query->orderBy('created_at', 'asc');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $items = $query->paginate(12);
+
+        return response()->json([
+            'html' => view('landing_page.galeri.partials._galeri_grid', compact('items', 'currentFilterType'))->render(),
+            'pagination' => $items->appends($request->except('page'))->links()->toHtml(),
+        ]);
+    }
+}
