@@ -83,7 +83,7 @@
                      'Jelajahi berbagai kekayaan intelektual yang dimiliki oleh BAPPERIDA Kabupaten Merauke dalam mendukung pembangunan daerah.',
              ],
              [
-                 'routes' => ['galeri.public.index'],
+                 'routes' => ['galeri.public.index', 'galeri.public.show'],
                  'title' => 'Galeri',
                  'subtitle' => 'Galeri oleh BAPPERIDA',
                  'description' =>

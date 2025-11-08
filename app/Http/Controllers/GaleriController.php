@@ -395,4 +395,47 @@ class GaleriController extends Controller
             'pagination' => $items->appends($request->except('page'))->links()->toHtml(),
         ]);
     }
+
+    public function showPublic(Galeri $galeri)
+    {
+        // 1. Muat semua item untuk galeri ini
+        // Kita akan memuat semua item di sini, filter akan ditangani AJAX
+        $items = $galeri->items()->orderBy('id', 'asc')->get();
+
+        // 2. Ambil 4 "Album Lainnya" (terbaru, kecuali yang ini)
+        $albumLainnya = Galeri::with('firstItem')
+            ->where('id', '!=', $galeri->id)
+            ->latest()
+            ->take(4)
+            ->get();
+
+        $currentFilterType = 'all'; // Filter default saat halaman dimuat
+
+        return view('landing_page.galeri.galeri_detail', compact('galeri', 'items', 'albumLainnya', 'currentFilterType'));
+    }
+
+    // ==========================================================
+    // === FUNGSI BARU UNTUK FILTER AJAX DI HALAMAN DETAIL ===
+    // ==========================================================
+    public function filterItems(Request $request, Galeri $galeri)
+    {
+        if (!$request->ajax()) {
+            abort(404);
+        }
+
+        $type = $request->input('type', 'all');
+        $currentFilterType = $type;
+
+        $query = $galeri->items(); // Mulai query dari relasi
+
+        if ($type !== 'all') {
+            $query->where('tipe_file', $type);
+        }
+
+        $items = $query->orderBy('id', 'asc')->get();
+
+        return response()->json([
+            'html' => view('landing_page.galeri.partials._galeri_masonry_grid', compact('items', 'currentFilterType', 'galeri'))->render()
+        ]);
+    }
 }

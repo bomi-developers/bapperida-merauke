@@ -39,7 +39,7 @@
                             <th scope="col" class="px-6 py-3 min-w-[300px]">Judul Album</th>
                             <th scope="col" class="px-6 py-3">Jumlah Item</th>
                             <th scope="col" class="px-6 py-3">Tanggal Dibuat</th>
-                            <th scope="col" class.="px-6 py-3">Status</th>
+                            <th scope="col" class="px-6 py-3">Status</th>
                             <th scope="col" class="px-6 py-3 text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -74,8 +74,21 @@
                                 </td>
                                 <td class="px-6 py-4 text-gray-600 dark:text-gray-400">
                                     {{ $album->created_at->format('d M Y') }}</td>
+                                <td class="px-6 py-4">
+                                    @if ($album->is_highlighted)
+                                        <span
+                                            class="px-2 py-1 text-xs font-medium rounded-full bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300">
+                                            Pilihan
+                                        </span>
+                                    @else
+                                        <span
+                                            class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                                            Normal
+                                        </span>
+                                    @endif
+                                </td>
                                 <td class="px-6 py-4 text-center">
-                                    <div class="flex items-center justify-center space-x-4">
+                                    <div class="flex items-center justify-center">
                                         <button
                                             class="show-btn font-medium text-green-600 dark:text-green-500 hover:bg-green-200 dark:hover:bg-green-800 rounded-full w-8 h-8"
                                             title="Detail" data-id="{{ $album->id }}"><i

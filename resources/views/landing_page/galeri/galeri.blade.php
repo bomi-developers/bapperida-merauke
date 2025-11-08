@@ -84,7 +84,7 @@
                                             </p>
                                         @endif
                                         <div class="mt-auto pt-4">
-                                            <a href="#" {{-- TODO: Ganti ke route('galeri.public.show', $populer) --}}
+                                            <a href="{{ route('galeri.public.show', $populer) }}"
                                                 class="inline-block bg-lime-400 text-blue-800 font-semibold px-6 py-3 rounded-md text-sm hover:bg-blue-500 hover:text-white transition-colors">
                                                 Buka Album
                                             </a>

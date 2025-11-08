@@ -14,7 +14,7 @@
             $subtitle = $isAlbum ? $item->items_count . ' Item Media' : $item->caption ?? 'Item Media';
             $date = $item->created_at->isoFormat('D MMMM YYYY');
             // Tentukan link (Nanti ini akan mengarah ke halaman detail)
-            $link = '#'; // TODO: Ganti ke route('galeri.public.show', $isAlbum ? $item : $item->galeri)
+            $link = route('galeri.public.show', $isAlbum ? $item : $item->galeri);
         @endphp
 
         {{-- Kartu --}}

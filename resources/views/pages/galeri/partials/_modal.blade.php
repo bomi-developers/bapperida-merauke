@@ -5,8 +5,10 @@
             <!-- Header Modal -->
             <div class="pt-5 pb-2 px-5 dark:border-gray-700 flex justify-between items-center flex-shrink-0">
                 <h3 id="modal-title" class="text-xl font-semibold mb-5 text-gray-900 dark:text-white"></h3>
-                <button
-                    class="close-modal-btn   text-red-800 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800 rounded-full w-8 h-8 flex items-center justify-center">&times;</button>
+                <button type="button" {{-- Tombol ini sudah benar --}}
+                    class="close-modal-btn text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                    <i class="bi bi-x-lg"></i>
+                </button>
             </div>
 
             <!-- Konten Modal (Scrollable) -->
@@ -30,8 +32,8 @@
 
                 <div class="mb-4">
                     <label class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-200">
-                        <input type="checkbox" name="is_highlighted" id="is_highlighted" 
-                               class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600">
+                        <input type="checkbox" name="is_highlighted" id="is_highlighted"
+                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600">
                         <span>Jadikan Album Pilihan (Highlight Album)</span>
                     </label>
                 </div>
@@ -71,6 +73,7 @@
             <!-- Footer Modal -->
             <div
                 class="p-4 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-2 flex-shrink-0">
+                <button type="button" class="btn-secondary close-modal-btn">Batal</button>
                 <button type="submit" id="save-btn" class="btn-primary">Simpan</button>
             </div>
         </form>

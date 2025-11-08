@@ -74,6 +74,8 @@ Route::get('/berita/{berita:slug}', [BeritaController::class, 'show'])->name('be
 
 Route::get('/galeri', [GaleriController::class, 'indexPublic'])->name('galeri.public.index');
 Route::get('/galeri/search', [GaleriController::class, 'searchPublic'])->name('galeri.public.search');
+Route::get('/galeri/{galeri}', [GaleriController::class, 'showPublic'])->name('galeri.public.show');
+Route::get('/galeri/{galeri}/filter', [GaleriController::class, 'filterItems'])->name('galeri.public.filter_items');
 
 Route::get('/dokumen/kategori/{kategori}/{slug}', [DocumentController::class, 'showByCategory'])
   ->name('documents.by_category');
