@@ -1,8 +1,6 @@
 <x-layout>
     <x-header></x-header>
-    <!-- ===== Main Content Start ===== -->
-    <!-- Main section -->
-    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-slate-100 dark:bg-slate-900 p-6">
+    <div class="flex-1 overflow-x-hidden overflow-y-auto bg-slate-100 dark:bg-slate-900 p-6">
         <!-- Stat Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
             <x-card.card1 icon="bi-eye-fill" value="{{ number_format($pageView) }}" title="Total Views" change="" />
@@ -14,120 +12,80 @@
                 change="" />
         </div>
 
-        <!-- Charts Section -->
-        {{-- <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-6 mb-6">
             <div
-                class="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-transparent">
-                <div class="flex justify-between items-center mb-4">
-                    <div class="flex gap-4">
-                        <div class="flex items-center"><span
-                                class="w-3 h-3 bg-indigo-500 rounded-full mr-2"></span><span class="text-sm">Total
-                                Revenue</span></div>
-                        <div class="flex items-center"><span class="w-3 h-3 bg-sky-500 rounded-full mr-2"></span><span
-                                class="text-sm">Total
-                                Sales</span></div>
-                    </div>
-                    <div class="bg-slate-200 dark:bg-slate-700 p-1 rounded-lg text-xs flex"><button
-                            class="px-3 py-1 rounded-md bg-white dark:bg-slate-600">Day</button><button
-                            class="px-3 py-1 rounded-md">Week</button><button
-                            class="px-3 py-1 rounded-md">Month</button></div>
-                </div>
-                <div class="h-80 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center">
-                    <p class="text-slate-500">Chart will be rendered here</p>
-                </div>
+                class="w-full bg-white dark:bg-slate-800 p-3 rounded-lg border border-gray-200 dark:border-transparent">
+                <h2 class="text-lg font-semibold text-center mb-4">Kunjungan Per Hari (7 Hari Terakhir)</h2>
+                <canvas id="dailyChart"></canvas>
             </div>
-            <div class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-transparent">
-                <h4 class="font-bold text-gray-900 dark:text-white mb-4">Profit this week</h4>
-                <div class="h-80 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center">
-                    <p class="text-slate-500">Bar Chart</p>
-                </div>
-            </div>
-        </div> --}}
 
-        <!-- Table and Chats Section -->
-        {{-- <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div
-                class="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-transparent">
-                <h4 class="font-bold text-gray-900 dark:text-white mb-4">Top Channels</h4>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-left">
-                        <thead
-                            class="text-xs text-gray-500 dark:text-slate-400 uppercase bg-slate-50 dark:bg-slate-700/50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">Source</th>
-                                <th scope="col" class="px-6 py-3">Visitors</th>
-                                <th scope="col" class="px-6 py-3">Revenues</th>
-                                <th scope="col" class="px-6 py-3">Sales</th>
-                                <th scope="col" class="px-6 py-3">Conversion</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="border-b border-gray-200 dark:border-slate-700">
-                                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">Google</td>
-                                <td class="px-6 py-4">3.5K</td>
-                                <td class="px-6 py-4 text-green-500 dark:text-green-400">$5,768</td>
-                                <td class="px-6 py-4">590</td>
-                                <td class="px-6 py-4 text-indigo-500 dark:text-indigo-400">4.8%</td>
-                            </tr>
-                            <tr class="border-b border-gray-200 dark:border-slate-700">
-                                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">Twitter</td>
-                                <td class="px-6 py-4">2.2K</td>
-                                <td class="px-6 py-4 text-green-500 dark:text-green-400">$4,635</td>
-                                <td class="px-6 py-4">467</td>
-                                <td class="px-6 py-4 text-indigo-500 dark:text-indigo-400">4.3%</td>
-                            </tr>
-                            <tr class="border-b border-gray-200 dark:border-slate-700">
-                                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">Github</td>
-                                <td class="px-6 py-4">2.1K</td>
-                                <td class="px-6 py-4 text-green-500 dark:text-green-400">$4,290</td>
-                                <td class="px-6 py-4">420</td>
-                                <td class="px-6 py-4 text-indigo-500 dark:text-indigo-400">3.7%</td>
-                            </tr>
-                            <tr class="border-b border-gray-200 dark:border-slate-700">
-                                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">Vimeo</td>
-                                <td class="px-6 py-4">1.5K</td>
-                                <td class="px-6 py-4 text-green-500 dark:text-green-400">$3,580</td>
-                                <td class="px-6 py-4">389</td>
-                                <td class="px-6 py-4 text-indigo-500 dark:text-indigo-400">2.5%</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                class="w-full  bg-white dark:bg-slate-800 p-3 rounded-lg border border-gray-200 dark:border-transparent">
+                <h2 class="text-lg font-semibold text-center mb-4">Kunjungan Per Bulan (6 Bulan Terakhir)</h2>
+                <canvas id="monthlyChart"></canvas>
             </div>
-            <div class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-transparent">
-                <h4 class="font-bold text-gray-900 dark:text-white p-6 pb-2">Chats</h4>
-                <div class="p-4 space-y-1"><a href="#"
-                        class="flex items-center gap-4 p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700"><img
-                            src="https://placehold.co/48x48/7e22ce/ffffff?text=DH" alt="chat user"
-                            class="w-12 h-12 rounded-full">
-                        <div class="flex-1 text-left">
-                            <div class="flex justify-between items-start">
-                                <p class="font-semibold text-gray-800 dark:text-white">David Heilo</p><span
-                                    class="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">3</span>
-                            </div>
-                            <p class="text-sm text-gray-600 dark:text-slate-400 truncate">Hello, how are you?
-                            </p>
-                        </div>
-                    </a><a href="#"
-                        class="flex items-center gap-4 p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700"><img
-                            src="https://placehold.co/48x48/16a34a/ffffff?text=HF" alt="chat user"
-                            class="w-12 h-12 rounded-full">
-                        <div class="flex-1 text-left">
-                            <p class="font-semibold text-gray-800 dark:text-white">Henry Fisher</p>
-                            <p class="text-sm text-gray-600 dark:text-slate-400 truncate">I am waiting for you.
-                            </p>
-                        </div>
-                    </a><a href="#"
-                        class="flex items-center gap-4 p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700"><img
-                            src="https://placehold.co/48x48/be123c/ffffff?text=WS" alt="chat user"
-                            class="w-12 h-12 rounded-full">
-                        <div class="flex-1 text-left">
-                            <p class="font-semibold text-gray-800 dark:text-white">Wilium Smith</p>
-                            <p class="text-sm text-gray-600 dark:text-slate-400 truncate">Where are you now?</p>
-                        </div>
-                    </a></div>
-            </div>
-        </div> --}}
-    </main>
-    <!-- ===== Main Content End ===== -->
+        </div>
+    </div>
+    @push('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            const dailyLabels = @json($dailyViews->pluck('date'));
+            const dailyData = @json($dailyViews->pluck('total'));
+
+            const monthlyLabels = @json($monthlyViews->pluck('month'));
+            const monthlyData = @json($monthlyViews->pluck('total'));
+            new Chart(document.getElementById('dailyChart'), {
+                type: 'line',
+                data: {
+                    labels: dailyLabels,
+                    datasets: [{
+                        label: 'Kunjungan',
+                        data: dailyData,
+                        borderColor: '#4338CA',
+                        backgroundColor: 'rgba(59,130,246,0.2)',
+                        tension: 0.3,
+                        fill: true,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            new Chart(document.getElementById('monthlyChart'), {
+                type: 'bar',
+                data: {
+                    labels: monthlyLabels,
+                    datasets: [{
+                        label: 'Kunjungan',
+                        data: monthlyData,
+                        backgroundColor: '#4338CA',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        </script>
+    @endpush
 </x-layout>

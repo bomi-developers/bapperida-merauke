@@ -263,86 +263,117 @@
     </script>
     </script>
     <script>
-        const menuData = [{
-                name: "Dashboard",
-                url: "/home"
-            },
-            {
-                icon: "bi bi-newspaper",
-                name: "Berita",
-                url: "/admin/berita"
-            },
-            {
-                icon: "bi bi-image-fill",
-                name: "Galeri",
-                url: "/admin/galeri"
-            },
-            {
-                icon: "bi bi-folder-fill",
-                name: "Bidang",
-                url: "/admin/bidang"
-            },
-            {
-                icon: "bi bi-briefcase-fill",
-                name: "Jabatan",
-                url: "/admin/jabatan"
-            },
-            {
-                icon: "bi bi-people-fill",
-                name: "Golongan",
-                url: "/admin/golongan"
-            },
-            {
-                icon: "bi bi-file-earmark-fill",
-                name: "Kategori Dokument",
-                url: "/admin/document-kategori"
-            },
-            {
-                icon: "bi bi-file-earmark-text-fill",
-                name: "Dokument",
-                url: "/admin/documents"
-            },
-            {
-                icon: "bi bi-people-fill",
-                name: "Pegawai",
-                url: "/admin/pegawai"
-            },
-            {
-                icon: "bi bi-box-arrow-in-right",
-                name: "Aktifitas Login",
-                url: "/admin/login-logs"
-            },
-            {
-                icon: "bi bi-activity",
-                name: "Aktifitas Log Data",
-                url: "/admin/activity-logs"
-            },
-            {
-                icon: "bi bi-eye-fill",
-                name: "Aktifitas Akses Tampilan",
-                url: "/admin/view-logs"
-            },
-            {
-                icon: "bi bi-gear-fill",
-                name: "Pengaturan Website",
-                url: "/admin/website-setting"
-            },
-            {
-                icon: "bi bi-person-circle",
-                name: "Profile",
-                url: "/admin/profile"
-            },
-            {
-                icon: "bi bi-gear",
-                name: "Lending Page Setting",
-                url: "/admin/lending-page"
-            },
-            {
-                icon: "bi bi-code-slash",
-                name: "Template Editor",
-                url: "/admin/lending-page/template"
-            },
-        ];
+        @if (Auth::user()->role == 'super_admin')
+            const menuData = [{
+                    name: "Dashboard",
+                    url: "/home"
+                },
+                {
+                    icon: "bi bi-newspaper",
+                    name: "Berita",
+                    url: "/admin/berita"
+                },
+                {
+                    icon: "bi bi-image-fill",
+                    name: "Galeri",
+                    url: "/admin/galeri"
+                },
+                {
+                    icon: "bi bi-folder-fill",
+                    name: "Bidang",
+                    url: "/admin/bidang"
+                },
+                {
+                    icon: "bi bi-briefcase-fill",
+                    name: "Jabatan",
+                    url: "/admin/jabatan"
+                },
+                {
+                    icon: "bi bi-people-fill",
+                    name: "Golongan",
+                    url: "/admin/golongan"
+                },
+                {
+                    icon: "bi bi-file-earmark-fill",
+                    name: "Kategori Dokument",
+                    url: "/admin/document-kategori"
+                },
+                {
+                    icon: "bi bi-file-earmark-text-fill",
+                    name: "Dokument",
+                    url: "/admin/documents"
+                },
+                {
+                    icon: "bi bi-people-fill",
+                    name: "Pegawai",
+                    url: "/admin/pegawai"
+                },
+                {
+                    icon: "bi bi-box-arrow-in-right",
+                    name: "Aktifitas Login",
+                    url: "/admin/login-logs"
+                },
+                {
+                    icon: "bi bi-activity",
+                    name: "Aktifitas Log Data",
+                    url: "/admin/activity-logs"
+                },
+                {
+                    icon: "bi bi-eye-fill",
+                    name: "Aktifitas Akses Tampilan",
+                    url: "/admin/view-logs"
+                },
+                {
+                    icon: "bi bi-gear-fill",
+                    name: "Pengaturan Website",
+                    url: "/admin/website-setting"
+                },
+                {
+                    icon: "bi bi-person-circle",
+                    name: "Profile",
+                    url: "/admin/profile"
+                },
+                {
+                    icon: "bi bi-gear",
+                    name: "Lending Page Setting",
+                    url: "/admin/lending-page"
+                },
+                {
+                    icon: "bi bi-code-slash",
+                    name: "Template Editor",
+                    url: "/admin/lending-page/template"
+                },
+            ];
+        @else
+            const menuData = [{
+                    name: "Dashboard",
+                    url: "/home"
+                },
+                {
+                    icon: "bi bi-newspaper",
+                    name: "Berita",
+                    url: "/admin/berita"
+                },
+                {
+                    icon: "bi bi-image-fill",
+                    name: "Galeri",
+                    url: "/admin/galeri"
+                },
+
+                {
+                    icon: "bi bi-file-earmark-text-fill",
+                    name: "Dokument",
+                    url: "/admin/documents"
+                },
+
+                {
+                    icon: "bi bi-person-circle",
+                    name: "Profile",
+                    url: "/admin/profile"
+                },
+
+            ];
+        @endif
 
         const searchInput = document.getElementById('searchInput');
         const searchOverlay = document.getElementById('searchOverlay');

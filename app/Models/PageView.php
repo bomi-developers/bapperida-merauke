@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PageView extends Model
 {
-    public $timestamps = false; // kita pakai viewed_at
+    public $timestamps = false;
     protected $fillable = ['url', 'ip_address', 'user_agent', 'user_id', 'viewed_at'];
 
     public function user()

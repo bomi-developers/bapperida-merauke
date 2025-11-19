@@ -22,7 +22,18 @@
                 <div class="p-8 sm:p-12">
                     <p class="text-sm text-gray-500">Selamat Datang</p>
                     <h1 class="text-4xl font-bold mt-1 text-gray-900">Sign In</h1>
-
+                    @error('g-recaptcha-response')
+                        <div class="text-red-700 p-4 bg-red-100 rounded-lg text-sm mt-3">Silakan verifikasi reCAPTCHA
+                            {{ $message }}</div>
+                    @enderror
+                    @error('email')
+                        <div class="text-red-700 p-4 bg-red-100 rounded-lg text-sm mt-3">Silakan verifikasi reCAPTCHA
+                            {{ $message }}</div>
+                    @enderror
+                    @error('password')
+                        <div class="text-red-700 p-4 bg-red-100 rounded-lg text-sm mt-3">Silakan verifikasi reCAPTCHA
+                            {{ $message }}</div>
+                    @enderror
                     <form method="POST" action="{{ route('login') }}" class="mt-8 space-y-6">
                         @csrf
 
@@ -62,7 +73,9 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="flex justify-center items-center">
+                            {!! NoCaptcha::display() !!}
+                        </div>
                         <!-- Tombol Login -->
                         <button type="submit"
                             class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
@@ -73,4 +86,5 @@
             </div>
         </div>
     </div>
+    {!! NoCaptcha::renderJs() !!}
 </x-auth>

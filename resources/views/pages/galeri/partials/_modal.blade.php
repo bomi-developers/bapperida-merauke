@@ -83,24 +83,26 @@
 
 <!-- Modal Show Detail Album Galeri -->
 <div id="show-modal"
-    class="fixed inset-0 z-50 hidden bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-slate-800 border border-slate-700 rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
+    class="fixed inset-0 z-50 hidden bg-black bg-opacity-30 backdrop-blur-sm flex items-center justify-center p-4">
+    <div
+        class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
         <!-- Header -->
-        <div class="p-5 border-b border-slate-700 flex justify-between items-center flex-shrink-0">
-            <h3 class="text-xl font-semibold text-white flex items-center gap-3">
-                <i class="bi bi-images text-blue-400"></i>
+        <div class="p-5 border-b border-gray-200 dark:border-slate-700 flex justify-between items-center flex-shrink-0">
+            <h3 class="text-xl font-semibold text-black dark:text-white flex items-center gap-3">
+                <i class="bi bi-images dark:text-indigo-400 text-indigo-700"></i>
                 Detail Album Galeri
             </h3>
-            <button type="button" class="close-show-modal text-slate-400 hover:text-white">
-                <i class="bi bi-x-lg"></i>
+            <button type="button"
+                class="absolute top-4 right-4 text-red-800 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800 rounded-full w-8 h-8 flex items-center justify-center">
+                &times;
             </button>
         </div>
 
         <!-- Content -->
         <div class="flex-grow p-6 space-y-4 overflow-y-auto"
             style="scrollbar-width: thin; scrollbar-color: #4A5568 #2D3748;">
-            <h2 id="show-judul" class="text-2xl font-bold text-white mb-1"></h2>
-            <p id="show-keterangan" class="text-slate-400 text-sm mb-6"></p>
+            <h2 id="show-judul" class="text-2xl font-bold text-black dark:text-white mb-1"></h2>
+            <p id="show-keterangan" class="dark:text-slate-200 text-slate-700 text-sm mb-6"></p>
 
             <div id="show-items-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 {{-- Item galeri akan di-render oleh JS di sini --}}
@@ -110,7 +112,8 @@
         </div>
 
         <!-- Footer -->
-        <div class="p-4 bg-slate-900/50 border-t border-slate-700 flex justify-end flex-shrink-0">
+        <div
+            class="p-4 bg-whte dark:bg-slate-900/50 border-t border-gray-200 dark:border-slate-700 flex justify-end flex-shrink-0">
             <button type="button" class="btn-secondary close-show-modal">Tutup</button>
         </div>
     </div>

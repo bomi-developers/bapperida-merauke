@@ -14,6 +14,7 @@ class Pegawai extends Model
         'id_jabatan',
         'id_golongan',
         'id_bidang',
+        'foto'
     ];
 
     public function jabatan()
@@ -28,5 +29,9 @@ class Pegawai extends Model
     public function bidang()
     {
         return $this->belongsTo(Bidang::class, 'id_bidang');
+    }
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id_pegawai');
     }
 }

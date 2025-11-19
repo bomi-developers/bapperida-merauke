@@ -20,7 +20,7 @@ class PegawaiController extends Controller
 
     public function getData(Request $request)
     {
-        $query = Pegawai::with(['golongan', 'jabatan', 'bidang']);
+        $query = Pegawai::with(['golongan', 'jabatan', 'bidang', 'user']);
 
         if ($request->search) {
             $query->where('nama', 'like', "%{$request->search}%")
@@ -41,11 +41,26 @@ class PegawaiController extends Controller
             'id_golongan' => 'required|exists:golongans,id',
             'id_jabatan' => 'required|exists:jabatans,id',
             'id_bidang' => 'required|exists:bidangs,id',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:5048',
         ]);
 
-        $pegawai = Pegawai::create($request->all());
+        $data = $request->all();
 
-        return response()->json(['success' => true, 'message' => 'Pegawai berhasil ditambahkan', 'data' => $pegawai]);
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/foto_pegawai', $filename);
+
+            $data['foto'] = $filename;
+        }
+
+        $pegawai = Pegawai::create($data);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pegawai berhasil ditambahkan',
+            'data' => $pegawai
+        ]);
     }
 
     public function update(Request $request, Pegawai $pegawai)

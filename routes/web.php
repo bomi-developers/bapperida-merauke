@@ -199,35 +199,50 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/lending-page', [LendingPageController::class, 'store'])->name('lending.store');
     Route::post('/lending-page/{id}', [LendingPageController::class, 'update'])->name('lending.update');
     Route::delete('/lending-page/{id}', [LendingPageController::class, 'destroy'])->name('lending.destroy');
-    // bidang
-    Route::get('bidang', [\App\Http\Controllers\BidangController::class, 'index'])->name('bidang.index');
-    Route::get('bidang/data', [\App\Http\Controllers\BidangController::class, 'getData'])->name('bidang.data');
-    Route::post('bidang', [\App\Http\Controllers\BidangController::class, 'store'])->name('bidang.store');
-    Route::put('bidang/{bidang}', [\App\Http\Controllers\BidangController::class, 'update'])->name('bidang.update');
-    Route::delete('bidang/{bidang}', [\App\Http\Controllers\BidangController::class, 'destroy'])->name('bidang.destroy');
-    // golongan
-    Route::get('golongan', [\App\Http\Controllers\GolonganController::class, 'index'])->name('golongan');
-    Route::get('golongan/data', [\App\Http\Controllers\GolonganController::class, 'getData'])->name('golongan.data');
-    Route::post('golongan', [\App\Http\Controllers\GolonganController::class, 'store'])->name('golongan.store');
-    Route::put('golongan/{golongan}', [\App\Http\Controllers\GolonganController::class, 'update'])->name('golongan.update');
-    Route::delete('golongan/{golongan}', [\App\Http\Controllers\GolonganController::class, 'destroy'])->name('golongan.destroy');
-    // jabatan
-    Route::get('jabatan', [\App\Http\Controllers\JabatanController::class, 'index'])->name('jabatan');
-    Route::get('jabatan/data', [\App\Http\Controllers\JabatanController::class, 'getData'])->name('jabatan.data');
-    Route::post('jabatan', [\App\Http\Controllers\JabatanController::class, 'store'])->name('jabatan.store');
-    Route::put('jabatan/{jabatan}', [\App\Http\Controllers\JabatanController::class, 'update'])->name('jabatan.update');
-    Route::delete('jabatan/{jabatan}', [\App\Http\Controllers\JabatanController::class, 'destroy'])->name('jabatan.destroy');
-    // pegawai
-    Route::get('pegawai', [\App\Http\Controllers\PegawaiController::class, 'index'])->name('pegawai');
-    Route::get('pegawai/data', [\App\Http\Controllers\PegawaiController::class, 'getData'])->name('pegawai.data');
-    Route::post('pegawai', [\App\Http\Controllers\PegawaiController::class, 'store'])->name('pegawai.store');
-    Route::put('pegawai/{pegawai}', [\App\Http\Controllers\PegawaiController::class, 'update'])->name('pegawai.update');
-    Route::delete('pegawai/{pegawai}', [\App\Http\Controllers\PegawaiController::class, 'destroy'])->name('pegawai.destroy');
-    // akun pegawai
-    Route::get('pegawai/akun', [\App\Http\Controllers\UserController::class, 'pegawai'])->name('pegawai.akun');
-    // profile dinas
-    Route::get('/profile-dinas', [ProfileDinasController::class, 'index'])->name('profile-dinas');
-    Route::post('/profile-dinas', [ProfileDinasController::class, 'store'])->name('profile-dinas.store');
+
+    Route::middleware('role:!pegawai')->group(function () {
+      Route::get('bidang', [\App\Http\Controllers\BidangController::class, 'index'])->name('bidang.index');
+      Route::get('bidang/data', [\App\Http\Controllers\BidangController::class, 'getData'])->name('bidang.data');
+      Route::post('bidang', [\App\Http\Controllers\BidangController::class, 'store'])->name('bidang.store');
+      Route::put('bidang/{bidang}', [\App\Http\Controllers\BidangController::class, 'update'])->name('bidang.update');
+      Route::delete('bidang/{bidang}', [\App\Http\Controllers\BidangController::class, 'destroy'])->name('bidang.destroy');
+      // golongan
+      Route::get('golongan', [\App\Http\Controllers\GolonganController::class, 'index'])->name('golongan');
+      Route::get('golongan/data', [\App\Http\Controllers\GolonganController::class, 'getData'])->name('golongan.data');
+      Route::post('golongan', [\App\Http\Controllers\GolonganController::class, 'store'])->name('golongan.store');
+      Route::put('golongan/{golongan}', [\App\Http\Controllers\GolonganController::class, 'update'])->name('golongan.update');
+      Route::delete('golongan/{golongan}', [\App\Http\Controllers\GolonganController::class, 'destroy'])->name('golongan.destroy');
+      // jabatan
+      Route::get('jabatan', [\App\Http\Controllers\JabatanController::class, 'index'])->name('jabatan');
+      Route::get('jabatan/data', [\App\Http\Controllers\JabatanController::class, 'getData'])->name('jabatan.data');
+      Route::post('jabatan', [\App\Http\Controllers\JabatanController::class, 'store'])->name('jabatan.store');
+      Route::put('jabatan/{jabatan}', [\App\Http\Controllers\JabatanController::class, 'update'])->name('jabatan.update');
+      Route::delete('jabatan/{jabatan}', [\App\Http\Controllers\JabatanController::class, 'destroy'])->name('jabatan.destroy');
+      // pegawai
+      Route::get('pegawai', [\App\Http\Controllers\PegawaiController::class, 'index'])->name('pegawai');
+      Route::get('pegawai/data', [\App\Http\Controllers\PegawaiController::class, 'getData'])->name('pegawai.data');
+      Route::post('pegawai', [\App\Http\Controllers\PegawaiController::class, 'store'])->name('pegawai.store');
+      Route::put('pegawai/{pegawai}', [\App\Http\Controllers\PegawaiController::class, 'update'])->name('pegawai.update');
+      Route::delete('pegawai/{pegawai}', [\App\Http\Controllers\PegawaiController::class, 'destroy'])->name('pegawai.destroy');
+      // akun pegawai
+      Route::get('pegawai/akun', [\App\Http\Controllers\UserController::class, 'pegawai'])->name('pegawai.akun');
+      // profile dinas
+      Route::get('/profile-dinas', [ProfileDinasController::class, 'index'])->name('profile-dinas');
+      Route::post('/profile-dinas', [ProfileDinasController::class, 'store'])->name('profile-dinas.store');
+      // kategori document
+      Route::get('/document-kategori', [KategoriDocumentController::class, 'index'])->name('doctkategori.index');
+      Route::post('/document-kategori', [KategoriDocumentController::class, 'store'])->name('doctkategori.store');
+      Route::get('/document-kategori/{kategori}', [KategoriDocumentController::class, 'show'])->name('doctkategori.show');
+      Route::put('/document-kategori/{kategori}', [KategoriDocumentController::class, 'update'])->name('doctkategori.update');
+      Route::delete('/document-kategori/{kategori}', [KategoriDocumentController::class, 'destroy'])->name('doctkategori.destroy');
+      // logs login
+      Route::get('login-logs', [PagesController::class, 'loginLogs'])->name('login-logs');
+      Route::get('activity-logs', [PagesController::class, 'activityLogs'])->name('activity-logs');
+      Route::get('view-logs', [PagesController::class, 'viewLogs'])->name('view-logs');
+      // user
+      Route::get('akun/{id}', [\App\Http\Controllers\UserController::class, 'cekAkun'])->name('akun.cek');
+      Route::post('akun/store', [\App\Http\Controllers\UserController::class, 'store'])->name('akun.store');
+    });
     // berita
     Route::get('berita', [\App\Http\Controllers\BeritaController::class, 'index'])->name('berita.index');
     Route::get('berita/create', [\App\Http\Controllers\BeritaController::class, 'create'])->name('berita.create');
@@ -243,22 +258,12 @@ Route::middleware(['auth'])->group(function () {
     Route::put('documents/{document}', [DocumentController::class, 'update'])->name('documents.update');
     Route::delete('documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
     Route::get('/documents/{document}/download', [DocumentController::class, 'downloadFile'])->name('documents.download');
-    // kategori document
-    Route::get('/document-kategori', [KategoriDocumentController::class, 'index'])->name('doctkategori.index');
-    Route::post('/document-kategori', [KategoriDocumentController::class, 'store'])->name('doctkategori.store');
-    Route::get('/document-kategori/{kategori}', [KategoriDocumentController::class, 'show'])->name('doctkategori.show');
-    Route::put('/document-kategori/{kategori}', [KategoriDocumentController::class, 'update'])->name('doctkategori.update');
-    Route::delete('/document-kategori/{kategori}', [KategoriDocumentController::class, 'destroy'])->name('doctkategori.destroy');
     // galeri
     Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri.index');
     Route::post('/galeri', [GaleriController::class, 'store'])->name('galeri.store');
-    Route::get('/galeri/{galeri}', [GaleriController::class, 'show'])->name('galeri.show'); 
+    Route::get('/galeri/{galeri}', [GaleriController::class, 'show'])->name('galeri.show');
     Route::put('/galeri/{galeri}', [GaleriController::class, 'update'])->name('galeri.update');
     Route::delete('/galeri/{galeri}', [GaleriController::class, 'destroy'])->name('galeri.destroy');
-    // logs login
-    Route::get('login-logs', [PagesController::class, 'loginLogs'])->name('login-logs');
-    Route::get('activity-logs', [PagesController::class, 'activityLogs'])->name('activity-logs');
-    Route::get('view-logs', [PagesController::class, 'viewLogs'])->name('view-logs');
   });
   // setting page
   Route::get('/website-setting', [PagesController::class, 'websiteSetting'])->name('website-setting');

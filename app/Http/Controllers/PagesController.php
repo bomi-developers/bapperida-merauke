@@ -9,13 +9,50 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\LoginLog;
 use Spatie\Activitylog\Models\Activity;
 use App\Models\PageView;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class PagesController extends Controller
 {
     public function dashboard()
     {
+        $dailyViewsRaw = DB::table('page_views')
+            ->selectRaw('DATE(viewed_at) as date, COUNT(*) as total')
+            ->whereNull('user_id')
+            ->where('viewed_at', '>=', Carbon::now()->subDays(6)->startOfDay())
+            ->groupBy(DB::raw('DATE(viewed_at)'))
+            ->orderBy('date', 'ASC')
+            ->pluck('total', 'date');
+        $dailyViews = collect();
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::now()->subDays($i)->format('Y-m-d');
+            $dailyViews->push([
+                'date' => $date,
+                'total' => $dailyViewsRaw[$date] ?? 0, // isi 0 kalau tidak ada data
+            ]);
+        }
+
+        $monthlyViewsRaw = DB::table('page_views')
+            ->selectRaw('DATE_FORMAT(viewed_at, "%Y-%m") as month, COUNT(*) as total')
+            ->whereNull('user_id')
+            ->where('viewed_at', '>=', Carbon::now()->subMonths(5)->startOfMonth())
+            ->groupBy(DB::raw('DATE_FORMAT(viewed_at, "%Y-%m")'))
+            ->orderBy('month', 'ASC')
+            ->pluck('total', 'month');
+        $monthlyViews = collect();
+        for ($i = 5; $i >= 0; $i--) {
+            $month = Carbon::now()->subMonths($i)->format('Y-m');
+            $monthlyViews->push([
+                'month' => $month,
+                'total' => $monthlyViewsRaw[$month] ?? 0,
+            ]);
+        }
+
+
         $data = [
             'title' => 'Dashboard',
+            'dailyViews' => $dailyViews,
+            'monthlyViews' => $monthlyViews,
             'beritaCount' => number_format(Berita::where('status', 'published')->where('page', 'berita')->count()),
         ];
         return view('pages.dashboard', $data);

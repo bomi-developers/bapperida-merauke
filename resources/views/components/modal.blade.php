@@ -1,5 +1,5 @@
 <!-- resources/views/components/modal.blade.php -->
-<div id="{{ $id ?? 'modalTemplate' }}"
+<div id="{{ $id ?? 'modalTemplate' }}" onclick="closeIfOutside(event, '{{ $id ?? 'modalTemplate' }}')"
     class="fixed inset-0 hidden bg-black/10 backdrop-blur-sm flex items-center justify-center z-50 transition-all duration-300">
     <div
         class="relative w-full max-w-lg bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-6 border border-gray-200 dark:border-gray-700">
@@ -26,3 +26,13 @@
         @endif
     </div>
 </div>
+@push('scripts')
+    <script>
+        function closeIfOutside(event, modalId) {
+            const modal = document.getElementById(modalId);
+            if (event.target === modal) {
+                closeForm();
+            }
+        }
+    </script>
+@endpush

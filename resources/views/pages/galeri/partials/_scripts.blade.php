@@ -252,7 +252,7 @@
 
         if (closeModalBtns) closeModalBtns.forEach(btn => btn.addEventListener('click', closeModal));
         if (closeShowModalBtns) closeShowModalBtns.forEach(btn => btn.addEventListener('click',
-        closeShowModal));
+            closeShowModal));
 
         if (addImageBtn) addImageBtn.addEventListener('click', () => addNewItemInput('image'));
         if (addVideoBtn) addVideoBtn.addEventListener('click', () => addNewItemInput('video'));
@@ -342,7 +342,7 @@
                                 if (!responseText) {
                                     throw new Error(
                                         'Respons server kosong. Periksa log server.'
-                                        );
+                                    );
                                 }
 
                                 const res = JSON.parse(responseText);
@@ -394,7 +394,7 @@
                             galeri.items.forEach(item => {
                                 const itemElement = document.createElement('div');
                                 itemElement.className =
-                                    'aspect-square rounded-lg overflow-hidden relative group border border-slate-700 bg-black';
+                                    'aspect-square rounded-lg overflow-hidden relative group border border-gray-200 dark:border-slate-700 bg-black';
                                 let mediaElement = '';
                                 if (item.tipe_file === 'image') {
                                     mediaElement =
@@ -583,7 +583,7 @@
                     if (!response.ok) {
                         if (response.status === 422 && res.errors) {
                             let errorHtml =
-                            '<ul class="text-left list-disc list-inside space-y-1">';
+                                '<ul class="text-left list-disc list-inside space-y-1">';
                             for (const key in res.errors) {
                                 res.errors[key].forEach(message => {
                                     let fieldName = key.replace(/^items\.new_\d+\./,
@@ -606,7 +606,7 @@
                             });
                         } else {
                             throw new Error(res.message ||
-                            `HTTP error! status: ${response.status}`);
+                                `HTTP error! status: ${response.status}`);
                         }
 
                     } else {
