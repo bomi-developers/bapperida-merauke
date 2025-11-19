@@ -55,6 +55,11 @@
                         ],
                     ],
                     [
+                        'title' => 'Administrator',
+                        'items' => [['label' => 'Super Admin', 'icon' => 'bi-people', 'route' => 'admin.user.admin']],
+                    ],
+
+                    [
                         'title' => 'Tracker System',
                         'items' => [
                             ['label' => 'Log Login', 'icon' => 'bi-box-arrow-in-right', 'route' => 'admin.login-logs'],
@@ -117,6 +122,7 @@
     </div>
     {{-- toast --}}
     <x-toast></x-toast>
+    <x-password></x-password>
     {{-- script components layout --}}
     <x-script></x-script>
 

@@ -16,6 +16,13 @@ class UserController extends Controller
         ];
         return view('pages.users.pegawai', $data);
     }
+    public function admin()
+    {
+        $data = [
+            'title' => 'Akun Super Administrator',
+        ];
+        return view('pages.users.admin', $data);
+    }
     public function cekAkun($id)
     {
         $user = User::where('id_pegawai', $id)->first();
@@ -79,5 +86,17 @@ class UserController extends Controller
                 'data'    => $user
             ], 201);
         }
+    }
+    public function admin_data(Request $request)
+    {
+        $query = User::where('role', 'super_admin');
+
+        if ($request->search) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $users = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        return response()->json($users);
     }
 }

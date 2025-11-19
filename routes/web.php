@@ -14,6 +14,7 @@ use App\Http\Controllers\ProfileDinasController;
 use App\Http\Controllers\KategoriDocumentController;
 use App\Http\Controllers\LendingPageController;
 use App\Http\Controllers\ProposalController;
+use App\Http\Controllers\UpdatePasswordController;
 use App\Models\KategoriDocument;
 use App\Models\LendingPage;
 use App\Models\Notifikasi;
@@ -199,8 +200,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/lending-page', [LendingPageController::class, 'store'])->name('lending.store');
     Route::post('/lending-page/{id}', [LendingPageController::class, 'update'])->name('lending.update');
     Route::delete('/lending-page/{id}', [LendingPageController::class, 'destroy'])->name('lending.destroy');
+    // update password
+    Route::post('/ganti-password', [UpdatePasswordController::class, 'update'])->name('password.update');
 
-    Route::middleware('role:!pegawai')->group(function () {
+    Route::middleware('role:super_admin')->group(function () {
       Route::get('bidang', [\App\Http\Controllers\BidangController::class, 'index'])->name('bidang.index');
       Route::get('bidang/data', [\App\Http\Controllers\BidangController::class, 'getData'])->name('bidang.data');
       Route::post('bidang', [\App\Http\Controllers\BidangController::class, 'store'])->name('bidang.store');
@@ -239,9 +242,12 @@ Route::middleware(['auth'])->group(function () {
       Route::get('login-logs', [PagesController::class, 'loginLogs'])->name('login-logs');
       Route::get('activity-logs', [PagesController::class, 'activityLogs'])->name('activity-logs');
       Route::get('view-logs', [PagesController::class, 'viewLogs'])->name('view-logs');
-      // user
+      // user pegawai
       Route::get('akun/{id}', [\App\Http\Controllers\UserController::class, 'cekAkun'])->name('akun.cek');
       Route::post('akun/store', [\App\Http\Controllers\UserController::class, 'store'])->name('akun.store');
+      // user admin
+      Route::get('user/admin', [\App\Http\Controllers\UserController::class, 'admin'])->name('user.admin');
+      Route::get('user/admin-data', [\App\Http\Controllers\UserController::class, 'admin_data'])->name('user.admin-data');
     });
     // berita
     Route::get('berita', [\App\Http\Controllers\BeritaController::class, 'index'])->name('berita.index');
