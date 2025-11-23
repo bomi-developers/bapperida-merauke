@@ -74,7 +74,8 @@
             <div class="modal-content">
                 <div id="statusAkun" class="mb-2 w-full"></div>
                 <div class="mb-2 w-full">
-                    <div class="text-gray-500 dark:text-gray-300 dark:bg-gray-800 w-full bg-gray-100 rounded-lg p-3">
+                    <div class="text-gray-500 dark:text-gray-300 dark:bg-gray-800 w-full bg-gray-100 rounded-lg p-3"
+                        id="PasswordDefault">
                         Password default adalah <strong class="text-black dark:text-white">PegawaiBAPPERIDA</strong>
                     </div>
                 </div>

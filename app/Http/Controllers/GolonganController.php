@@ -29,9 +29,13 @@ class GolonganController extends Controller
     {
         $request->validate([
             'golongan' => 'required|string|max:255',
+            'kode' => 'required',
         ]);
 
-        $golongan = golongan::create($request->only('golongan'));
+        $golongan = golongan::create([
+            'golongan' => $request->golongan,
+            'kode'     => $request->kode,
+        ]);
 
         return response()->json(['success' => true, 'message' => 'golongan berhasil ditambahkan', 'data' => $golongan]);
     }
@@ -40,9 +44,13 @@ class GolonganController extends Controller
     {
         $request->validate([
             'golongan' => 'required|string|max:255',
+            'kode' => 'required',
         ]);
 
-        $golongan->update($request->only('golongan'));
+        $golongan->update([
+            'golongan' => $request->golongan,
+            'kode'     => $request->kode,
+        ]);
 
         return response()->json(['success' => true, 'message' => 'golongan berhasil diupdate', 'data' => $golongan]);
     }

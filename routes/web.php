@@ -212,8 +212,8 @@ Route::middleware(['auth'])->group(function () {
       // golongan
       Route::get('golongan', [\App\Http\Controllers\GolonganController::class, 'index'])->name('golongan');
       Route::get('golongan/data', [\App\Http\Controllers\GolonganController::class, 'getData'])->name('golongan.data');
-      Route::post('golongan', [\App\Http\Controllers\GolonganController::class, 'store'])->name('golongan.store');
-      Route::put('golongan/{golongan}', [\App\Http\Controllers\GolonganController::class, 'update'])->name('golongan.update');
+      Route::post('golongan/store', [\App\Http\Controllers\GolonganController::class, 'store'])->name('golongan.store');
+      Route::put('golongan/update/{golongan}', [\App\Http\Controllers\GolonganController::class, 'update'])->name('golongan.update');
       Route::delete('golongan/{golongan}', [\App\Http\Controllers\GolonganController::class, 'destroy'])->name('golongan.destroy');
       // jabatan
       Route::get('jabatan', [\App\Http\Controllers\JabatanController::class, 'index'])->name('jabatan');

@@ -2,6 +2,7 @@
     <form id="formGolongan" class="space-y-4">
         @csrf
         <input type="hidden" id="golongan_id" name="id">
+        <x-input label="Kode Golongan" id="kode" name="kode" type="text" />
         <x-input label="Nama Golongan" id="golongan" name="golongan" type="text" />
         <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
             <button type="button" onclick="closeForm()"

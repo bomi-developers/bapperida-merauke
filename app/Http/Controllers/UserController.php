@@ -31,7 +31,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Akun untuk pegawai belum ada, sikahkan mengisi form untuk membuat akun'
-            ], 404);
+            ], 200);
         }
 
         return response()->json([

@@ -1,5 +1,13 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     let pageUrl = "{{ route('admin.pegawai.data') }}";
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true,
+    });
 
     function loadData(url = pageUrl) {
         const search = document.getElementById('search').value;
@@ -175,7 +183,10 @@
                     // Akun belum ada
                     document.getElementById('statusAkun').innerHTML =
                         `<div class="text-red-500 dark:text-red-300 dark:bg-red-800 w-full bg-red-100 rounded-lg p-3">${result.message}</div>`;
+                    document.getElementById('PasswordDefault').classList.remove('hidden');
                 } else {
+                    document.getElementById('statusAkun').innerHTML = "";
+                    document.getElementById('PasswordDefault').classList.add('hidden');
                     // Isi data user
                     document.getElementById('username').value = result.data.name ?? '';
                     document.getElementById('email').value = result.data.email ?? '';
@@ -184,7 +195,7 @@
                 }
             })
             .catch(err => {
-                console.error(err);
+                // console.error(err);
                 document.getElementById('statusAkun').innerHTML =
                     `<span class="text-red-600">Terjadi kesalahan</span>`;
             });
@@ -238,7 +249,11 @@
             })
             .then(res => res.json())
             .then(res => {
-                alert(res.message);
+                // alert(res.message);
+                Toast.fire({
+                    icon: 'success',
+                    title: res.message
+                });
                 closeForm();
                 loadData();
             })
@@ -255,7 +270,11 @@
                 })
                 .then(res => res.json())
                 .then(res => {
-                    alert(res.message);
+                    // alert(res.message);
+                    Toast.fire({
+                        icon: 'success',
+                        title: res.message
+                    });
                     loadData();
                 })
                 .catch(err => console.error(err));

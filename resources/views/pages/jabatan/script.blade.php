@@ -1,5 +1,13 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     let pageUrl = "{{ route('admin.jabatan.data') }}";
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true,
+    });
 
     function loadData(url = pageUrl) {
         const search = document.getElementById('search').value;
@@ -115,7 +123,11 @@
             })
             .then(res => res.json())
             .then(res => {
-                alert(res.message);
+                // alert(res.message);
+                Toast.fire({
+                    icon: 'success',
+                    title: res.message
+                });
                 closeForm();
                 loadData();
             })
@@ -132,7 +144,11 @@
                 })
                 .then(res => res.json())
                 .then(res => {
-                    alert(res.message);
+                    // alert(res.message);
+                    Toast.fire({
+                        icon: 'success',
+                        title: res.message
+                    });
                     loadData();
                 })
                 .catch(err => console.error(err));

@@ -20,6 +20,7 @@
                             <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-200 sticky top-0 z-10">
                                 <tr>
                                     <th class="px-4 py-3">#</th>
+                                    <th class="px-4 py-3">Kode Golongan</th>
                                     <th class="px-4 py-3">Nama Golongan</th>
                                     <th class="px-4 py-3 text-center">Aksi</th>
                                 </tr>
@@ -31,10 +32,11 @@
                         html += `
                             <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition">
                                 <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">${i + 1}</td>
+                                <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">${g.kode}</td>
                                 <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">${g.golongan}</td>
                                 <td class="px-4 py-3 text-center">
                                     <div class="flex justify-center gap-3">
-                                        <button onclick="editGolongan(${g.id}, '${g.golongan}')"
+                                        <button onclick="editGolongan(${g.id}, '${g.golongan}', '${g.kode}')"
                                             class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition"
                                             title="Edit">
                                             <i class="bi bi-pencil-square text-lg"></i>
@@ -98,13 +100,15 @@
         document.getElementById('modalTitle').innerText = "Tambah Golongan";
         document.getElementById('golongan_id').value = "";
         document.getElementById('golongan').value = "";
+        document.getElementById('kode').value = "";
         document.getElementById('formModal').classList.remove('hidden');
     }
 
-    function editGolongan(id, nama) {
+    function editGolongan(id, golongan, kode) {
         document.getElementById('modalTitle').innerText = "Edit Golongan";
         document.getElementById('golongan_id').value = id;
-        document.getElementById('golongan').value = nama;
+        document.getElementById('golongan').value = golongan;
+        document.getElementById('kode').value = kode;
         document.getElementById('formModal').classList.remove('hidden');
     }
 
@@ -117,9 +121,10 @@
 
         const id = document.getElementById('golongan_id').value;
         const method = id ? 'PUT' : 'POST';
-        const url = id ? `/admin/golongan/${id}` : `/admin/golongan`;
+        const url = id ? `/admin/golongan/update/${id}` : `/admin/golongan/store`;
 
         const data = {
+            kode: document.getElementById('kode').value,
             golongan: document.getElementById('golongan').value,
         };
 
@@ -133,7 +138,11 @@
             })
             .then(res => res.json())
             .then(res => {
-                alert(res.message);
+                // alert(res.message);
+                Toast.fire({
+                    icon: 'success',
+                    title: res.message
+                });
                 closeForm();
                 loadData();
             })
