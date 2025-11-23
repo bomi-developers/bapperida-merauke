@@ -10,7 +10,18 @@
                 <span>Tambah Kategori</span>
             </button>
         </div>
-
+        <form method="GET" action="{{ route('admin.doctkategori.index') }}" class="mb-5">
+            <div class="flex">
+                <input type="text" id="searchInput" name="search" placeholder="Ketik nama kategori..."
+                    value="{{ request('search') }}" {{-- Tampilkan query pencarian sebelumnya --}}
+                    class="w-full sm:w-80 px-4 py-2.5 text-sm border border-gray-300 dark:border-gray-700 rounded-l-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200" />
+                <button type="submit"
+                    class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-r-lg text-sm flex items-center">
+                    <i class="bi bi-search mr-2"></i>
+                    Cari
+                </button>
+            </div>
+        </form>
         {{-- Tabel Kategori --}}
         <section
             class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md overflow-hidden">
@@ -27,19 +38,20 @@
                         @forelse ($kategori as $kat)
                             <tr id="kat-row-{{ $kat->id }}"
                                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $loop->iteration }}
+                                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white w-[20px]">
+                                    {{ $loop->iteration }}
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
                                     {{ $kat->nama_kategori }}</td>
                                 <td class="px-6 py-4 text-center">
                                     <div class="flex items-center justify-center space-x-4">
                                         <button
-                                            class="edit-btn font-medium text-indigo-600 dark:text-indigo-500 hover:underline"
+                                            class="edit-btn p-2 rounded-lg text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900 hover:text-indigo-800 dark:hover:text-indigo-300 transition"
                                             title="Edit" data-id="{{ $kat->id }}">
                                             <i class="bi bi-pencil-square text-base"></i>
                                         </button>
                                         <button
-                                            class="delete-btn font-medium text-red-600 dark:text-red-500 hover:underline"
+                                            class="delete-btn p-2 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900 hover:text-red-800 dark:hover:text-red-300 transition"
                                             title="Hapus" data-id="{{ $kat->id }}">
                                             <i class="bi bi-trash text-base"></i>
                                         </button>

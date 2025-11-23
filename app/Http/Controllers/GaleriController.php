@@ -16,9 +16,6 @@ use App\Jobs\CompressGaleriItem; // Pastikan ini di-import
 
 class GaleriController extends Controller
 {
-    // ==================================================================
-    //                  FUNGSI ADMIN
-    // ==================================================================
 
     /**
      * Menampilkan halaman manajemen galeri (album).

@@ -9,9 +9,14 @@ use Illuminate\Validation\Rule;
 
 class KategoriDocumentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $kategori = KategoriDocument::latest()->get();
+        $query = KategoriDocument::query();
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where('nama_kategori', 'like', $searchTerm . '%');
+        }
+        $kategori = $query->latest()->paginate(20);
         return view('pages.document.kategori', compact('kategori'));
     }
 

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Berita;
+use App\Models\Document;
+use App\Models\Galeri;
 use App\Models\WebsiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -53,6 +55,8 @@ class PagesController extends Controller
             'title' => 'Dashboard',
             'dailyViews' => $dailyViews,
             'monthlyViews' => $monthlyViews,
+            'galeriCount' => number_format(Galeri::count()),
+            'documentCount' => number_format(Document::count()),
             'beritaCount' => number_format(Berita::where('status', 'published')->where('page', 'berita')->count()),
             'beritaDraftCount' => number_format(Berita::where('status', '!=', 'published')->where('page', 'berita')->count()),
             'beritaCountView' => number_format(Berita::where('status', 'published')->where('page', 'berita')->sum('views_count')),

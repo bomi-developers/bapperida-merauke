@@ -16,9 +16,14 @@ class DocumentController extends Controller
     /**
      * Menampilkan halaman manajemen dokumen.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $documents = Document::with('kategori')->latest()->get();
+        $query = Document::query();
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where('judul', 'like', $searchTerm . '%');
+        }
+        $documents = $query->latest()->paginate(20);
         $kategori = KategoriDocument::orderBy('nama_kategori')->get();
         return view('pages.document.index', compact('documents', 'kategori'));
     }

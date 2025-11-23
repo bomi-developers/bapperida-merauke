@@ -24,8 +24,6 @@ use Illuminate\Support\Facades\Blade;
 
 // cache control
 
-
-
 Route::get('img/{path}', function ($path) {
   $fullPath = public_path('img/' . $path);
 
