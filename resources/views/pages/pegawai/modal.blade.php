@@ -1,4 +1,4 @@
-<x-modal id="formModal" title="Tambah Jabatan">
+<x-modal id="formModal" title="Tambah Pegawai">
     <form id="formPegawai" class="space-y-4">
         @csrf
         <input type="hidden" id="pegawai_id" name="id">

@@ -280,22 +280,22 @@
                     document.getElementById('show-kategori').textContent = doc.kategori
                         .nama_kategori;
                     document.getElementById('show-cover').innerHTML = doc.cover ?
-                        `<img src="{{ asset('storage') }}/${doc.cover}" class="w-full h-100 object-cover rounded-md border border-slate-700 shadow-md">` :
+                        `<img src="{{ asset('storage') }}/${doc.cover}" class="w-full h-100 object-cover rounded-xl  ">` :
                         '<div class="w-full h-64 bg-slate-700/50 rounded-md flex items-center justify-center text-slate-500">Tidak ada cover</div>';
 
                     const fileName = doc.file.split('/').pop();
                     const downloadUrl = `{{ url('admin/documents') }}/${doc.id}/download`;
                     document.getElementById('show-file').innerHTML = `
-                        <a href="${downloadUrl}" class="relative block w-full h-24 rounded-lg overflow-hidden border border-slate-700 group transition-all duration-300 hover:shadow-lg hover:border-blue-500" title="Unduh ${fileName}">
-                            <div class="absolute inset-0 bg-slate-900/50 flex items-center justify-center">
+                        <a href="${downloadUrl}" class="relative block w-full h-24 rounded-xl overflow-hidden border border-slate-700 group transition-all duration-300  hover:border-indigo-500" title="Unduh ${fileName}">
+                            <div class="absolute inset-0 bg-gray-400/20 dark:bg-slate-900/20 flex items-center justify-center">
                                 <i class="bi bi-file-earmark-zip-fill text-4xl text-slate-500"></i>
                             </div>
-                            <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
-                            <div class="absolute inset-0 flex flex-col items-center justify-center bg-blue-600/80 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="absolute inset-0  backdrop-blur-sm"></div>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center bg-indigo-600/80 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                 <i class="bi bi-download text-2xl"></i>
                                 <span class="mt-1 font-semibold text-xs">Unduh File</span>
                             </div>
-                            <div class="absolute bottom-0 left-0 right-0 p-2 bg-black/50 text-white text-xs font-medium text-center truncate">
+                            <div class="absolute bottom-0 left-0 right-0 p-2 bg-indigo-800/90 text-white text-xs font-medium text-center truncate mt-3">
                                 ${fileName}
                             </div>
                         </a>
@@ -319,17 +319,17 @@
                         showLainnyaWrapper.classList.remove('hidden');
                         let html = '';
                         if (lainnyaDataToShow.visi) html +=
-                            `<div><h5 class="font-semibold text-blue-400">Visi</h5><p class="mt-1 text-slate-300">${lainnyaDataToShow.visi}</p></div>`;
+                            `<div><h5 class="font-semibold text-indigo-700 dark:text-indigo-400">Visi</h5><p class="mt-1 text-slate-300">${lainnyaDataToShow.visi}</p></div>`;
                         if (lainnyaDataToShow.misi && lainnyaDataToShow.misi.length > 0) {
                             html +=
-                                `<div><h5 class="font-semibold text-blue-400">Misi</h5><ul class="list-decimal list-inside mt-2 space-y-1 text-slate-300">`;
+                                `<div><h5 class="font-semibold text-indigo-700 dark:text-indigo-400">Misi</h5><ul class="list-decimal list-inside mt-2 space-y-1 text-slate-300">`;
                             lainnyaDataToShow.misi.forEach(m => {
                                 html += `<li>${m}</li>`;
                             });
                             html += `</ul></div>`;
                         }
                         if (lainnyaDataToShow.keterangan) html +=
-                            `<div><h5 class="font-semibold text-blue-400">Keterangan</h5><p class="mt-1 text-slate-300 whitespace-pre-wrap">${lainnyaDataToShow.keterangan}</p></div>`;
+                            `<div><h5 class="font-semibold text-indigo-700 dark:text-indigo-400">Keterangan</h5><p class="mt-1 text-gray-600 dark:text-slate-300 whitespace-pre-wrap">${lainnyaDataToShow.keterangan}</p></div>`;
                         showLainnyaContainer.innerHTML = html;
                     } else {
                         showLainnyaWrapper.classList.add('hidden');
@@ -356,7 +356,7 @@
                 const res = await response.json();
                 if (!response.ok) {
                     let errorMessages = Object.values(res.errors).map(e => `<li>${e}</li>`).join(
-                    '');
+                        '');
                     Swal.fire({
                         icon: 'error',
                         title: 'Gagal Validasi',

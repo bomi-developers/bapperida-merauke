@@ -3,10 +3,10 @@
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
         <form id="galeri-form" enctype="multipart/form-data" class="flex flex-col flex-grow min-h-0">
             <!-- Header Modal -->
-            <div class="pt-5 pb-2 px-5 dark:border-gray-700 flex justify-between items-center flex-shrink-0">
+            <div class="pt-5 px-5 dark:border-gray-700 flex justify-between items-center flex-shrink-0">
                 <h3 id="modal-title" class="text-xl font-semibold mb-5 text-gray-900 dark:text-white"></h3>
                 <button type="button" {{-- Tombol ini sudah benar --}}
-                    class="close-modal-btn text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                    class="close-modal-btn text-red-800 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800 rounded-full w-8 h-8 flex items-center justify-center">
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
@@ -71,9 +71,10 @@
             </div>
 
             <!-- Footer Modal -->
-            <div
-                class="p-4 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-2 flex-shrink-0">
-                <button type="button" class="btn-secondary close-modal-btn">Batal</button>
+            <div class="p-4  flex justify-end gap-2 flex-shrink-0">
+                <button type="button"
+                    class="close-modal-btn px-4 py-2 text-sm font-medium rounded-lg border border-gray-300 dark:border-gray-600
+                       text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition">Batal</button>
                 <button type="submit" id="save-btn" class="btn-primary">Simpan</button>
             </div>
         </form>
@@ -87,7 +88,7 @@
     <div
         class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
         <!-- Header -->
-        <div class="p-5 border-b border-gray-200 dark:border-slate-700 flex justify-between items-center flex-shrink-0">
+        <div class="p-5 flex justify-between items-center flex-shrink-0">
             <h3 class="text-xl font-semibold text-black dark:text-white flex items-center gap-3">
                 <i class="bi bi-images dark:text-indigo-400 text-indigo-700"></i>
                 Detail Album Galeri
@@ -112,9 +113,10 @@
         </div>
 
         <!-- Footer -->
-        <div
-            class="p-4 bg-whte dark:bg-slate-900/50 border-t border-gray-200 dark:border-slate-700 flex justify-end flex-shrink-0">
-            <button type="button" class="btn-secondary close-show-modal">Tutup</button>
+        <div class="p-4 border-t border-gray-200 dark:border-slate-700 flex justify-end flex-shrink-0">
+            <button type="button"
+                class="px-4 py-2 text-sm font-medium rounded-lg border border-gray-300 dark:border-gray-600
+                       text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition close-show-modal">Tutup</button>
         </div>
     </div>
 </div>

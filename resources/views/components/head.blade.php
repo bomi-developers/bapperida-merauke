@@ -34,7 +34,12 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            /* rubah cursor */
+            /* cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><polygon points='4,2 20,28 4,28' fill='%236d28d9'/></svg>") 0 0,
+                url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAARElEQVR4nGNgGDSA4T8DAwMDA8O/gYGB4T8zMDDwH4oZGBgYGPxPyMjI+AcQYkRkYGBoaBv5HNAEI6gIwxgQgAhFMFjKVR2iAAAAAElFTkSuQmCC") 0 0,
+                auto; */
         }
+
 
         /* Hapus scrollbar tertentu */
         .no-scrollbar::-webkit-scrollbar {

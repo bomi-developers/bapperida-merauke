@@ -1,11 +1,18 @@
 <!-- Modal Tambah/Edit Dokumen -->
-<div id="document-modal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+<div id="document-modal"
+    class="fixed inset-0 z-50 hidden bg-black/10 backdrop-blur-sm flex items-center justify-center px-4">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-2xl ">
         <form id="document-form" enctype="multipart/form-data">
-            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+
+            <div
+                class="p-5 flex justify-between items-center flex-shrink-0 border-b border-gray-200 dark:border-gray-700">
                 <h3 id="modal-title" class="text-xl font-semibold text-gray-900 dark:text-white"></h3>
+                <button type="button" id="close-modal-btn"
+                    class="close-show-modal dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800 rounded-full w-8 h-8 flex items-center justify-center">
+                    <i class="bi bi-x-lg"></i>
+                </button>
             </div>
-            <div class="p-6 space-y-4">
+            <div class="px-6 space-y-4 max-h-[70vh] overflow-y-auto">
                 {{-- Hidden fields --}}
                 <input type="hidden" name="_method" id="method-field">
                 <input type="hidden" name="document_id" id="document-id-field">
@@ -55,9 +62,7 @@
                 </div>
 
             </div>
-            <div
-                class="p-6 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-2">
-                <button type="button" id="close-modal-btn" class="btn-secondary">Batal</button>
+            <div class="p-6 mt-2  border-t border-gray-200 dark:border-gray-700 flex justify-end gap-2">
                 <button type="submit" id="save-btn" class="btn-primary">Simpan</button>
             </div>
         </form>
@@ -66,32 +71,33 @@
 
 {{-- show modal --}}
 <div id="show-modal"
-    class="fixed inset-0 z-[60] hidden bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+    class="fixed inset-0 z-[60] hidden bg-black/10 backdrop-blur-sm flex items-center justify-center px-4">
     <div
-        class="bg-slate-800 border border-slate-700 rounded-2xl shadow-xl w-full max-w-4xl max-h-[95vh] flex flex-col text-white">
+        class="relative w-full max-w-4xl bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-3 border border-gray-200 dark:border-gray-700">
         <!-- Header -->
-        <div class="p-5 border-b border-slate-700 flex justify-between items-center flex-shrink-0">
-            <h3 class="text-xl font-semibold flex items-center gap-3">
-                <i class="bi bi-file-earmark-text text-blue-400"></i>
+        <div class="p-5 flex justify-between items-center flex-shrink-0">
+            <h3 class="text-xl font-semibold flex items-center gap-3 text-indigo-700 dark:text-white">
+                <i class="bi bi-file-earmark-text "></i>
                 <span>Detail Dokumen</span>
             </h3>
-            <button type="button" class="close-show-modal text-slate-400 hover:text-white transition-colors">
+            <button type="button"
+                class="close-show-modal dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800 rounded-full w-8 h-8 flex items-center justify-center">
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
 
         <!-- Content -->
-        <div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8 overflow-y-auto">
+        <div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8 max-h-[75vh] overflow-y-auto">
             <!-- Kolom Kiri: Cover & File -->
             <div class="space-y-6">
                 <div>
-                    <h4 class="font-semibold text-slate-400 mb-2">Cover Dokumen</h4>
+                    <h4 class="font-semibold text-gray-700 dark:text-slate-400 mb-2">Cover Dokumen</h4>
                     <div id="show-cover">
                         {{-- JS will inject cover image here --}}
                     </div>
                 </div>
                 <div>
-                    <h4 class="font-semibold text-slate-400 mb-2">File Dokumen</h4>
+                    <h4 class="font-semibold text-gray-700 dark:text-slate-400 mb-2">File Dokumen</h4>
                     <div id="show-file">
                         {{-- JS will inject file preview card here --}}
                     </div>
@@ -101,22 +107,22 @@
             <!-- Kolom Kanan: Rincian -->
             <div class="space-y-5">
                 <div>
-                    <h2 id="show-judul" class="text-2xl font-bold text-white leading-tight"></h2>
-                    <p class="text-sm text-slate-400 mt-1">Kategori: <span id="show-kategori"
-                            class="font-medium text-blue-400"></span></p>
+                    <h2 id="show-judul" class="text-2xl font-bold text-indigo-700 dark:text-white leading-tight"></h2>
+                    <p class="text-sm text-gray-700 dark:text-slate-400 mt-1">Kategori: <span id="show-kategori"
+                            class="font-medium text-indigo-700 dark:text-indigo-400"></span></p>
                 </div>
 
-                <div id="show-lainnya-wrapper" class="hidden pt-5 border-t border-slate-700">
+                <div id="show-lainnya-wrapper" class="hidden pt-5 border-t border-gray-400 dark:border-slate-700">
                     <div id="show-lainnya-container" class="space-y-5 text-sm">
                         {{-- JS will inject Visi, Misi, Keterangan here --}}
                     </div>
                 </div>
             </div>
         </div>
+        {{-- <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 p-3">
+            <button type="button" class="btn-secondary close-show-modal">Tutup</button>
+        </div> --}}
 
         <!-- Footer -->
-        <div class="p-4 bg-slate-900/50 border-t border-slate-700 flex justify-end flex-shrink-0">
-            <button type="button" class="btn-secondary close-show-modal">Tutup</button>
-        </div>
     </div>
 </div>

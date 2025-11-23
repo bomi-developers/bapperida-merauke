@@ -1,4 +1,20 @@
 <!-- Header -->
+@php
+    switch (Auth::user()->role) {
+        case 'super_admin':
+            $roleUser = 'Super Admin';
+            break;
+        case 'opd':
+            $roleUser = 'OPD';
+            break;
+        case 'admin':
+            $roleUser = 'Admin';
+            break;
+        default:
+            $roleUser = 'Pegawai';
+            break;
+    }
+@endphp
 <header class="bg-white dark:bg-slate-800 dark:border-slate-700">
     <div class="flex items-center justify-between p-4">
         <div class="flex items-center gap-4 w-full">
@@ -112,7 +128,7 @@
                     <div class="hidden md:block text-left">
                         <p class="text-sm font-semibold text-gray-800 dark:text-white">
                             {{ Auth::user()->name ?? 'User' }}</p>
-                        <p class="text-xs text-gray-500 dark:text-slate-400">Staff</p>
+                        <p class="text-xs text-gray-500 dark:text-slate-400">{{ $roleUser }}</p>
                     </div>
                     <i class="bi bi-chevron-down hidden md:block text-slate-400"></i>
                 </button>

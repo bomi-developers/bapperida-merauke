@@ -18,6 +18,7 @@
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
+                            <th scope="col" class="px-6 py-3 min-w-[300px]">#</th>
                             <th scope="col" class="px-6 py-3 min-w-[300px]">Judul</th>
                             <th scope="col" class="px-6 py-3">Kategori</th>
                             <th scope="col" class="px-6 py-3">File</th>
@@ -27,19 +28,22 @@
                     <tbody id="document-table-body">
                         @forelse ($documents as $doc)
                             <tr id="doc-row-{{ $doc->id }}"
-                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                <th scope="row"
+                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <td class="px-2 w-[10px]">{{ $loop->iteration }}</td>
+                                <td scope="row"
                                     class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     <div class="flex items-center gap-4">
                                         <img src="{{ $doc->cover ? asset('storage/' . $doc->cover) : 'https://placehold.co/100x60/e2e8f0/e2e8f0?text=No+Cover' }}"
                                             alt="Cover" class="w-24 h-14 object-cover rounded-md flex-shrink-0">
                                         <span class="font-semibold">{{ $doc->judul }}</span>
                                     </div>
-                                </th>
-                                <td class="px-6 py-4">{{ $doc->kategori->nama_kategori ?? 'N/A' }}</td>
+                                </td>
+                                <td class="px-6 py-4"><span
+                                        class="bg-indigo-200 dark:bg-indigo-600 px-2 py-1 text-indigo-800 dark:text-indigo-200 rounded-xl">{{ $doc->kategori->nama_kategori ?? 'N/A' }}</span>
+                                </td>
                                 <td class="px-6 py-4">
                                     <a href="{{ asset('storage/' . $doc->file) }}" target="_blank"
-                                        class="text-indigo-600 hover:underline">
+                                        class="font-bold text-indigo-600 dark:text-white hover:underline">
                                         Lihat File
                                     </a>
                                 </td>

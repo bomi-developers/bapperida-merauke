@@ -54,6 +54,8 @@ class PagesController extends Controller
             'dailyViews' => $dailyViews,
             'monthlyViews' => $monthlyViews,
             'beritaCount' => number_format(Berita::where('status', 'published')->where('page', 'berita')->count()),
+            'beritaDraftCount' => number_format(Berita::where('status', '!=', 'published')->where('page', 'berita')->count()),
+            'beritaCountView' => number_format(Berita::where('status', 'published')->where('page', 'berita')->sum('views_count')),
         ];
         return view('pages.dashboard', $data);
     }
