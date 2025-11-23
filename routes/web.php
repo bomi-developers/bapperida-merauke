@@ -1,7 +1,13 @@
 <?php
 
+use Carbon\Carbon;
+use App\Models\Template;
+use App\Models\Notifikasi;
+use App\Models\LendingPage;
+use App\Models\KategoriDocument;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Response;
@@ -10,17 +16,12 @@ use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\BidangController;
 use App\Http\Controllers\GaleriController;
 use App\Http\Controllers\DocumentController;
-use App\Http\Controllers\ProfileDinasController;
-use App\Http\Controllers\KategoriDocumentController;
-use App\Http\Controllers\LendingPageController;
 use App\Http\Controllers\ProposalController;
+use App\Http\Controllers\TriwulanController;
+use App\Http\Controllers\LendingPageController;
+use App\Http\Controllers\ProfileDinasController;
 use App\Http\Controllers\UpdatePasswordController;
-use App\Models\KategoriDocument;
-use App\Models\LendingPage;
-use App\Models\Notifikasi;
-use App\Models\Template;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Blade;
+use App\Http\Controllers\KategoriDocumentController;
 
 // cache control
 
@@ -269,6 +270,16 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/galeri/{galeri}', [GaleriController::class, 'update'])->name('galeri.update');
     Route::delete('/galeri/{galeri}', [GaleriController::class, 'destroy'])->name('galeri.destroy');
   });
+
+  Route::get('/triwulan', [TriwulanController::class, 'index'])->name('triwulan.index');
+  Route::post('/triwulan', [TriwulanController::class, 'store'])->name('triwulan.store');
+  Route::put('/triwulan/{id}/verify', [TriwulanController::class, 'verify'])->name('triwulan.verify');
+  Route::get('/triwulan/template', [TriwulanController::class, 'downloadTemplate'])->name('triwulan.template');
+  Route::post('/triwulan/periode', [TriwulanController::class, 'updatePeriod'])->name('triwulan.period.update');
+  Route::post('/triwulan/periode/{id}/toggle', [TriwulanController::class, 'togglePeriod'])->name('triwulan.period.toggle');
+  Route::get('/triwulan/{id}/history', [TriwulanController::class, 'getHistory'])->name('triwulan.history');
+  Route::post('/triwulan/template/upload', [TriwulanController::class, 'uploadTemplate'])->name('triwulan.template.upload');
+
   // setting page
   Route::get('/website-setting', [PagesController::class, 'websiteSetting'])->name('website-setting');
   Route::put('/website-setting', [PagesController::class, 'websiteSettingUpdate'])->name('website-setting.update');

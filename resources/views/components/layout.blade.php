@@ -47,6 +47,16 @@
                         ],
                     ],
                     [
+                        'title' => 'E-Reporting',
+                        'items' => [
+                            [
+                                'label' => 'Laporan Triwulan',
+                                'icon' => 'bi bi-calendar-check',
+                                'route' => 'triwulan.index',
+                            ],
+                        ],
+                    ],
+                    [
                         'title' => 'Settings',
                         'items' => [
                             ['label' => 'Landing Setting', 'icon' => 'bi-gear', 'route' => 'admin.lending.index'],
@@ -89,6 +99,18 @@
                         ],
                     ],
                 ];
+                if (Auth::user()->role == 'admin' || Auth::user()->role == 'opd') {
+                    $menus[] = [
+                        'title' => 'E-Reporting',
+                        'items' => [
+                            [
+                                'label' => 'Laporan Triwulan',
+                                'icon' => 'bi bi-calendar-check',
+                                'route' => 'triwulan.index',
+                            ],
+                        ],
+                    ];
+                }
             }
         @endphp
 
