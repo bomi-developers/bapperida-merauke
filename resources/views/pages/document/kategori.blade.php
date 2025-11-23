@@ -10,90 +10,54 @@
                 <span>Tambah Kategori</span>
             </button>
         </div>
-        <form method="GET" action="{{ route('admin.doctkategori.index') }}" class="mb-5">
-            <div class="flex">
-                <input type="text" id="searchInput" name="search" placeholder="Ketik nama kategori..."
-                    value="{{ request('search') }}" {{-- Tampilkan query pencarian sebelumnya --}}
-                    class="w-full sm:w-80 px-4 py-2.5 text-sm border border-gray-300 dark:border-gray-700 rounded-l-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200" />
-                <button type="submit"
-                    class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-r-lg text-sm flex items-center">
-                    <i class="bi bi-search mr-2"></i>
-                    Cari
-                </button>
+        <div class="mb-6">
+            <div class="relative w-full md:w-1/3">
+                <!-- Icon -->
+                <i class="bi bi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+
+                <!-- Input -->
+                <input type="text" id="search" placeholder="Cari kategori dokumen..."
+                    class="w-full pl-10 pr-4 py-3 text-sm rounded-xl border border-gray-300 dark:border-gray-700 
+             bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 
+             focus:ring-2 focus:ring-indigo-500 outline-none transition-colors duration-200" />
             </div>
-        </form>
-        {{-- Tabel Kategori --}}
-        <section
-            class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md overflow-hidden">
-            <div class="max-w-full overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">#</th>
-                            <th scope="col" class="px-6 py-3">Nama Kategori</th>
-                            <th scope="col" class="px-6 py-3 text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="kategori-table-body">
-                        @forelse ($kategori as $kat)
-                            <tr id="kat-row-{{ $kat->id }}"
-                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white w-[20px]">
-                                    {{ $loop->iteration }}
-                                </td>
-                                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                    {{ $kat->nama_kategori }}</td>
-                                <td class="px-6 py-4 text-center">
-                                    <div class="flex items-center justify-center space-x-4">
-                                        <button
-                                            class="edit-btn p-2 rounded-lg text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900 hover:text-indigo-800 dark:hover:text-indigo-300 transition"
-                                            title="Edit" data-id="{{ $kat->id }}">
-                                            <i class="bi bi-pencil-square text-base"></i>
-                                        </button>
-                                        <button
-                                            class="delete-btn p-2 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900 hover:text-red-800 dark:hover:text-red-300 transition"
-                                            title="Hapus" data-id="{{ $kat->id }}">
-                                            <i class="bi bi-trash text-base"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr id="no-data-row">
-                                <td colspan="2" class="text-center py-12">
-                                    <p class="text-gray-500 dark:text-gray-400">Belum ada kategori yang ditambahkan.</p>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </section>
+        </div>
+
+        <div
+            class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg overflow-hidden transition-colors duration-300">
+            <div id="kategori-table" class="max-w-full overflow-x-auto p-6"></div>
+        </div>
     </main>
 
     {{-- MODAL AREA --}}
 
     <!-- Modal Tambah/Edit Kategori -->
-    <div id="kategori-modal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-lg">
-            <form id="kategori-form">
-                <div class=" flex justify-between items-center p-6 ">
-                    <h3 id="modal-title" class="text-xl font-semibold text-gray-900 dark:text-white"></h3>
-                    <button id="close-modal-btn"
-                        class="text-red-800 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800 rounded-full w-8 h-8 flex items-center justify-center">&times;</button>
-                </div>
-                <div class="p-6">
+    <div id="kategori-modal"
+        class="fixed inset-0 z-50 hidden bg-black/10 backdrop-blur-sm flex items-center justify-center">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-lg">
+            <div class=" flex justify-between items-center p-6 ">
+                <h3 id="modal-title" class="text-xl font-semibold text-gray-900 dark:text-white"></h3>
+                <button id="close-modal-btn"
+                    class="text-red-800 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800 rounded-full w-8 h-8 flex items-center justify-center">&times;</button>
+            </div>
+            <form id="kategori-form" novalidate>
+                <div class="modal-content px-6">
                     <input type="hidden" name="_method" id="method-field">
                     <input type="hidden" name="kategori_id" id="kategori-id-field">
                     <div>
-                        <label for="nama_kategori" class="form-label">Nama Kategori</label>
-                        <input type="text" id="nama_kategori" name="nama_kategori" class="form-input w-full"
+                        <label for="nama_kategori"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nama
+                            Kategori</label>
+                        <input type="text" id="nama_kategori" name="nama_kategori"
+                            class="w-full px-4 py-2.5 text-sm border border-gray-300 dark:border-gray-700 rounded-lg
+                                bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
+                                focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
                             required>
                     </div>
                 </div>
                 <div class="p-6  flex justify-end gap-2">
-                    {{-- <button type="button" id="close-modal-btn" class="btn-secondary">Batal</button> --}}
-                    <button type="submit" id="save-btn" class="btn-primary">Simpan</button>
+                    <button type="submit" id="save-btn"
+                        class="px-4 py-2 text-sm font-medium rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white transition">Simpan</button>
                 </div>
             </form>
         </div>
@@ -103,223 +67,266 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                // --- Elements ---
+
+                // Elements
                 const modal = document.getElementById('kategori-modal');
                 const addBtn = document.getElementById('add-kategori-btn');
                 const closeModalBtn = document.getElementById('close-modal-btn');
                 const form = document.getElementById('kategori-form');
-                const tableBody = document.getElementById('kategori-table-body');
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-                // --- Functions ---
+                // Helpers
                 const openModal = () => modal.classList.remove('hidden');
                 const closeModal = () => modal.classList.add('hidden');
-
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                });
-
                 const resetForm = () => {
                     form.reset();
-                    document.getElementById('method-field').value = '';
-                    document.getElementById('kategori-id-field').value = '';
+                    form.action = "";
+                    document.getElementById('method-field').value = "";
+                    document.getElementById('kategori-id-field').value = "";
                 };
 
-                const renderRow = (kat) => {
-                    return `
-                    <tr id="kat-row-${kat.id}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">${kat.nama_kategori}</td>
-                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">${kat.nama_kategori}</td>
-                        <td class="px-6 py-4 text-center">
-                            <div class="flex items-center justify-center space-x-4">
-                                <button class="edit-btn font-medium text-indigo-600 dark:text-indigo-500 hover:underline" title="Edit" data-id="${kat.id}"><i class="bi bi-pencil-square text-base"></i></button>
-                                <button class="delete-btn font-medium text-red-600 dark:text-red-500 hover:underline" title="Hapus" data-id="${kat.id}"><i class="bi bi-trash text-base"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-                };
+                // Create
+                addBtn.addEventListener('click', () => {
+                    resetForm();
+                    document.getElementById('modal-title').textContent = "Tambah Kategori Baru";
+                    form.action = "{{ route('admin.doctkategori.store') }}";
+                    openModal();
+                });
 
-                // --- Event Listeners ---
-                if (addBtn) {
-                    addBtn.addEventListener('click', () => {
-                        resetForm();
-                        document.getElementById('modal-title').textContent = 'Tambah Kategori Baru';
-                        form.action = '{{ route('admin.doctkategori.store') }}';
-                        openModal();
+                // Close modal
+                closeModalBtn.addEventListener('click', closeModal);
+
+                // Submit
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+
+                    const method = document.getElementById('method-field').value || "POST";
+                    const formData = {
+                        nama_kategori: document.getElementById('nama_kategori').value,
+                        _method: method
+                    };
+
+                    const response = await fetch(form.action, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": csrfToken,
+                            "Accept": "application/json"
+                        },
+                        body: JSON.stringify(formData)
                     });
-                }
 
-                if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+                    const res = await response.json();
 
-                if (tableBody) {
-                    tableBody.addEventListener('click', async (e) => {
-                        const target = e.target.closest('button');
-                        if (!target) return;
-                        const id = target.dataset.id;
+                    if (!response.ok) {
+                        let errors = Object.values(res.errors).map(v => `<li>${v}</li>`).join('');
+                        Swal.fire({
+                            icon: "error",
+                            title: "Validasi Gagal",
+                            html: `<ul class='text-left list-disc pl-4'>${errors}</ul>`
+                        });
+                        return;
+                    }
 
-                        if (target.classList.contains('edit-btn')) {
-                            resetForm();
-                            document.getElementById('modal-title').textContent = 'Edit Kategori';
-                            document.getElementById('method-field').value = 'PUT';
-                            document.getElementById('kategori-id-field').value = id;
-                            form.action = `{{ url('admin/document-kategori') }}/${id}`;
+                    closeModal();
+                    Toast.fire({
+                        icon: "success",
+                        title: res.message
+                    });
+                    loadData();
+                    document.getElementById('kategori-table').innerHTML = html;
+                    // ========== EVENT HANDLER EDIT ==========
+                    document.querySelectorAll('.edit-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const id = this.dataset.id;
 
-                            const response = await fetch(`{{ url('admin/document-kategori') }}/${id}`);
-                            const kat = await response.json();
+                            fetch(`/admin/doctkategori/${id}`)
+                                .then(res => res.json())
+                                .then(data => {
+                                    // isi form
+                                    document.getElementById('modal-title').textContent =
+                                        "Edit Kategori";
+                                    document.getElementById('nama_kategori').value =
+                                        data.nama_kategori;
 
-                            form.querySelector('#nama_kategori').value = kat.nama_kategori;
-                            openModal();
-                        }
+                                    document.getElementById('method-field').value =
+                                        "PUT";
+                                    document.getElementById('kategori-id-field').value =
+                                        id;
 
-                        if (target.classList.contains('delete-btn')) {
+                                    form.action = `/admin/doctkategori/${id}`;
+
+                                    // buka modal
+                                    document.getElementById('kategori-modal').classList
+                                        .remove('hidden');
+                                });
+                        });
+                    });
+
+                    // ========== EVENT HANDLER HAPUS ==========
+                    document.querySelectorAll('.delete-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const id = this.dataset.id;
+
                             Swal.fire({
-                                title: 'Anda yakin?',
-                                text: "Menghapus kategori juga akan menghapus semua dokumen di dalamnya!",
+                                title: 'Hapus kategori?',
+                                text: "Data tidak dapat dikembalikan!",
                                 icon: 'warning',
                                 showCancelButton: true,
-                                confirmButtonColor: '#d33',
-                                cancelButtonColor: '#3085d6',
-                                confirmButtonText: 'Ya, hapus!',
-                                cancelButtonText: 'Batal'
-                            }).then(async (result) => {
+                                confirmButtonText: 'Ya, hapus',
+                            }).then(result => {
                                 if (result.isConfirmed) {
-                                    const response = await fetch(
-                                        `{{ url('admin/document-kategori') }}/${id}`, {
-                                            method: 'DELETE',
+                                    fetch(`/admin/doctkategori/${id}`, {
+                                            method: "DELETE",
                                             headers: {
-                                                'X-CSRF-TOKEN': csrfToken,
-                                                'Accept': 'application/json'
+                                                "X-CSRF-TOKEN": document
+                                                    .querySelector(
+                                                        'meta[name="csrf-token"]'
+                                                    ).content
                                             }
+                                        })
+                                        .then(res => res.json())
+                                        .then(res => {
+                                            Toast.fire({
+                                                icon: "success",
+                                                title: res.message
+                                            });
+                                            loadData(); // reload data
                                         });
-                                    const res = await response.json();
-                                    if (res.success) {
-                                        document.getElementById(`kat-row-${id}`).remove();
-                                        Toast.fire({
-                                            icon: 'success',
-                                            title: res.message
-                                        });
-                                    }
                                 }
                             });
-                        }
+                        });
                     });
+                });
+            });
+        </script>
+        <script>
+            const pageUrl = "{{ route('admin.doctkategori.data') }}";
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2500,
+                timerProgressBar: true,
+            });
+
+            let deleteId = null;
+
+            // 🔹 Load Data
+            function loadData(url = pageUrl) {
+                const search = document.getElementById('search').value;
+
+                let finalUrl = new URL(url, window.location.origin);
+                if (search !== "") {
+                    finalUrl.searchParams.set("search", search);
                 }
 
-                if (form) {
-                    form.addEventListener('submit', async (e) => {
-                        e.preventDefault();
 
-                        const formData = new FormData(form);
-                        const isUpdating = formData.get('_method') === 'PUT';
-                        const data = {
-                            nama_kategori: formData.get('nama_kategori')
-                        };
+                fetch(finalUrl)
+                    .then(res => res.json())
+                    .then(res => {
+                        let html = `
+                    <div class="overflow-x-auto max-h-[75vh] overflow-y-auto rounded-lg border border-gray-300 dark:border-gray-700">
+                        <table class="w-full text-sm text-left text-gray-700 dark:text-gray-200">
+                            <thead class="sticky top-0 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 uppercase text-xs font-semibold">
+                                <tr>
+                                    <th class="px-4 py-3 w-14">#</th>
+                                    <th class="px-4 py-3">Kategori</th>
+                                    <th class="px-4 py-3">Dokumen</th>
+                                    <th class="px-4 py-3 text-center w-28">Aksi</th>
+                                </tr>
+                            </thead>
 
-                        const response = await fetch(form.action, {
-                            method: isUpdating ? 'POST' :
-                            'POST', // Tetap POST, method asli di-handle oleh _method
-                            body: JSON.stringify(isUpdating ? {
-                                ...data,
-                                _method: 'PUT'
-                            } : data),
-                            headers: {
-                                'X-CSRF-TOKEN': csrfToken,
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json'
+                            <tbody>
+                `;
+
+                        // 🔹 Jika Ada Data
+                        if (res.data.length > 0) {
+                            res.data.forEach((b, i) => {
+                                html += `
+                            <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition">
+                                <td class="px-4 py-3">${i + 1}</td>
+                                <td class="px-4 py-3 font-medium">${b.nama_kategori}</td>
+                                <td class="px-4 py-3 font-medium"><span class="px-3 py-2 text-md rounded-full transition-all duration-200 border border-opacity-50 bg-green-100 text-green-700 border-green-300 hover:bg-green-200 dark:bg-green-900 dark:text-green-300 dark:border-green-700">
+                                    <strong>${b.documents_count}</strong> Dokumen </span></td>
+
+                                <td class="px-4 py-3 flex justify-center gap-2">
+                                   <button
+                                            class="edit-btn p-2 rounded-lg text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900 hover:text-indigo-800 dark:hover:text-indigo-300 transition"
+                                            title="Edit" data-id="${b.id}">
+                                            <i class="bi bi-pencil-square text-base"></i>
+                                        </button>
+                                        <button
+                                            class="delete-btn p-2 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900 hover:text-red-800 dark:hover:text-red-300 transition"
+                                            title="Hapus" data-id="${b.id}">
+                                            <i class="bi bi-trash text-base"></i>
+                                        </button>
+                                </td>
+                            </tr>
+                        `;
+                            });
+                        } else {
+                            html += `
+                        <tr>
+                            <td colspan="4" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
+                                Tidak ada data
+                            </td>
+                        </tr>`;
+                        }
+
+                        html += `
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="mt-4 flex flex-wrap gap-2 justify-start">
+                `;
+
+                        // 🔹 Pagination kiri
+                        res.links.forEach(link => {
+                            let buttonUrl = link.url;
+
+                            if (buttonUrl) {
+                                let pagUrl = new URL(buttonUrl, window.location.origin);
+
+                                if (search !== "") {
+                                    pagUrl.searchParams.set("search", search);
+                                }
+
+                                const label = link.label.replace('&laquo;', '«').replace('&raquo;', '»');
+
+                                html += `
+                        <button onclick="loadData('${pagUrl}')"
+                            class="px-3 py-1 text-sm rounded font-medium transition-colors duration-200
+                                ${link.active
+                                    ? 'bg-indigo-600 text-white'
+                                    : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600'}">
+                            ${label}
+                        </button>`;
                             }
                         });
 
-                        const res = await response.json();
 
-                        if (!response.ok) {
-                            let errorMessages = Object.values(res.errors).map(e => `<li>${e}</li>`).join(
-                                '');
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal Validasi',
-                                html: `<ul class="text-left list-disc list-inside">${errorMessages}</ul>`
-                            });
-                            return;
-                        }
+                        html += `</div>`;
 
-                        const newRowHtml = renderRow(res.data);
-                        const existingRow = document.getElementById(`kat-row-${res.data.id}`);
+                        document.getElementById('kategori-table').innerHTML = html;
+                    })
 
-                        if (existingRow) {
-                            existingRow.outerHTML = newRowHtml;
-                        } else {
-                            document.getElementById('no-data-row')?.remove();
-                            tableBody.insertAdjacentHTML('afterbegin', newRowHtml);
-                        }
-
-                        closeModal();
-                        Toast.fire({
-                            icon: 'success',
-                            title: res.message
+                    .catch(err => {
+                        console.error(err);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal Memuat Data',
+                            toast: false,
+                            position: 'center',
+                            showConfirmButton: true
                         });
                     });
-                }
-            });
+            }
+
+            document.getElementById('search').addEventListener('input', () => loadData());
+            loadData();
         </script>
-        <style>
-            .show-btn i,
-            .edit-btn i,
-            .delete-btn i {
-                pointer-events: none;
-            }
-
-            .form-label {
-                display: block;
-                margin-bottom: 0.5rem;
-                font-weight: 500;
-                color: #374151;
-            }
-
-            .dark .form-label {
-                color: #d1d5db;
-            }
-
-            .form-input {
-                border: 1px solid #d1d5db;
-                border-radius: 0.5rem;
-                padding: 0.5rem 0.75rem;
-                width: 100%;
-                background-color: #f9fafb;
-                color: #111827;
-            }
-
-            .dark .form-input {
-                border-color: #4b5563;
-                background-color: #374151;
-                color: #f9fafb;
-            }
-
-            .btn-primary {
-                background-color: #4f46e5;
-                color: white;
-                padding: 0.6rem 1.2rem;
-                border-radius: 0.5rem;
-                font-weight: 500;
-            }
-
-            .btn-secondary {
-                background-color: #e5e7eb;
-                color: #1f2937;
-                padding: 0.6rem 1.2rem;
-                border-radius: 0.5rem;
-                font-weight: 500;
-            }
-
-            .dark .btn-secondary {
-                background-color: #4b5563;
-                color: #f9fafb;
-            }
-        </style>
     @endpush
 </x-layout>

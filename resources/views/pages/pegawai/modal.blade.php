@@ -86,13 +86,23 @@
                 <!-- role -->
                 <div class="mb-3">
                     <label for="role" class="text-sm dark:text-white">Akses Akun</label>
-                    <select id="role" name="role"
-                        class="w-full px-3 py-2 border rounded dark:border-strokedark 
-                 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-primary outline-none">
-                        <option value="">Pilih Akses</option>
-                        <option value="admin">Administrator Bidang</option>
-                        <option value="pegawai">Publisher Berita & Galeri</option>
-                    </select>
+                    <div class="relative w-full">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <i class="bi bi-person-fill-lock text-gray-400 dark:text-gray-500"></i>
+                        </div>
+                        <select id="role" name="role"
+                            class="appearance-none bg-white border border-gray-300 text-gray-900 text-sm rounded-xl
+                   focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 
+                   block w-full pl-10 pr-10 p-2.5 shadow-sm cursor-pointer transition-all duration-200
+                   dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                            <option value="">Pilih Akses</option>
+                            <option value="admin">Administrator Bidang</option>
+                            <option value="pegawai">Publisher Berita & Galeri</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <i class="bi bi-chevron-down text-xs text-gray-500 dark:text-gray-400"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="flex justify-end gap-3 pt-4 ">

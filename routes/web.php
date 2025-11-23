@@ -234,6 +234,7 @@ Route::middleware(['auth'])->group(function () {
       // kategori document
       Route::get('/document-kategori', [KategoriDocumentController::class, 'index'])->name('doctkategori.index');
       Route::post('/document-kategori', [KategoriDocumentController::class, 'store'])->name('doctkategori.store');
+      Route::get('document-kategori/data', [\App\Http\Controllers\KategoriDocumentController::class, 'getData'])->name('doctkategori.data');
       Route::get('/document-kategori/{kategori}', [KategoriDocumentController::class, 'show'])->name('doctkategori.show');
       Route::put('/document-kategori/{kategori}', [KategoriDocumentController::class, 'update'])->name('doctkategori.update');
       Route::delete('/document-kategori/{kategori}', [KategoriDocumentController::class, 'destroy'])->name('doctkategori.destroy');
@@ -251,6 +252,7 @@ Route::middleware(['auth'])->group(function () {
     // berita
     Route::get('berita', [\App\Http\Controllers\BeritaController::class, 'index'])->name('berita.index');
     Route::get('berita/create', [\App\Http\Controllers\BeritaController::class, 'create'])->name('berita.create');
+    Route::get('berita/data', [\App\Http\Controllers\BeritaController::class, 'getData'])->name('berita.data');
     Route::post('berita', [\App\Http\Controllers\BeritaController::class, 'store'])->name('berita.store');
     Route::get('berita/{berita}/edit', [\App\Http\Controllers\BeritaController::class, 'edit'])->name('berita.edit');
     Route::put('berita/{berita}', [\App\Http\Controllers\BeritaController::class, 'update'])->name('berita.update');

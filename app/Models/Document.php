@@ -26,6 +26,7 @@ class Document extends Model
         'cover',
         'file',
         'lainnya',
+        'download'
     ];
 
     /**

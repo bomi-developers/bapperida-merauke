@@ -1,6 +1,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     let pageUrl = "{{ route('admin.jabatan.data') }}";
+
     const Toast = Swal.mixin({
         toast: true,
         position: 'top-end',
@@ -11,7 +12,13 @@
 
     function loadData(url = pageUrl) {
         const search = document.getElementById('search').value;
-        fetch(`${url}?search=${encodeURIComponent(search)}`)
+
+        // URL utama pertama kali dipanggil → tambahkan search
+        if (!url.includes("search=")) {
+            url = `${url}?search=${encodeURIComponent(search)}`;
+        }
+
+        fetch(url)
             .then(res => res.json())
             .then(res => {
                 let html = `
@@ -19,7 +26,7 @@
                         <table class="w-full text-sm text-left text-gray-600 dark:text-gray-300">
                             <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-200 sticky top-0 z-10">
                                 <tr>
-                                     <th class="px-4 py-3">#</th>
+                                    <th class="px-4 py-3">#</th>
                                     <th class="px-4 py-3">Nama Jabatan</th>
                                     <th class="px-4 py-3 text-center">Aksi</th>
                                 </tr>
@@ -51,7 +58,7 @@
                 } else {
                     html += `
                         <tr>
-                            <td colspan="2" class="px-4 py-6 text-center text-gray-500 dark:text-gray-300">
+                            <td colspan="3" class="px-4 py-6 text-center text-gray-500 dark:text-gray-300">
                                 Tidak ada data
                             </td>
                         </tr>`;
@@ -67,8 +74,9 @@
                 res.links.forEach(link => {
                     if (link.url) {
                         const label = link.label.replace('&laquo;', '«').replace('&raquo;', '»');
+
                         html += `
-                            <button onclick="loadData('${link.url}')"
+                            <button onclick="loadPage('${link.url}')"
                                 class="px-3 py-1 text-sm rounded font-medium transition-colors duration-200
                                 ${link.active
                                     ? 'bg-indigo-600 text-white'
@@ -82,6 +90,17 @@
                 document.getElementById('jabatan-table').innerHTML = html;
             })
             .catch(err => console.error(err));
+    }
+
+    // Pagination handler: mempertahankan pencarian
+    function loadPage(url) {
+        const search = document.getElementById('search').value;
+
+        let finalUrl = url.includes('?') ?
+            `${url}&search=${encodeURIComponent(search)}` :
+            `${url}?search=${encodeURIComponent(search)}`;
+
+        loadData(finalUrl);
     }
 
     function openCreateForm() {
@@ -123,7 +142,6 @@
             })
             .then(res => res.json())
             .then(res => {
-                // alert(res.message);
                 Toast.fire({
                     icon: 'success',
                     title: res.message
@@ -144,7 +162,6 @@
                 })
                 .then(res => res.json())
                 .then(res => {
-                    // alert(res.message);
                     Toast.fire({
                         icon: 'success',
                         title: res.message

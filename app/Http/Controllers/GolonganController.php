@@ -20,7 +20,7 @@ class GolonganController extends Controller
             $query->where('golongan', 'like', '%' . $request->search . '%');
         }
 
-        $golongans = $query->orderBy('created_at', 'desc')->paginate(20);
+        $golongans = $query->orderBy('created_at', 'desc')->paginate(10);
 
         return response()->json($golongans);
     }

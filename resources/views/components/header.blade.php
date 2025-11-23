@@ -157,9 +157,14 @@
     </div>
 </header>
 <!-- Overlay Search -->
-<div id="searchOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-md hidden flex items-center justify-center z-50">
+<div id="searchOverlay" class="fixed inset-0 bg-black/20 backdrop-blur-sm hidden flex items-center justify-center z-50">
 
-    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 w-full max-w-md relative">
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-lg px-6 py-8 w-full max-w-md relative">
+        <div class="mb-4">
+
+            <button id="closeOverlay"
+                class="absolute top-3 right-3 text-red-800 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800 rounded-full w-8 h-8 flex items-center justify-center">✕</button>
+        </div>
         <input id="overlaySearchInput" type="text" placeholder="Cari menu..."
             class="w-full border border-slate-300 dark:border-slate-600 rounded-lg py-3 px-4 mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-slate-700 dark:text-white">
 
@@ -169,8 +174,6 @@
         </div>
 
         <!-- Tombol close -->
-        <button id="closeOverlay"
-            class="absolute top-3 right-3 text-slate-400 hover:text-red-500 transition">✕</button>
     </div>
 </div>
 <x-modal id="modalTemplate" title="Semua Notifikasi">
@@ -359,6 +362,11 @@
                     name: "Template Editor",
                     url: "/admin/lending-page/template"
                 },
+                {
+                    icon: "bi bi-folder",
+                    name: "Laporan Triwulan",
+                    url: "/triwulan"
+                },
             ];
         @else
             const menuData = [{
@@ -387,7 +395,13 @@
                     name: "Profile",
                     url: "/admin/profile"
                 },
-
+                @if (Auth::user()->role == 'admin' || Auth::user()->role == 'opd')
+                    {
+                        icon: "bi bi-folder",
+                        name: "Laporan Triwulan",
+                        url: "/triwulan"
+                    },
+                @endif
             ];
         @endif
 

@@ -19,7 +19,7 @@
 
                 <!-- Input -->
                 <input type="text" id="search" placeholder="Cari golongan..."
-                    class="w-full pl-10 pr-4 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-700 
+                    class="w-full pl-10 pr-4 py-3 text-sm rounded-xl border border-gray-300 dark:border-gray-700 
              bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 
              focus:ring-2 focus:ring-indigo-500 outline-none transition-colors duration-200" />
             </div>

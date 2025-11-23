@@ -19,6 +19,18 @@ class KategoriDocumentController extends Controller
         $kategori = $query->latest()->paginate(20);
         return view('pages.document.kategori', compact('kategori'));
     }
+    public function getData(Request $request)
+    {
+        $query = KategoriDocument::query()->withCount('documents');
+
+        if ($request->search) {
+            $query->where('nama_kategori', 'like', '%' . $request->search . '%');
+        }
+
+        $kategoris = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        return response()->json($kategoris);
+    }
 
     public function store(Request $request)
     {

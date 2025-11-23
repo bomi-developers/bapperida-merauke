@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Jobs\CompressBeritaImage;
+use App\Models\User;
 
 class BeritaController extends Controller
 {
@@ -25,9 +26,28 @@ class BeritaController extends Controller
             $searchTerm = $request->search;
             $query->whereRaw('LOWER(title) LIKE ?', [strtolower($searchTerm) . '%']);
         }
+        $authors = User::has('berita')->get();
 
         $beritas = $query->paginate(10);
-        return view('pages.berita.index', compact('beritas'));
+        return view('pages.berita.index', compact('beritas', 'authors'));
+    }
+    public function getData(Request $request)
+    {
+        $query = Berita::with(['author', 'items']);
+
+        if ($request->search) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+        if ($request->author != '-' && $request->author) {
+            $query->where('user_id', $request->author);
+        }
+        if ($request->status != '-' && $request->status) {
+            $query->where('status', $request->status);
+        }
+
+        $beritas = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        return response()->json($beritas);
     }
 
     /**
@@ -277,7 +297,8 @@ class BeritaController extends Controller
             }
             $berita->delete(); // Hapus berita, dan items akan terhapus via cascade
         });
-        return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil dihapus!');
+        // return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil dihapus!');
+        return response()->json(['success' => true, 'message' => 'Berita berhasil dihapus']);
     }
 
     // --- METODE PUBLIK ---

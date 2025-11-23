@@ -10,67 +10,99 @@
             </a>
         </div>
 
-        @if (session('success'))
-            <div id="success-alert"
-                class="mb-4 p-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                role="alert">
-                {{ session('success') }}
+
+        <div class="flex flex-col sm:flex-row flex-wrap gap-4 w-full items-center mb-6">
+
+            {{-- 1. Search Input --}}
+            <div class="relative w-full sm:w-64 group">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <i class="bi bi-search text-gray-400 group-focus-within:text-indigo-500 transition-colors"></i>
+                </div>
+                <input type="text" id="search"
+                    class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl 
+                   focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 
+                   block w-full pl-10 p-2.5 shadow-sm transition-all duration-200
+                   dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                    placeholder="Cari berita...">
             </div>
-        @endif
+            <div class="relative w-full sm:w-80">
+                <!-- Icon kiri -->
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <i class="bi bi-calendar-range text-gray-400 dark:text-gray-500"></i>
+                </div>
 
-        {{-- PERBAIKAN: Menggunakan form HTML standar untuk pencarian (lebih andal) --}}
-        <form method="GET" action="{{ route('admin.berita.index') }}" class="mb-5">
-            <div class="flex">
-                <input type="text" id="searchInput" name="search" placeholder="Ketik judul berita..."
-                    value="{{ request('search') }}" {{-- Tampilkan query pencarian sebelumnya --}}
-                    class="w-full sm:w-80 px-4 py-2.5 text-sm border border-gray-300 dark:border-gray-700 rounded-l-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200" />
-                <button type="submit"
-                    class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-r-lg text-sm">
-                    Cari
-                </button>
+                <!-- Wrapper dua input dalam satu kotak -->
+                <div
+                    class="flex items-center bg-white border border-gray-300 text-gray-900 text-sm rounded-xl
+               focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 
+               w-full pl-10 pr-10 p-2.5 shadow-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+
+                    <!-- Start Date -->
+                    <input type="date" id="startDate"
+                        class="w-1/2 bg-transparent outline-none border-none text-sm
+                   dark:text-white" />
+
+                    <span class="mx-2 text-gray-400">—</span>
+
+                    <!-- End Date -->
+                    <input type="date" id="endDate"
+                        class="w-1/2 bg-transparent outline-none border-none text-sm
+                   dark:text-white" />
+
+                </div>
+
+                <!-- Icon kanan -->
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <i class="bi bi-chevron-down text-xs text-gray-500 dark:text-gray-400"></i>
+                </div>
+
             </div>
-        </form>
-
-
-        <section
-            class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md overflow-hidden">
-            <div class="max-w-full overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 min-w-[50px]">#</th>
-                            <th scope="col" class="px-6 py-3 min-w-[300px]">Judul</th>
-                            <th scope="col" class="px-6 py-3">Penulis</th>
-                            <th scope="col" class="px-6 py-3">Status</th>
-                            <th scope="col" class="px-6 py-3">Penayangan</th>
-                            <th scope="col" class="px-6 py-3 text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="beritaTableBody">
-                        {{-- Muat data awal menggunakan partial view --}}
-                        @include('pages.berita._berita_rows', ['beritas' => $beritas])
-                    </tbody>
-                </table>
-                {{-- Paginasi untuk tampilan awal --}}
-                <div id="paginationLinks" class="p-4">
-                    {{-- PERBAIKAN: Tambahkan appends agar paginasi tetap membawa query pencarian --}}
-                    {{ $beritas->appends(request()->query())->links() }}
+            {{-- 5. Filter author --}}
+            <div class="relative w-full sm:w-56">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <i class="bi bi-person-check text-gray-400 dark:text-gray-500"></i>
+                </div>
+                <select id="selectAuthor"
+                    class="appearance-none bg-white border border-gray-300 text-gray-900 text-sm rounded-xl
+                   focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 
+                   block w-full pl-10 pr-10 p-2.5 shadow-sm cursor-pointer transition-all duration-200
+                   dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                    <option value="-">Semua Penulis</option>
+                    @foreach ($authors as $item)
+                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                    @endforeach
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <i class="bi bi-chevron-down text-xs text-gray-500 dark:text-gray-400"></i>
                 </div>
             </div>
-        </section>
+            <div class="relative w-full sm:w-56">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <i class="bi bi-folder text-gray-400 dark:text-gray-500"></i>
+                </div>
+                <select id="selectStatus"
+                    class="appearance-none bg-white border border-gray-300 text-gray-900 text-sm rounded-xl
+                   focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 
+                   block w-full pl-10 pr-10 p-2.5 shadow-sm cursor-pointer transition-all duration-200
+                   dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                    <option value="-">Semua Status</option>
+                    <option value="published">Published</option>
+                    <option value="draft">Draft</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <i class="bi bi-chevron-down text-xs text-gray-500 dark:text-gray-400"></i>
+                </div>
+            </div>
+
+        </div>
+        <div
+            class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg overflow-hidden transition-colors duration-300">
+            <div id="berita-table" class="max-w-full overflow-x-auto p-6"></div>
+        </div>
+
+
     </main>
 
-    @push('scripts')
-        <script>
-            // Script untuk menghilangkan alert
-            setTimeout(() => {
-                const alertBox = document.getElementById('success-alert');
-                if (alertBox) {
-                    alertBox.style.transition = 'opacity 0.5s ease';
-                    alertBox.style.opacity = '0';
-                    setTimeout(() => alertBox.remove(), 500);
-                }
-            }, 3000); // Hilang setelah 3 detik
-        </script>
-    @endpush
+
 </x-layout>
+@include('pages.berita.script')

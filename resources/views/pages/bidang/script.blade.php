@@ -1,6 +1,8 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     const pageUrl = "{{ route('admin.bidang.data') }}";
+
     const Toast = Swal.mixin({
         toast: true,
         position: 'top-end',
@@ -11,94 +13,115 @@
 
     let deleteId = null;
 
+    // 🔹 Load Data
     function loadData(url = pageUrl) {
         const search = document.getElementById('search').value;
-        fetch(`${url}?search=${search}`)
+
+        let finalUrl = new URL(url, window.location.origin);
+        if (search !== "") {
+            finalUrl.searchParams.set("search", search);
+        }
+
+
+        fetch(finalUrl)
             .then(res => res.json())
             .then(res => {
                 let html = `
-                    <table class="w-full table-auto border-collapse">
-                        <thead>
-                            <tr class="bg-gray-100 dark:bg-gray-800 text-left text-sm font-semibold">
-                                <th class="px-4 py-3 text-gray-700 dark:text-gray-200 w-16">#</th>
-                                <th class="px-4 py-3 text-gray-700 dark:text-gray-200">Nama Bidang</th>
-                                <th class="px-4 py-3 text-gray-700 dark:text-gray-200">Deskripsi</th>
-                                <th class="px-4 py-3 text-gray-700 dark:text-gray-200 text-center w-32">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-sm text-gray-800 dark:text-gray-100">
+                    <div class="overflow-x-auto max-h-[75vh] overflow-y-auto rounded-lg border border-gray-300 dark:border-gray-700">
+                        <table class="w-full text-sm text-left text-gray-700 dark:text-gray-200">
+                            <thead class="sticky top-0 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 uppercase text-xs font-semibold">
+                                <tr>
+                                    <th class="px-4 py-3 w-14">#</th>
+                                    <th class="px-4 py-3">Nama Bidang</th>
+                                    <th class="px-4 py-3">Deskripsi</th>
+                                    <th class="px-4 py-3 text-center w-28">Aksi</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
                 `;
 
+                // 🔹 Jika Ada Data
                 if (res.data.length > 0) {
                     res.data.forEach((b, i) => {
                         html += `
-                            <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+                            <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition">
                                 <td class="px-4 py-3">${i + 1}</td>
                                 <td class="px-4 py-3 font-medium">${b.nama_bidang}</td>
                                 <td class="px-4 py-3">${b.deskripsi ?? ''}</td>
-                                <td class="px-4 py-3 flex items-center justify-center gap-3">
+
+                                <td class="px-4 py-3 flex justify-center gap-2">
                                     <button onclick="editBidang(${b.id}, '${b.nama_bidang}', '${b.deskripsi ?? ''}')"
                                         class="p-2 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900 text-blue-600 dark:text-blue-400 transition"
                                         title="Edit">
-                                        <i class="bi bi-pencil text-lg"></i>
+                                        <i class="bi bi-pencil-square text-lg"></i>
                                     </button>
+
                                     <button onclick="deleteBidang(${b.id})"
                                         class="p-2 rounded-lg hover:bg-red-100 dark:hover:bg-red-900 text-red-600 dark:text-red-400 transition"
                                         title="Hapus">
                                         <i class="bi bi-trash text-lg"></i>
                                     </button>
                                 </td>
-                            </tr>`;
+                            </tr>
+                        `;
                     });
                 } else {
                     html += `
                         <tr>
-                            <td colspan="4" class="text-center py-6 text-gray-500 dark:text-gray-400">
+                            <td colspan="4" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
                                 Tidak ada data
                             </td>
                         </tr>`;
                 }
 
                 html += `
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
 
-                    <!-- Pagination -->
-                    <div class="mt-4 flex flex-wrap gap-2 justify-center">
+                    <div class="mt-4 flex flex-wrap gap-2 justify-start">
                 `;
 
+                // 🔹 Pagination kiri
                 res.links.forEach(link => {
-                    if (link.url) {
+                    let buttonUrl = link.url;
+
+                    if (buttonUrl) {
+                        let pagUrl = new URL(buttonUrl, window.location.origin);
+
+                        if (search !== "") {
+                            pagUrl.searchParams.set("search", search);
+                        }
+
+                        const label = link.label.replace('&laquo;', '«').replace('&raquo;', '»');
+
                         html += `
-                            <button onclick="loadData('${link.url}')"
-                                class="px-3 py-1 rounded-md text-sm font-medium transition
-                                       ${link.active 
-                                            ? 'bg-blue-600 text-white' 
-                                            : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'}">
-                                ${link.label}
-                            </button>`;
+                        <button onclick="loadData('${pagUrl}')"
+                            class="px-3 py-1 text-sm rounded font-medium transition-colors duration-200
+                                ${link.active
+                                    ? 'bg-indigo-600 text-white'
+                                    : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600'}">
+                            ${label}
+                        </button>`;
                     }
                 });
 
+
                 html += `</div>`;
+
                 document.getElementById('bidang-table').innerHTML = html;
             })
+
             .catch(err => {
-                console.error('Error loading data:', err);
-                // showToast('Gagal memuat data', false);
-                // Toast.fire({
-                //     icon: 'error',
-                //     title: 'Gagal Memuat Data'
-                // });
+                console.error(err);
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal Memuat Data',
                     toast: false,
                     position: 'center',
-                    timer: 5000,
                     showConfirmButton: true
                 });
-
             });
     }
 
@@ -125,7 +148,7 @@
         document.getElementById('formModal').classList.add('hidden');
     }
 
-    // 🔹 Submit Form
+    // 🔹 Submit
     document.getElementById('formBidang').addEventListener('submit', e => {
         e.preventDefault();
 
@@ -149,7 +172,6 @@
             .then(res => res.json())
             .then(res => {
                 closeForm();
-                // showToast(res.message, true);
                 Toast.fire({
                     icon: 'success',
                     title: res.message
@@ -157,16 +179,14 @@
                 loadData();
             })
             .catch(err => {
-                // console.error('Error saving data:', err);
-                // showToast('Terjadi kesalahan saat menyimpan', false);
                 Toast.fire({
                     icon: 'error',
-                    title: 'Gagal menyimpan Data'
+                    title: 'Gagal menyimpan data'
                 });
             });
     });
 
-    // 🔹 Delete with confirmation modal
+    // 🔹 Hapus
     function deleteBidang(id) {
         deleteId = id;
         document.getElementById('confirmModal').classList.remove('hidden');
@@ -178,31 +198,29 @@
 
     document.getElementById('confirmDelete').addEventListener('click', () => {
         document.getElementById('confirmModal').classList.add('hidden');
-        if (deleteId) {
-            fetch(`/admin/bidang/${deleteId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                })
-                .then(res => res.json())
-                .then(res => {
-                    // showToast(res.message, true);
-                    Toast.fire({
-                        icon: 'success',
-                        title: res.message
-                    });
-                    loadData();
-                })
-                .catch(err => {
-                    console.error('Error deleting data:', err);
-                    // showToast('Gagal menghapus data', false);
-                    Toast.fire({
-                        icon: 'error',
-                        title: 'Gagal menghapus Data'
-                    });
+
+        if (!deleteId) return;
+
+        fetch(`/admin/bidang/${deleteId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(res => res.json())
+            .then(res => {
+                Toast.fire({
+                    icon: 'success',
+                    title: res.message
                 });
-        }
+                loadData();
+            })
+            .catch(err => {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Gagal menghapus data'
+                });
+            });
     });
 
     document.getElementById('search').addEventListener('input', () => loadData());

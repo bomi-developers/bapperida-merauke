@@ -46,12 +46,12 @@ class LoginController extends Controller
         $validator = Validator::make($request->all(), [
             $this->username() => 'required|string',
             'password' => 'required|string',
-            // 'g-recaptcha-response' => 'required|captcha',
+            'g-recaptcha-response' => 'required|captcha',
         ], [
             'email.required' => 'Email wajib diisi.',
             'password.required' => 'Password wajib diisi.',
-            // 'g-recaptcha-response.required' => 'Silakan verifikasi reCAPTCHA terlebih dahulu.',
-            // 'g-recaptcha-response.captcha' => 'Verifikasi reCAPTCHA gagal, coba lagi.',
+            'g-recaptcha-response.required' => 'Silakan verifikasi reCAPTCHA terlebih dahulu.',
+            'g-recaptcha-response.captcha' => 'Verifikasi reCAPTCHA gagal, coba lagi.',
         ]);
         if ($validator->fails()) {
             return back()

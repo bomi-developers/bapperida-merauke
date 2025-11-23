@@ -27,6 +27,22 @@ class PegawaiController extends Controller
                 ->orWhere('nip', 'like', "%{$request->search}%")
                 ->orWhere('nik', 'like', "%{$request->search}%");
         }
+        if ($request->golongan != '-' && $request->golongan) {
+            $query->where('id_golongan', $request->golongan);
+        }
+        if ($request->jabatan != '-' && $request->jabatan) {
+            $query->where('id_jabatan', $request->jabatan);
+        }
+        if ($request->bidang != '-' && $request->bidang) {
+            $query->where('id_bidang', $request->bidang);
+        }
+        if ($request->akun !== '-' && $request->akun !== null) {
+            if ($request->akun == 1) {
+                $query->whereHas('user');
+            } elseif ($request->akun == 0) {
+                $query->whereDoesntHave('user');
+            }
+        }
 
         $pegawais = $query->orderBy('created_at', 'desc')->paginate(5);
         return response()->json($pegawais);

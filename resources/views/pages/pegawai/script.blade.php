@@ -11,8 +11,15 @@
 
     function loadData(url = pageUrl) {
         const search = document.getElementById('search').value;
+        const selectJabatan = document.getElementById('selectJabatan').value;
+        const selectGolongan = document.getElementById('selectGolongan').value;
+        const selectBidang = document.getElementById('selectBidang').value;
+        const selectAkun = document.getElementById('selectAkun').value;
 
-        fetch(`${url}?search=${encodeURIComponent(search)}`)
+
+        fetch(
+                `${url}?search=${encodeURIComponent(search)}&golongan=${encodeURIComponent(selectGolongan)}&jabatan=${encodeURIComponent(selectJabatan)}&bidang=${encodeURIComponent(selectBidang)}&akun=${encodeURIComponent(selectAkun)}`
+            )
             .then(res => res.json())
             .then(res => {
                 let html = `
@@ -282,6 +289,10 @@
     }
 
     document.getElementById('search').addEventListener('input', () => loadData());
+    document.getElementById('selectGolongan').addEventListener('input', () => loadData());
+    document.getElementById('selectJabatan').addEventListener('input', () => loadData());
+    document.getElementById('selectBidang').addEventListener('input', () => loadData());
+    document.getElementById('selectAkun').addEventListener('input', () => loadData());
 
     // Initial load
     loadData();

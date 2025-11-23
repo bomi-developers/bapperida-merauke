@@ -11,22 +11,49 @@
             </button>
         </div>
 
-        {{-- =================================== --}}
-        {{-- === SEARCH BAR BARU === --}}
-        {{-- =================================== --}}
-        <form method="GET" action="{{ route('admin.galeri.index') }}" class="mb-5">
-            <div class="flex">
-                <input type="text" id="searchInput" name="search" placeholder="Ketik judul album..."
-                    value="{{ request('search') }}" {{-- Tampilkan query pencarian sebelumnya --}}
-                    class="w-full sm:w-80 px-4 py-2.5 text-sm border border-gray-300 dark:border-gray-700 rounded-l-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200" />
-                <button type="submit"
-                    class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-r-lg text-sm flex items-center">
-                    <i class="bi bi-search mr-2"></i>
-                    Cari
-                </button>
+        <div class="flex flex-col sm:flex-row flex-wrap gap-4 w-full items-center mb-6">
+
+            {{-- 1. Search Input --}}
+            <div class="relative w-full sm:w-64 group">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <i class="bi bi-search text-gray-400 group-focus-within:text-indigo-500 transition-colors"></i>
+                </div>
+                <input type="text" id="search"
+                    class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl 
+                   focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 
+                   block w-full pl-10 p-2.5 shadow-sm transition-all duration-200
+                   dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                    placeholder="Cari berita...">
             </div>
-        </form>
-        {{-- =================================== --}}
+            <div class="relative w-full sm:w-80">
+
+                <!-- Icon kiri -->
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <i class="bi bi-calendar-range text-gray-400 dark:text-gray-500"></i>
+                </div>
+
+                <!-- Wrapper dua input dalam satu kotak -->
+                <div
+                    class="flex items-center bg-white border border-gray-300 text-gray-900 text-sm rounded-xl
+               focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 
+               w-full pl-10 pr-10 p-2.5 shadow-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+
+                    <!-- Start Date -->
+                    <input type="date" id="startDate"
+                        class="w-1/2 bg-transparent outline-none border-none text-sm
+                   dark:text-white" />
+                    <span class="mx-2 text-gray-400">—</span>
+                    <!-- End Date -->
+                    <input type="date" id="endDate"
+                        class="w-1/2 bg-transparent outline-none border-none text-sm
+                   dark:text-white" />
+                </div>
+                <!-- Icon kanan -->
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <i class="bi bi-chevron-down text-xs text-gray-500 dark:text-gray-400"></i>
+                </div>
+            </div>
+        </div>
 
         {{-- Tabel Galeri (Album) --}}
         <section
@@ -114,7 +141,8 @@
                             <tr id="no-data-row">
                                 {{-- PERBAIKAN: Ubah colspan menjadi 5 --}}
                                 <td colspan="5" class="text-center py-12">
-                                    <p class="text-gray-500 dark:text-gray-400">Belum ada album galeri yang ditambahkan.
+                                    <p class="text-gray-500 dark:text-gray-400">Belum ada album galeri yang
+                                        ditambahkan.
                                     </p>
                                 </td>
                             </tr>

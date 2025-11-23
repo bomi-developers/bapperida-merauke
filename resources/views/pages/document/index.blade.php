@@ -10,18 +10,72 @@
                 <span>Tambah Dokumen</span>
             </button>
         </div>
-        <form method="GET" action="{{ route('admin.documents.index') }}" class="mb-5">
-            <div class="flex">
-                <input type="text" id="searchInput" name="search" placeholder="Cari dokumen..."
-                    value="{{ request('search') }}"
-                    class="w-full sm:w-80 px-4 py-2.5 text-sm border border-gray-300 dark:border-gray-700 rounded-l-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200" />
-                <button type="submit"
-                    class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-r-lg text-sm flex items-center">
-                    <i class="bi bi-search mr-2"></i>
-                    Cari
-                </button>
+        <div class="flex flex-col sm:flex-row flex-wrap gap-4 w-full items-center mb-6">
+
+            {{-- 1. Search Input --}}
+            <div class="relative w-full sm:w-64 group">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <i class="bi bi-search text-gray-400 group-focus-within:text-indigo-500 transition-colors"></i>
+                </div>
+                <input type="text" id="search"
+                    class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl 
+                   focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 
+                   block w-full pl-10 p-2.5 shadow-sm transition-all duration-200
+                   dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                    placeholder="Cari berita...">
             </div>
-        </form>
+            <div class="relative w-full sm:w-80">
+
+                <!-- Icon kiri -->
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <i class="bi bi-calendar-range text-gray-400 dark:text-gray-500"></i>
+                </div>
+
+                <!-- Wrapper dua input dalam satu kotak -->
+                <div
+                    class="flex items-center bg-white border border-gray-300 text-gray-900 text-sm rounded-xl
+               focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 
+               w-full pl-10 pr-10 p-2.5 shadow-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+
+                    <!-- Start Date -->
+                    <input type="date" id="startDate"
+                        class="w-1/2 bg-transparent outline-none border-none text-sm
+                   dark:text-white" />
+
+                    <span class="mx-2 text-gray-400">—</span>
+                    <!-- End Date -->
+                    <input type="date" id="endDate"
+                        class="w-1/2 bg-transparent outline-none border-none text-sm
+                   dark:text-white" />
+
+                </div>
+                <!-- Icon kanan -->
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <i class="bi bi-chevron-down text-xs text-gray-500 dark:text-gray-400"></i>
+                </div>
+
+            </div>
+            {{-- 5. Filter author --}}
+            <div class="relative w-full sm:w-56">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <i class="bi bi-folder text-gray-400 dark:text-gray-500"></i>
+                </div>
+                <select id="selectAkun"
+                    class="appearance-none bg-white border border-gray-300 text-gray-900 text-sm rounded-xl
+                   focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 
+                   block w-full pl-10 pr-10 p-2.5 shadow-sm cursor-pointer transition-all duration-200
+                   dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                    <option value="-">Semua Kategori</option>
+                    @foreach ($kategori as $item)
+                        <option value="{{ $item->id }}">{{ $item->nama_kategori }}</option>
+                    @endforeach
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <i class="bi bi-chevron-down text-xs text-gray-500 dark:text-gray-400"></i>
+                </div>
+            </div>
+
+        </div>
         {{-- Tabel Dokumen --}}
         <div
             class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg overflow-hidden transition-colors duration-300">
@@ -31,8 +85,9 @@
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" class="px-6 py-3 ">#</th>
-                            <th scope="col" class="px-6 py-3 min-w-[300px]">Judul</th>
+                            <th scope="col" class="px-6 py-3 min-w-[300px]">Nama Dokumen</th>
                             <th scope="col" class="px-6 py-3">Kategori</th>
+                            <th scope="col" class="px-6 py-3">Download</th>
                             <th scope="col" class="px-6 py-3">File</th>
                             <th scope="col" class="px-6 py-3 text-center">Aksi</th>
                         </tr>
@@ -57,9 +112,15 @@
                                         class="bg-indigo-200 dark:bg-indigo-600 px-2 py-1 text-indigo-800 dark:text-indigo-200 rounded-xl">{{ $doc->kategori->nama_kategori ?? 'N/A' }}</span>
                                 </td>
                                 <td class="px-6 py-4">
+                                    <span
+                                        class=" px-3 py-2 text-md rounded-full transition-all duration-200 border border-opacity-50 bg-yellow-100 text-yellow-700 border-yellow-300  dark:bg-yellow-900 dark:text-yellow-300 dark:border-yellow-700">
+                                        {{ $doc->download > 0 ? $doc->download . ' Kali' : 'Belum Pernah' }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
                                     <a href="{{ asset('storage/' . $doc->file) }}" target="_blank"
-                                        class="font-bold text-indigo-600 dark:text-white hover:underline">
-                                        Lihat File
+                                        class="px-3 py-2 text-md rounded-full transition-all duration-200 border border-opacity-50 bg-green-100 text-green-700 border-green-300 hover:bg-green-200 dark:bg-green-900 dark:text-green-300 dark:border-green-700">
+                                        <i class="bi bi-folder2-open text-lg"></i> Lihat File
                                     </a>
                                 </td>
                                 <td class="px-6 py-4 text-center">
@@ -97,10 +158,8 @@
         </div>
     </main>
 
-    {{-- Modal dirender dari file partial --}}
     @include('pages.document._modals')
 
-    {{-- Script dirender dari file partial --}}
     @push('scripts')
         @include('pages.document._scripts')
     @endpush
