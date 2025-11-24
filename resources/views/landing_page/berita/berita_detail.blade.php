@@ -1,3 +1,7 @@
+@section('meta_title', $berita->title)
+@section('meta_description', Str::limit(strip_tags($berita->caption), 160))
+@section('meta_image', $berita->cover_image ? asset('storage/' . $berita->cover_image) : asset('default-og.png'))
+
 <x-landing.layout>
     {{-- Dependensi Swiper CSS (jika belum ada di global layout/app.css) --}}
     @push('styles')
@@ -9,9 +13,7 @@
         <div class="max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
 
-                {{-- =================================== --}}
-                {{-- === KOLOM KONTEN UTAMA (KIRI - 70%) === --}}
-                {{-- =================================== --}}
+
                 <div class="lg:col-span-8">
                     <!-- Article Header -->
                     <div class="mb-6 pb-6">

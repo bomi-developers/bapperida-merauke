@@ -138,7 +138,7 @@
              {{ $hero['description'] ?? 'Bersama BAPPERIDA Kabupaten Merauke, wujudkan pembangunan berkelanjutan, inklusif, dan berbasis potensi lokal.' }}
          </p>
 
-         <form class="mt-8 w-full max-w-lg">
+         {{-- <form class="mt-8 w-full max-w-lg">
              <div class="flex items-center bg-white rounded-full p-2 shadow-md">
                  <svg class="h-6 w-6 text-gray-400 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none"
                      viewBox="0 0 24" stroke="currentColor">
@@ -152,6 +152,6 @@
                      Cari
                  </button>
              </div>
-         </form>
+         </form> --}}
      </div>
  </section>

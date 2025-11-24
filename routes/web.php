@@ -69,6 +69,7 @@ Route::prefix('riset-inovasi')->name('riset-inovasi.')->group(function () {
 });
 
 Route::get('/berita', [BeritaController::class, 'home'])->name('berita.public.home');
+Route::get('/berita/data', [HomeController::class, 'getBerita'])->name('berita.data');
 Route::get('/berita/search', [BeritaController::class, 'searchPublic'])->name('berita.public.search');
 Route::get('/berita/{berita:slug}', [BeritaController::class, 'show'])->name('berita.public.show');
 

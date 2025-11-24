@@ -320,9 +320,10 @@ class BeritaController extends Controller
             ->where('status', 'published')
             ->latest() // Urutkan berdasarkan yang terbaru
             ->paginate(8); // Tampilkan 8 berita per halaman
-
+        $meta_title = 'Berita terlengkap dari BAPPERIDA';
+        $meta_description = 'Simak Berita terlengkap dari BAPPERIDA';
         // 3. Kirim kedua data ke view
-        return view('landing_page.berita.berita', compact('beritaPopuler', 'beritaTerkini'));
+        return view('landing_page.berita.berita', compact('beritaPopuler', 'beritaTerkini', 'meta_title', 'meta_description'));
     }
 
     /**
@@ -360,7 +361,14 @@ class BeritaController extends Controller
             ->take(6) // Ambil 3 berita
             ->get();
 
-        return view('landing_page.berita.berita_detail', compact('berita', 'beritaTerkini', 'beritaTerpopuler'));
+        $meta_title = $berita->title;
+        $meta_description = Str::limit(strip_tags($berita->caption), 160);
+        $meta_image  = asset('storage/' . $berita->cover_image);
+
+        return view(
+            'landing_page.berita.berita_detail',
+            compact('berita', 'beritaTerkini', 'beritaTerpopuler', 'meta_title', 'meta_description', 'meta_image')
+        );
     }
 
     public function searchPublic(Request $request)

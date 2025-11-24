@@ -362,3 +362,6 @@
 
     </section> --}}
 </x-landing.layout>
+@push('styles')
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+@endpush

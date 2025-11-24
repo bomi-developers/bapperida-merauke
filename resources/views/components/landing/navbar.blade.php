@@ -127,9 +127,16 @@
         </a>
 
         <!-- Tombol Menu (Hamburger) -->
-        <button id="menu-toggle" class="text-white text-3xl focus:outline-none transition-transform duration-300">
-            <i class="bi bi-list"></i>
-        </button>
+        <div class="flex space-x-3">
+            <button {{-- id="toggle-search-btn" --}}
+                class=" toggle-search-btn text-white text-2xl focus:outline-none transition-transform duration-300">
+                <i class="bi bi-search"></i>
+            </button>
+
+            <button id="menu-toggle" class="text-white text-3xl focus:outline-none transition-transform duration-300">
+                <i class="bi bi-list"></i>
+            </button>
+        </div>
     </div>
 
     <!-- Dropdown Menu -->
@@ -196,79 +203,7 @@
     <!-- Script -->
 
 </nav>
-<div id="side-nav" class="hidden md:flex fixed top-1/2 right-4 transform -translate-y-1/2 z-[500] items-center">
-    <div class="flex flex-col items-center space-y-2 bg-white/20 backdrop-blur-md p-2 rounded-full shadow-lg ml-2">
-        <button id="toggle-search-btn"
-            class="group relative flex justify-center items-center w-12 h-12 bg-white text-blue-600 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24"
-                stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <span
-                class="absolute right-full mr-3 px-3 py-1.5 bg-gray-800 text-white text-xs font-semibold rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                Pencarian
-            </span>
-        </button>
-        <a href="#"
-            class="group relative flex justify-center items-center w-12 h-12 bg-white text-blue-600 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24"
-                stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-            <span
-                class="absolute right-full mr-3 px-3 py-1.5 bg-gray-800 text-white text-xs font-semibold rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                Kontak
-            </span>
-        </a>
-        <a href="#"
-            class="group relative flex justify-center items-center w-12 h-12 bg-white text-blue-600 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24"
-                stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            <span
-                class="absolute right-full mr-3 px-3 py-1.5 bg-gray-800 text-white text-xs font-semibold rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                Lokasi
-            </span>
-        </a>
-        <a href="#"
-            class="group relative flex justify-center items-center w-12 h-12 bg-white text-blue-600 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24"
-                stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-            <span
-                class="absolute right-full mr-3 px-3 py-1.5 bg-gray-800 text-white text-xs font-semibold rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                Login
-            </span>
-        </a>
-    </div>
-</div>
-{{-- Script toggle mobile menu --}}
-<script>
-    document.getElementById('menu-toggle').addEventListener('click', () => {
-        const menu = document.getElementById('mobile-menu');
-        const icon = document.getElementById('menu-toggle').querySelector('i');
-        menu.classList.toggle('hidden');
-        icon.classList.toggle('bi-list');
-        icon.classList.toggle('bi-x-lg');
-    });
-</script>
-{{-- <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const btn = document.getElementById("mobile-menu-button");
-        const menu = document.getElementById("mobile-menu");
-        const iconOpen = document.getElementById("icon-open");
-        const iconClose = document.getElementById("icon-close");
-
-        btn.addEventListener("click", () => {
-            menu.classList.toggle("hidden");
-            iconOpen.classList.toggle("hidden");
-            iconClose.classList.toggle("hidden");
-        });
-    });
-</script> --}}
+@push('scripts')
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+@endpush
+<!-- Overlay Search -->

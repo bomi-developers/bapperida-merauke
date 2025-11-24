@@ -1,9 +1,24 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BAPPERIDA Merauke</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+    {{-- SEO Dynamic --}}
+    <title>@yield('meta_title', 'BAPPERIDA Kabupaten Merauke')</title>
+    <meta name="description" content="@yield('meta_description', 'BAPPERIDA kabupaten merauke bersama rakyat')">
+    <meta name="keywords" content="@yield('meta_keywords', 'BAPPERIDA,Merauke, Kabupaten merauke, kota rusa, papua selatan, papua, adata papua, indonesia, bapperida dan masyarakat, Bapperida merauke, bapperida papua selatan, bapperida indonesia, merauke, merauke cerdas, merauke membangun')">
+
+    {{-- Open Graph (Facebook, WhatsApp) --}}
+    <meta property="og:title" content="@yield('meta_title', 'BAPPERIDA Kabupaten Merauke')">
+    <meta property="og:description" content="@yield('meta_description', 'BAPPERIDA Kabupaten Merauke')">
+    <meta property="og:image" content="@yield('meta_image', asset('assets/LogoKabMerauke.png'))">
+    <meta property="og:type" content="article">
+
+    {{-- Twitter Card --}}
+    <meta name="twitter:title" content="@yield('meta_title', 'BAPPERIDA Kabupaten Merauke')">
+    <meta name="twitter:description" content="@yield('meta_description', 'BAPPERIDA Kabupaten Merauke')">
+    <meta name="twitter:image" content="@yield('meta_image', asset('assets/LogoKabMerauke.png'))">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script>
         tailwind.config = {
@@ -18,7 +33,7 @@
         }
     </script>
     <!-- Alpine.js v3 -->
-    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
     <style>
         /* Transisi halus untuk dropdown */
         /* .group .dropdown {

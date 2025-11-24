@@ -320,12 +320,15 @@ class GaleriController extends Controller
             ->orderBy('year', 'desc')
             ->pluck('year');
 
+        $meta_title = 'Galeri foto dan video BAPPERIDA MERAUK';
+        $meta_description = 'Yuk lihat Galeri foto dan video BAPPERIDA MERAUK';
+
         // 3. Data Awal untuk Grid (Default: Semua Album)
         $items = Galeri::with('firstItem')->withCount('items')->latest()->paginate(12);
 
         $currentFilterType = 'album';
 
-        return view('landing_page.galeri.galeri', compact('galeriPopuler', 'years', 'items', 'currentFilterType'));
+        return view('landing_page.galeri.galeri', compact('galeriPopuler', 'years', 'items', 'currentFilterType', 'meta_title', 'meta_description'));
     }
 
     /**

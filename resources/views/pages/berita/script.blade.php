@@ -81,7 +81,7 @@
                                 <div class="flex items-center gap-4">
                                     <img src="/storage/${g.cover_image}"
                                         alt="Cover" class="w-20 h-14 object-cover rounded-md flex-shrink-0">
-                                    <span class="font-semibold text-lg">${g.title}</span>
+                                    <span class="font-semibold text-md whitespace-normal break-words">${g.title}</span>
                                 </div>
                             </td>
                              <td class="px-6 py-4">
