@@ -10,10 +10,8 @@
     @endpush
 
     <section class="py-16 md:py-24 -mt-[450px]">
-        <div class="max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-
-
+        <div class="max-w-7xl mx-auto px-4 md:px-4 lg:px-5">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5">
                 <div class="lg:col-span-8">
                     <!-- Article Header -->
                     <div class="mb-6 pb-6">
@@ -53,7 +51,7 @@
                     @endphp
 
                     @if ($images->isNotEmpty())
-                        <div class="mb-8 relative w-full max-w-4xl mx-auto" id="image-slider">
+                        <div class="mb-8 relative w-full max-w-6xl mx-auto" id="image-slider">
                             <div class="slider-wrapper overflow-hidden rounded-lg shadow-lg">
                                 <div class="slides flex transition-transform duration-500 ease-in-out">
                                     @foreach ($images as $image)
@@ -192,7 +190,7 @@
                 {{-- =================================== --}}
                 <div class="lg:col-span-4">
                     {{-- Widget Berita Terkini --}}
-                    <div class="bg-white p-6 rounded-lg shadow-lg sticky top-28">
+                    <div class="bg-white py-6 px-3 rounded-xl shadow-lg sticky top-28">
                         <h3 class="text-xl font-bold text-blue-800 border-b border-gray-200 pb-3 mb-4">Berita Terkini
                         </h3>
                         <div class="space-y-4">

@@ -6,9 +6,7 @@
 
             {{-- Judul Halaman --}}
             <div class="flex justify-center mb-10">
-                <div class="bg-blue-500 text-white rounded-2xl px-6 py-3 shadow-md inline-block">
-                    <h1 class="text-2xl md:text-3xl font-bold text-center">{{ $galeri->judul }}</h1>
-                </div>
+                <h1 class="text-4xl md:text-3xl text-blue-700 font-bold text-center">{{ $galeri->judul }}</h1>
             </div>
 
             {{-- Filter Tipe Konten (Tabs) --}}
@@ -114,21 +112,21 @@
     {{-- === MODAL VIEWER BARU (LIGHTBOX) === --}}
     {{-- =================================== --}}
     <div id="item-viewer-modal"
-        class="fixed inset-0 z-[60] hidden bg-black bg-opacity-80 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300 opacity-0">
+        class="fixed inset-0 z-[60] hidden bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300 opacity-0">
         <div
             class="relative bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col transition-transform duration-300 scale-95">
             {{-- Konten Media (Gambar/Video/Embed) --}}
             <div id="viewer-content"
-                class="flex-grow flex items-center justify-center p-4 bg-black rounded-t-lg min-h-[300px]">
+                class="flex-grow flex items-center justify-center p-4 bg-gray-100 rounded-t-2xl min-h-[300px]">
                 {{-- Konten media akan di-inject oleh JS di sini --}}
             </div>
             {{-- Caption --}}
-            <div id="viewer-caption-container" class="flex-shrink-0 p-4 border-t border-gray-200">
+            <div id="viewer-caption-container" class="flex-shrink-0 p-4 border-b-2xl border-gray-200 text-center">
                 <p id="viewer-caption" class="text-sm text-gray-700">Keterangan gambar.</p>
             </div>
             {{-- Tombol Close --}}
             <button type="button"
-                class="close-viewer-btn absolute -top-4 -right-4 z-10 bg-white text-gray-800 rounded-full p-2 shadow-lg hover:bg-gray-200 transition-colors">
+                class="close-viewer-btn absolute -top-4 -right-4 z-10 bg-white hover:bg-red-500 hover:text-white text-gray-800 rounded-full p-2 shadow-lg hover:bg-gray-200 transition-colors w-12 h-12">
                 <i class="bi bi-x-lg text-lg"></i>
             </button>
         </div>

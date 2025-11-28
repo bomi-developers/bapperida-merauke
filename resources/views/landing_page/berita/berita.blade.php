@@ -6,13 +6,9 @@
         <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     @endpush
 
-    <section class="py-16 px-4 md:px-8 lg:px-16 -mt-[450px]">
+    <section class="py-16 px-4 md:px-8 lg:px-10 -mt-[450px]">
         <div class="max-w-7xl mx-auto">
-            <div class="flex justify-center mb-8">
-                <div class="bg-blue-500 text-white rounded-2xl px-6 py-3 shadow-md inline-block">
-                    <h2 class="text-2xl font-bold text-center">Berita Populer</h2>
-                </div>
-            </div>
+
 
             @if ($beritaPopuler->isEmpty())
                 <div class="p-8 text-center text-gray-500 bg-white rounded-lg shadow">
@@ -23,7 +19,7 @@
                 <div class="popular-news-slider relative">
 
                     <div id="popular-card-wrapper"
-                        class="bg-blue-800 rounded-xl overflow-hidden shadow-2xl transition-colors duration-500 ease-in-out">
+                        class="bg-blue-800 rounded-2xl overflow-hidden shadow-2xl transition-colors duration-500 ease-in-out">
                         <div class="flex flex-col md:flex-row p-8 md:p-12 items-center gap-y-8 md:gap-x-12">
 
                             <div class="w-full md:w-5/12 flex-shrink-0">
@@ -67,7 +63,8 @@
                                                     </a>
                                                 </h3>
                                                 <p class="text-sm text-gray-300 mb-4">
-                                                    Oleh {{ $populer->author->name ?? 'Admin' }} /
+                                                    <i class="bi bi-person"></i> {{ $populer->author->name ?? 'Admin' }}
+                                                    /
                                                     {{ $populer->created_at->isoFormat('D MMMM YYYY') }}
                                                 </p>
                                                 <p
@@ -94,34 +91,38 @@
         </div>
     </section>
 
-    <section class="py-16 px-4 md:px-8 lg:px-16">
+    <section class="py-10 px-4 md:px-8 lg:px-16">
         <div class="max-w-7xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                <h2 class="text-3xl font-bold text-gray-800">Berita Terkini</h2>
-
-                <div class="w-full md:w-auto flex flex-col md:flex-row gap-2">
+            <h2 class="text-3xl font-bold text-gray-800 mb-3">Berita Terkini</h2>
+            {{-- Search & Filter Bar --}}
+            <div class="mb-8 p-4 bg-gray-100 rounded-xl shadow-md">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
                     <!-- Input Pencarian -->
-                    <div class="relative w-full md:w-64">
+                    <div class="relative w-full md:col-span-2">
                         <label for="search-input" class="sr-only">Cari</label>
                         <input type="text" id="search-input"
-                            class="py-2 px-4 ps-10 block w-full border-gray-300 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                            placeholder="Cari judul berita...">
+                            class="py-2.5 px-4 ps-10 block w-full border-gray-300 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                            placeholder="Cari berdasarkan judul album...">
                         <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
                             <i class="bi bi-search text-gray-400"></i>
                         </div>
                     </div>
                     <!-- Filter Urutkan -->
-                    <div class="w-full md:w-auto">
+                    <div class="w-full">
                         <select id="sort-filter"
-                            class="py-2 px-3 pe-9 block w-full border-gray-300 shadow-sm rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500">
+                            class="py-2.5 px-3 pe-9 block w-full border-gray-300 shadow-sm rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500">
                             <option selected value="terbaru">Urutkan: Paling Baru</option>
                             <option value="terlama">Urutkan: Paling Lama</option>
                         </select>
                     </div>
-                    <!-- Filter Tanggal -->
-                    <div class="w-full md:w-auto">
+
+                    {{-- PERBAIKAN: Filter Tanggal (Input Date) --}}
+                    <div class="w-full relative">
                         <input type="date" id="tanggal-filter"
-                            class="py-2 px-3 block w-full border-gray-300 shadow-sm rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 text-gray-500">
+                            class="py-2.5 px-3 pe-10 block w-full border-gray-300 shadow-sm rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 text-gray-500">
+                        <div class="absolute inset-y-0 end-0 flex items-center pointer-events-none pe-3">
+                            <i class="bi bi-calendar-event text-gray-400"></i>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -268,6 +268,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/documents/{document}/download', [DocumentController::class, 'downloadFile'])->name('documents.download');
     // galeri
     Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri.index');
+    Route::get('/galeri/data', [GaleriController::class, 'getData'])->name('galeri.data');
     Route::post('/galeri', [GaleriController::class, 'store'])->name('galeri.store');
     Route::get('/galeri/{galeri}', [GaleriController::class, 'show'])->name('galeri.show');
     Route::put('/galeri/{galeri}', [GaleriController::class, 'update'])->name('galeri.update');

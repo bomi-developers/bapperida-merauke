@@ -1,6 +1,6 @@
 <x-layout>
     <x-header />
-    <main class="p-6 flex-1 overflow-y-auto"> {{-- Pastikan scrolling aktif --}}
+    <main class="p-6 flex-1 overflow-y-auto">
         {{-- Header Halaman --}}
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">Manajemen Galeri Album</h2>
@@ -56,7 +56,7 @@
         </div>
 
         {{-- Tabel Galeri (Album) --}}
-        <section
+        {{-- <section
             class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md overflow-hidden">
             <div class="max-w-full overflow-x-auto">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -71,13 +71,11 @@
                             <th scope="col" class="px-6 py-3 text-center">Aksi</th>
                         </tr>
                     </thead>
-                    {{-- PERBAIKAN: Ganti @forelse dengan @include --}}
                     <tbody id="galeri-table-body">
-                        {{-- Render baris awal dari data album --}}
                         @forelse ($galeris as $album)
                             <tr id="galeri-row-{{ $album->id }}"
                                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                {{-- PERBAIKAN: Tambahkan <td> untuk Cover --}}
+
                                 <td class="px-2 flex items-center justify-center !flex">
                                     {{ $loop->iteration }}
                                 </td>
@@ -139,7 +137,6 @@
                             </tr>
                         @empty
                             <tr id="no-data-row">
-                                {{-- PERBAIKAN: Ubah colspan menjadi 5 --}}
                                 <td colspan="5" class="text-center py-12">
                                     <p class="text-gray-500 dark:text-gray-400">Belum ada album galeri yang
                                         ditambahkan.
@@ -150,15 +147,102 @@
                     </tbody>
                 </table>
             </div>
-            {{-- Paginasi tidak diperlukan untuk index admin, karena kita load semua --}}
-        </section>
+        </section> --}}
+        <div
+            class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg overflow-hidden transition-colors duration-300">
+            <div id="galeri-table" class="max-w-full overflow-x-auto p-6"></div>
+        </div>
     </main>
 
-    {{-- Memuat Modal Tambah/Edit dan Modal Detail --}}
     @include('pages.galeri.partials._modal')
+    @push('styles')
+        <style>
+            #galeri-modal>div {
+                display: flex;
+                flex-direction: column;
+            }
+
+            #galeri-modal form {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+                min-height: 0;
+            }
+
+            #galeri-modal form>div.overflow-y-auto {
+                flex-grow: 1;
+                min-height: 0;
+            }
+
+            /* Styling dasar */
+            .form-label {
+                display: block;
+                margin-bottom: 0.5rem;
+                font-weight: 500;
+                color: #374151;
+            }
+
+            .dark .form-label {
+                color: #d1d5db;
+            }
+
+            .form-input {
+                border: 1px solid #d1d5db;
+                border-radius: 0.5rem;
+                padding: 0.5rem 0.75rem;
+                width: 100%;
+                background-color: #f9fafb;
+                color: #111827;
+            }
+
+            .dark .form-input {
+                border-color: #4b5563;
+                background-color: #374151;
+                color: #f9fafb;
+            }
+
+            .btn-add-item {
+                padding: 0.5rem 1rem;
+                border: 1px solid #d1d5db;
+                border-radius: 0.5rem;
+                font-size: 0.875rem;
+                transition: all 0.2s;
+                display: inline-flex;
+                align-items: center;
+            }
+
+            .dark .btn-add-item {
+                border-color: #4b5563;
+            }
+
+            .btn-add-item:hover:not(:disabled) {
+                background-color: #f3f4f6;
+            }
+
+            .dark .btn-add-item:hover:not(:disabled) {
+                background-color: #374151;
+            }
+
+            .btn-add-item:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+
+            /* Mencegah ikon mencuri klik */
+            /* .show-btn i,
+                                                            .edit-btn i, */
+            .delete-btn i,
+            .close-modal-btn i,
+            .close-show-modal i,
+            .remove-existing-item i,
+            .remove-new-item i {
+                pointer-events: none;
+            }
+        </style>
+    @endpush
 
     @push('scripts')
-        {{-- Memuat Skrip AJAX untuk galeri --}}
         @include('pages.galeri.partials._scripts')
+        {{-- tambahan nanti di pindah --}}
     @endpush
 </x-layout>

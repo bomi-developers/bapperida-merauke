@@ -6,7 +6,7 @@
         class=" rounded-3xl bg-white/40 backdrop-blur-lg w-full max-w-4xl p-6 
                scale-90 opacity-0 transition-all duration-300 border border-white shadow-lg">
 
-        <div class="relative w-full hover:scale-[102%] ">
+        <div class="relative w-full hover:scale-[102%] transition-transform duration-300 ">
             <!-- Icon -->
             <span class="absolute inset-y-0 left-4 flex items-center text-blue-700">
                 <i class="bi bi-search text-xl"></i>

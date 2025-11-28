@@ -4,7 +4,8 @@
             <div class="bg-white rounded-2xl shadow-2xl grid grid-cols-1 lg:grid-cols-2 overflow-hidden">
 
                 <!-- Bagian Kiri -->
-                <div class="hidden lg:flex flex-col items-center justify-center text-center p-12 bg-indigo-600">
+                <div
+                    class="hidden lg:flex flex-col items-center justify-center text-center p-12 bg-indigo-600 transition-all duration-300 hover:brightness-110 hover:shadow-[0_0_30px_rgba(79,70,229,0.6)]">
                     <a href="{{ url('/') }}">
                         <img src="{{ asset('img/bapperida_white.png') }}" alt="Bapperida Logo" class="mb-8 w-48">
                     </a>
@@ -78,7 +79,7 @@
                         </div>
                         <!-- Tombol Login -->
                         <button type="submit"
-                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
+                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
                             Sign In
                         </button>
                     </form>

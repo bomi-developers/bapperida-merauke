@@ -33,6 +33,18 @@ class GaleriController extends Controller
 
         return view('pages.galeri.index', compact('galeris'));
     }
+    public function getData(Request $request)
+    {
+        $query = Galeri::with('firstItem')->withCount('items');
+
+        if ($request->search) {
+            $query->where('judul', 'like', '%' . $request->search . '%')
+                ->orWhere('keterangan', 'like', '%' . $request->search . '%');
+        }
+        $galeri = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        return response()->json($galeri);
+    }
 
     /**
      * Menyimpan album galeri baru beserta item-item medianya.

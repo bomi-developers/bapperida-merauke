@@ -74,47 +74,6 @@
             if (isHighlightedCheckbox) isHighlightedCheckbox.checked = false; // Reset checkbox
         };
 
-        // --- Render Table Row (Updated) ---
-        const renderRow = (galeri) => {
-            const itemCount = galeri.items_count !== undefined ? galeri.items_count : 0;
-            let coverHtml = '';
-            if (galeri.first_item) {
-                if (galeri.first_item.tipe_file === 'image') {
-                    coverHtml =
-                        `<img src="{{ asset('storage') }}/${galeri.first_item.file_path}" alt="Cover" class="w-16 h-12 object-cover rounded-md">`;
-                } else if (galeri.first_item.tipe_file === 'video' || galeri.first_item.tipe_file ===
-                    'video_url') {
-                    coverHtml =
-                        `<div class="w-16 h-12 bg-gray-700 rounded-md flex items-center justify-center"><i class="bi bi-film text-2xl text-gray-400"></i></div>`;
-                }
-            } else {
-                coverHtml =
-                    `<div class="w-16 h-12 bg-gray-200 dark:bg-gray-700 rounded-md flex items-center justify-center"><i class="bi bi-image-alt text-2xl text-gray-400 dark:text-gray-500"></i></div>`;
-            }
-
-            // Tentukan status badge berdasarkan data
-            const statusBadge = galeri.is_highlighted ?
-                `<span class="px-2 py-1 text-xs font-medium rounded-full bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300">Pilihan</span>` :
-                `<span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Normal</span>`;
-
-            return `
-                <tr id="galeri-row-${galeri.id}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <td class="px-6 py-4">${coverHtml}</td>
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">${galeri.judul}</th>
-                    <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${itemCount} Item</td>
-                    <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${new Date(galeri.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
-                    <td class="px-6 py-4">${statusBadge}</td> {{-- Kolom Status --}}
-                    <td class="px-6 py-4 text-center">
-                        <div class="flex items-center justify-center space-x-4">
-                            <button class="show-btn font-medium text-green-600 dark:text-green-500 hover:underline" title="Detail" data-id="${galeri.id}"><i class="bi bi-eye-fill text-base"></i></button>
-                            <button class="edit-btn font-medium text-indigo-600 dark:text-indigo-500 hover:underline" title="Edit" data-id="${galeri.id}"><i class="bi bi-pencil-square text-base"></i></button>
-                            <button class="delete-btn font-medium text-red-600 dark:text-red-500 hover:underline" title="Hapus" data-id="${galeri.id}"><i class="bi bi-trash text-base"></i></button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        };
-
         // --- Functions for Dynamic Items in Add/Edit Modal ---
         const renderExistingItem = (item) => {
             const itemDiv = document.createElement('div');
@@ -549,9 +508,7 @@
                     else console.log(`${key}: ${value}`);
                 }
 
-
-                // --- MENGGUNAKAN FETCH DAN MODAL LOADING SEDERHANA ---
-                if (hasNewFiles) { // Tampilkan modal loading HANYA jika ada file upload
+                if (hasNewFiles) {
                     openLoadingModal();
                 } else {
                     // Tombol save sudah di-set ke "Memproses..."
@@ -645,134 +602,150 @@
             }); // Akhir event listener submit
         } // Akhir if (form)
 
-    }); // Akhir DOMContentLoaded
+    });
 </script>
-<style>
-    /* PERBAIKAN SCROLL: Pastikan area konten bisa scroll */
-    #galeri-modal>div {
-        display: flex;
-        flex-direction: column;
+<script>
+    let pageUrl = "{{ route('admin.galeri.data') }}";
+
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true,
+    });
+
+    function loadData(url = pageUrl) {
+        const search = encodeURIComponent(document.getElementById('search').value.trim());
+
+        // pastikan URL sudah benar formatnya
+        let finalUrl = new URL(url, window.location.origin);
+        if (search !== "") {
+            finalUrl.searchParams.set("search", search);
+        }
+
+        fetch(finalUrl)
+            .then(res => res.json())
+            .then(res => {
+                let html = `
+                            <div class="overflow-x-auto max-h-[75vh] overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700">
+                                <table class="w-full text-sm text-left text-gray-600 dark:text-gray-300">
+                                    <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-200 sticky top-0 z-10">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3">#</th>
+                                            <th scope="col" class="px-6 py-3">Cover</th>
+                                            <th scope="col" class="px-6 py-3 min-w-[300px]">Judul Album</th>
+                                            <th scope="col" class="px-6 py-3">Jumlah Item</th>
+                                            <th scope="col" class="px-6 py-3">Tanggal Dibuat</th>
+                                            <th scope="col" class="px-6 py-3">Status</th>
+                                            <th scope="col" class="px-6 py-3 text-center">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>`;
+
+                if (res.data.length > 0) {
+                    res.data.forEach((g, i) => {
+                        const itemCount = g.items_count !== undefined ? g.items_count : 0;
+                        const statusBadge = g.is_highlighted ?
+                            `<span class="px-2 py-1 text-xs font-medium rounded-full bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300">Pilihan</span>` :
+                            `<span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Normal</span>`;
+                        let coverHtml = '';
+                        if (g.first_item) {
+                            if (g.first_item.tipe_file === 'image') {
+                                coverHtml =
+                                    `<img src="{{ asset('storage') }}/${g.first_item.file_path}" alt="Cover" class="w-16 h-12 object-cover rounded-md">`;
+                            } else if (g.first_item.tipe_file === 'video' || g.first_item
+                                .tipe_file ===
+                                'video_url') {
+                                coverHtml =
+                                    `<div class="w-16 h-12 bg-gray-700 rounded-md flex items-center justify-center"><i class="bi bi-film text-2xl text-gray-400"></i></div>`;
+                            }
+                        } else {
+                            coverHtml =
+                                `<div class="w-16 h-12 bg-gray-200 dark:bg-gray-700 rounded-md flex items-center justify-center"><i class="bi bi-image-alt text-2xl text-gray-400 dark:text-gray-500"></i></div>`;
+                        }
+                        html += `
+                               <tr id="galeri-row-${g.id}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <td class="px-6 py-4">${i + 1}</td>
+                                    <td class="px-6 py-4">${coverHtml}</td>
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">${g.judul}</th>
+                                    <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${itemCount} Item</td>
+                                    <td class="px-6 py-4 text-gray-600 dark:text-gray-400">${new Date(g.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}</td>
+                                    <td class="px-6 py-4">${statusBadge}</td> 
+                                    <td class="px-6 py-4 text-center">
+                                        <div class="flex items-center justify-center space-x-4">
+                                             <button
+                                            class="show-btn font-medium text-green-600 dark:text-green-500 hover:bg-green-200 dark:hover:bg-green-800 rounded-full w-8 h-8"
+                                            title="Detail" data-id="${g.id}"><i class="bi bi-eye-fill text-lg"></i></button>
+                                        <button
+                                            class="edit-btn font-medium text-indigo-600 dark:text-indigo-500 hover:bg-indigo-200 dark:hover:bg-indigo-800 rounded-full w-8 h-8"
+                                            title="Edit" data-id="${g.id}">
+                                            <i class="bi bi-pencil-square text-lg"></i>
+                                        </button>
+                                        <button
+                                            class="delete-btn font-medium text-red-600 dark:text-red-500  hover:bg-red-200 dark:hover:bg-red-800 rounded-full w-8 h-8"
+                                            title="Hapus" data-id="${g.id}">
+                                            <i class="bi bi-trash text-lg"></i>
+                                        </button>
+                                        </div>
+                                    </td>
+                                </tr>`;
+                    });
+                } else {
+                    html += `
+                                <tr>
+                                    <td colspan="6" class="px-4 py-6 text-center text-gray-500 dark:text-gray-300">
+                                        Tidak ada data
+                                    </td>
+                                </tr>`;
+                }
+
+                html += `
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="mt-4 flex flex-wrap gap-2">`;
+
+                res.links.forEach(link => {
+                    let buttonUrl = link.url;
+
+                    if (buttonUrl) {
+                        let pagUrl = new URL(buttonUrl, window.location.origin);
+
+                        if (search !== "") {
+                            pagUrl.searchParams.set("search", search);
+                        }
+
+                        const label = link.label.replace('&laquo;', '«').replace('&raquo;', '»');
+
+                        html += `
+                        <button onclick="loadData('${pagUrl}')"
+                            class="px-3 py-1 text-sm rounded font-medium transition-colors duration-200
+                                ${link.active
+                                    ? 'bg-indigo-600 text-white'
+                                    : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600'}">
+                            ${label}
+                        </button>`;
+                    }
+                });
+
+                html += `</div>`;
+                document.getElementById('galeri-table').innerHTML = html;
+            })
+            .catch(err => {
+                console.error(err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Memuat Data',
+                    toast: false,
+                    position: 'center',
+                    showConfirmButton: true
+                });
+            });
+
     }
 
-    #galeri-modal form {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        min-height: 0;
-    }
-
-    #galeri-modal form>div.overflow-y-auto {
-        flex-grow: 1;
-        min-height: 0;
-    }
-
-    /* Styling dasar */
-    .form-label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 500;
-        color: #374151;
-    }
-
-    .dark .form-label {
-        color: #d1d5db;
-    }
-
-    .form-input {
-        border: 1px solid #d1d5db;
-        border-radius: 0.5rem;
-        padding: 0.5rem 0.75rem;
-        width: 100%;
-        background-color: #f9fafb;
-        color: #111827;
-    }
-
-    .dark .form-input {
-        border-color: #4b5563;
-        background-color: #374151;
-        color: #f9fafb;
-    }
-
-    .btn-primary {
-        background-color: #4f46e5;
-        color: white;
-        padding: 0.6rem 1.2rem;
-        border-radius: 0.5rem;
-        font-weight: 500;
-        transition: background-color 0.2s;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    /* Tambah display flex */
-    .btn-primary:hover {
-        background-color: #4338ca;
-    }
-
-    .btn-primary:disabled {
-        background-color: #a5b4fc;
-        cursor: not-allowed;
-    }
-
-    /* Style disabled */
-    .btn-secondary {
-        background-color: #e5e7eb;
-        color: #1f2937;
-        padding: 0.6rem 1.2rem;
-        border-radius: 0.5rem;
-        font-weight: 500;
-        transition: background-color 0.2s;
-    }
-
-    .dark .btn-secondary {
-        background-color: #4b5563;
-        color: #f9fafb;
-    }
-
-    .btn-secondary:hover {
-        background-color: #d1d5db;
-    }
-
-    .dark .btn-secondary:hover {
-        background-color: #6b7280;
-    }
-
-    .btn-add-item {
-        padding: 0.5rem 1rem;
-        border: 1px solid #d1d5db;
-        border-radius: 0.5rem;
-        font-size: 0.875rem;
-        transition: all 0.2s;
-        display: inline-flex;
-        align-items: center;
-    }
-
-    .dark .btn-add-item {
-        border-color: #4b5563;
-    }
-
-    .btn-add-item:hover:not(:disabled) {
-        background-color: #f3f4f6;
-    }
-
-    .dark .btn-add-item:hover:not(:disabled) {
-        background-color: #374151;
-    }
-
-    .btn-add-item:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-    /* Mencegah ikon mencuri klik */
-    .show-btn i,
-    .edit-btn i,
-    .delete-btn i,
-    .close-modal-btn i,
-    .close-show-modal i,
-    .remove-existing-item i,
-    .remove-new-item i {
-        pointer-events: none;
-    }
-</style>
+    document.getElementById('search').addEventListener('input', () => loadData());
+    loadData();
+</script>

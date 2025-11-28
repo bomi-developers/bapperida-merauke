@@ -11,11 +11,7 @@
     {{-- =================================== --}}
     <section class="py-16 px-4 md:px-8 lg:px-16 -mt-[450px]">
         <div class="max-w-7xl mx-auto">
-            <div class="flex justify-center mb-8">
-                <div class="bg-blue-500 text-white rounded-2xl px-6 py-3 shadow-md inline-block">
-                    <h2 class="text-2xl font-bold text-center"> Highlight Galeri BAPPERIDA</h2>
-                </div>
-            </div>
+
 
             @if ($galeriPopuler->isEmpty())
                 <div class="p-8 text-center text-gray-500 bg-white rounded-lg shadow">
@@ -27,7 +23,7 @@
 
                     {{-- Carousel Full Image (Sesuai UI) --}}
                     <div
-                        class="swiper-container popular-gallery-slider aspect-video rounded-xl overflow-hidden shadow-2xl">
+                        class="swiper-container popular-gallery-slider aspect-video rounded-2xl overflow-hidden shadow-2xl">
                         <div class="swiper-wrapper">
                             @foreach ($galeriPopuler as $populer)
                                 @php $coverItem = $populer->firstItem; @endphp
@@ -107,11 +103,11 @@
     {{-- =================================== --}}
     {{-- === 2. FILTER DAN GRID KONTEN === --}}
     {{-- =================================== --}}
-    <section class="py-16 px-4 md:px-8 lg:px-16 bg-gray-50">
+    <section class="py-16 px-4 md:px-8 lg:px-16 ">
         <div class="max-w-7xl mx-auto">
 
             {{-- Search & Filter Bar --}}
-            <div class="mb-8 p-4 bg-white rounded-lg shadow-md">
+            <div class="mb-8 p-4 rounded-xl shadow-md bg-gray-100">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
                     <!-- Input Pencarian -->
                     <div class="relative w-full md:col-span-2">

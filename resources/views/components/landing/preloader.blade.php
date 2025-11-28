@@ -19,11 +19,13 @@
 
 @push('scripts')
     <script>
-        // Tutup preloader saat halaman selesai dimuat
         window.addEventListener('load', () => {
             const preloader = document.getElementById('preloader');
-            preloader.classList.add('opacity-0');
-            setTimeout(() => preloader.remove(), 300); // hapus setelah animasi fade-out
+
+            setTimeout(() => {
+                preloader.classList.add('opacity-0');
+                setTimeout(() => preloader.remove(), 300);
+            }, 500);
         });
     </script>
 @endpush
