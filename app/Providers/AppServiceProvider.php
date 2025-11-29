@@ -36,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
                 ->count();
             $pageViewUrl = PageView::distinct('url')
                 ->count('url');
-            $view->with(['websiteSettings', $websiteSettings, 'ProfileDinas' => $ProfileDinas, 'pageView' => $pageView, 'pageViewToday' => $pageViewToday, 'pageViewUrl' => $pageViewUrl]);
+            $view->with(['websiteSettings' => $websiteSettings, 'ProfileDinas' => $ProfileDinas, 'pageView' => $pageView, 'pageViewToday' => $pageViewToday, 'pageViewUrl' => $pageViewUrl]);
         });
         View::composer('components.landing.navbar', function ($view) {
             $view->with('kategoriDocuments', KategoriDocument::orderBy('nama_kategori')->orderBy('id', 'desc')->get());

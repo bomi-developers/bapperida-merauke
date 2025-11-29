@@ -16,7 +16,6 @@
             </div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
-
             <x-card.card1 icon="bi-eye-fill" color="purple" value="{{ number_format($pageViewToday) }}"
                 title="Total Views Today" change="" />
             <x-card.card1 icon="bi-folder" color="purple" value="{{ number_format($documentCount) }}"
@@ -25,7 +24,6 @@
                 title="Total Media Publish" change="" />
             <x-card.card1 icon="bi-newspaper" color="purple" value="{{ $beritaCount }}" title="Total News Published"
                 change="" />
-
         </div>
         <h3 class="my-3 font-bold mx-2 text-2xl">Kunjungan Website</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">

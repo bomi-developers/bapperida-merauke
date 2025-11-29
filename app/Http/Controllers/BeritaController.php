@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Jobs\CompressBeritaImage;
+use App\Models\Notifikasi;
 use App\Models\User;
 
 class BeritaController extends Controller
@@ -127,6 +128,11 @@ class BeritaController extends Controller
                 'status' => $validatedData['status'],
                 'page' => $validatedData['page'],
                 // views_count akan default ke 0
+            ]);
+            // notifikasi
+            Notifikasi::create([
+                'title' => 'Berita Baru',
+                'message' => $validatedData['title'],
             ]);
 
             foreach ($validatedData['items'] as $index => $itemData) {

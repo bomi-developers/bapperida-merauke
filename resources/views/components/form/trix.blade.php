@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/trix@2.0.0/dist/trix.css">
 
     <!-- JS -->
-    <script src="https://unpkg.com/trix@2.0.0/dist/trix.umd.min.js"></script>
+    {{-- <script src="https://unpkg.com/trix@2.0.0/dist/trix.umd.min.js"></script> --}}
     <style>
         trix-editor {
             min-height: 200px;
@@ -21,6 +21,45 @@
             /* text-white */
             border-color: #374151;
             /* dark:border-strokedark */
+        }
+
+        /* DARK MODE – Warna toolbar Trix */
+        .dark .trix-button-group {
+            background-color: #bfbfbf !important;
+            /* bg-gray-800 */
+            border-color: #fafafa !important;
+            /* border-gray-700 */
+            color: #f9fafb !important;
+        }
+
+        .dark .trix-button {
+            color: #f9fafb !important;
+            /* text-white */
+        }
+
+        .dark .trix-button:not([disabled]):hover {
+            background-color: #797979 !important;
+            /* hover:bg-gray-700 */
+        }
+
+        /* Untuk ikon bold/italic/link dsb */
+        .dark .trix-button svg {
+            fill: #f9fafb !important;
+        }
+
+        /* Dropdown link, attach file, dsb */
+        .dark .trix-dialog {
+            background-color: #1f2937 !important;
+            color: #f9fafb !important;
+            border-color: #374151 !important;
+        }
+
+        .dark .trix-input--dialog {
+            background-color: #111827 !important;
+            /* bg-gray-900 */
+            color: #f9fafb !important;
+            border-color: #4b5563 !important;
+            /* border-gray-600 */
         }
     </style>
 @endpush

@@ -24,53 +24,12 @@
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12">
                 <!-- Map Section -->
                 <div class="lg:col-span-2">
-                    <div class="map-container rounded-2xl p-6 h-80 relative overflow-hidden">
+                    <div class="map-container rounded-2xl p-6  relative overflow-hidden">
                         <!-- Map placeholder with Google Maps style -->
                         <div class="w-full h-full bg-gray-200 rounded-xl relative overflow-hidden">
-                            <!-- Map background -->
-                            <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100"></div>
-
-                            <!-- Roads/Streets -->
-                            <div class="absolute top-1/4 left-0 w-full h-1 bg-white/60"></div>
-                            <div class="absolute top-1/2 left-0 w-full h-1 bg-white/60"></div>
-                            <div class="absolute top-3/4 left-0 w-full h-1 bg-white/60"></div>
-                            <div class="absolute left-1/4 top-0 w-1 h-full bg-white/60"></div>
-                            <div class="absolute left-1/2 top-0 w-1 h-full bg-white/60"></div>
-                            <div class="absolute left-3/4 top-0 w-1 h-full bg-white/60"></div>
-
-                            <!-- Location marker -->
-                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                                <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center shadow-lg">
-                                    <div class="w-4 h-4 bg-white rounded-full"></div>
-                                </div>
-                            </div>
-
-                            <!-- Map controls -->
-                            <div class="absolute bottom-4 left-4 flex flex-col space-y-2">
-                                <button
-                                    class="w-8 h-8 bg-white rounded shadow flex items-center justify-center text-gray-600 text-sm font-bold">+</button>
-                                <button
-                                    class="w-8 h-8 bg-white rounded shadow flex items-center justify-center text-gray-600 text-sm font-bold">-</button>
-                            </div>
-
-                            <!-- Google Maps logo placeholder -->
-                            <div class="absolute bottom-2 right-2 text-xs text-gray-500 bg-white px-2 py-1 rounded">
-                                Maps
-                            </div>
+                            {!! $websiteSettings->maps_iframe !!}
                         </div>
-
                         <!-- Location info overlay -->
-                        <div class="absolute bottom-6 left-6 right-6">
-                            <div class="bg-white rounded-lg p-4 shadow-lg">
-                                <h3 class="font-semibold text-gray-800 text-sm">Kantor Bapperida</h3>
-                                <p class="text-gray-600 text-xs mt-1">Jl. Raya Mandala, Merauke</p>
-                                <div class="flex items-center mt-2 space-x-4">
-                                    <button class="text-blue-600 text-xs hover:underline">Directions</button>
-                                    <button class="text-blue-600 text-xs hover:underline">Save</button>
-                                    <button class="text-blue-600 text-xs hover:underline">Share</button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -98,52 +57,50 @@
                                 Pegawai
                             </a></li>
                     </ul>
+                    <h3 class="text-lg font-semibold mt-6 mb-2">Alamat Kantor</h3>
+                    <p class="text-blue-100 hover:text-white transition-colors text-sm">{{ $websiteSettings->alamat }}
+                    </p>
                 </div>
 
                 <!-- Account & Newsletter Column -->
                 <div class="text-white">
                     <!-- Account Section -->
                     <div class="mb-8">
-                        <h3 class="text-lg font-semibold mb-6">Akun</h3>
+                        <h3 class="text-lg font-semibold mb-6">Statistik Pengunjung</h3>
                         <ul class="space-y-1">
                             <li>
-                                @guest
-                                    <a href="{{ route('login') }}"
-                                        class="text-blue-100 hover:text-white transition-colors text-sm">Sign
-                                        In</a>
-                                @else
-                                    <a href="{{ route('home') }}"
-                                        class="text-blue-100 hover:text-white transition-colors text-sm">Sign
-                                        In</a>
-                                    @endif
-                                </li>
-                            </ul>
-                        </div>
+                                <strong>Hari ini : </strong>
+                                {{ number_format($pageViewToday) }}
+                            </li>
+                            <li>
+                                <strong>Total : </strong> {{ number_format($pageView) }}
+                            </li>
 
-                        <!-- Newsletter Section -->
-                        <div>
-                            <h3 class="text-lg font-semibold mb-4">Stay in Touch</h3>
-                            <p class="text-blue-100 text-sm mb-4">Subscribe now for exclusive insights and
-                                offers!</p>
+                        </ul>
+                    </div>
+                    <!-- Newsletter Section -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Berlangganan</h3>
+                        <p class="text-blue-100 text-sm mb-4">Berlangganan untuk dapat berita terupdate dari kami!</p>
 
-                            <div class="space-y-3">
-                                <input type="email" placeholder="Email Address"
-                                    class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent">
-                                <button
-                                    class="w-full bg-[#CCFF00] hover:bg-white text-[#006FFF] font-semibold py-2 px-4 rounded-lg transition-colors">
-                                    Subscribe Now
-                                </button>
-                            </div>
+                        <div class="space-y-3">
+                            <input type="email" placeholder="Email Address"
+                                class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent">
+                            <button
+                                class="w-full bg-[#CCFF00] hover:bg-white text-[#006FFF] font-semibold py-2 px-4 rounded-lg transition-colors">
+                                Subscribe Now
+                            </button>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Copyright -->
-                <div class="mt-12 pt-8 border-t border-white/20">
-                    <p class="text-center text-blue-100 text-sm">
-                        © {{ date('Y') }} Bapperida . All Rights Reserved.
-                    </p>
-                </div>
+            <!-- Copyright -->
+            <div class="mt-12 pt-8 border-t border-white/20">
+                <p class="text-center text-blue-100 text-sm">
+                    © {{ date('Y') }} Bapperida . All Rights Reserved.
+                </p>
             </div>
         </div>
-    </footer>
+    </div>
+</footer>

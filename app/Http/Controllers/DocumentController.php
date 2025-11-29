@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\KategoriDocument;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Notifikasi;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -178,6 +179,12 @@ class DocumentController extends Controller
         if (!Storage::disk('public')->exists($document->file)) {
             return back()->with('error', 'File tidak ditemukan atau telah dihapus.');
         }
+        $document->increment('download');
+        Notifikasi::create([
+            'title' => 'Download dokumen baru',
+            'message' => 'Pengguna mendownload dokumen : ' . $document->judul,
+        ]);
+
 
         // Nama file saat diunduh sudah sesuai dengan judul dokumen
         $slug = Str::slug($document->judul);

@@ -9,6 +9,7 @@ use App\Models\TriwulanPeriod;
 use App\Models\LaporanTriwulan;
 use Illuminate\Support\Facades\Auth;
 use App\Models\MasterTemplateTriwulan;
+use App\Models\Notifikasi;
 use Illuminate\Support\Facades\Storage;
 
 class TriwulanController extends Controller
@@ -91,6 +92,11 @@ class TriwulanController extends Controller
             ]
         );
 
+        Notifikasi::create([
+            'title' => 'Periode Triwulan',
+            'message' => 'Triwulan ke-' . $request->triwulan . ' Tahun ' . $request->tahun,
+        ]);
+
         return redirect()->back()->with('success', 'Data Periode berhasil disimpan.');
     }
 
@@ -103,6 +109,10 @@ class TriwulanController extends Controller
         $period->is_open = !$period->is_open;
         $period->save();
 
+        Notifikasi::create([
+            'title' => 'Periode Triwulan',
+            'message' => Auth::user()->name . ($period->is_open ? ' Membuka Periode Upload' : ' Menutup periode Upload'),
+        ]);
         // Return JSON agar tidak refresh halaman
         return response()->json([
             'success' => true,
