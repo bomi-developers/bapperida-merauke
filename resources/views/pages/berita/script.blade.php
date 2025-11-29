@@ -28,6 +28,7 @@
         const search = encodeURIComponent(document.getElementById('search').value.trim());
         const selectAuthor = encodeURIComponent(document.getElementById('selectAuthor').value.trim());
         const selectStatus = encodeURIComponent(document.getElementById('selectStatus').value.trim());
+        const selectJenis = encodeURIComponent(document.getElementById('selectJenis').value.trim());
 
         // pastikan URL sudah benar formatnya
         let finalUrl = new URL(url, window.location.origin);
@@ -40,6 +41,9 @@
 
         if (selectStatus !== "") {
             finalUrl.searchParams.set("status", selectStatus);
+        }
+        if (selectJenis !== "") {
+            finalUrl.searchParams.set("jenis", selectJenis);
         }
 
         const editUrlBase = "{{ route('admin.berita.edit', ':id') }}";
@@ -197,5 +201,6 @@
     document.getElementById('search').addEventListener('input', () => loadData());
     document.getElementById('selectAuthor').addEventListener('input', () => loadData());
     document.getElementById('selectStatus').addEventListener('input', () => loadData());
+    document.getElementById('selectJenis').addEventListener('input', () => loadData());
     loadData();
 </script>

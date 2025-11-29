@@ -93,6 +93,25 @@
                     <i class="bi bi-chevron-down text-xs text-gray-500 dark:text-gray-400"></i>
                 </div>
             </div>
+            <div class="relative w-full sm:w-56">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <i class="bi bi-folder text-gray-400 dark:text-gray-500"></i>
+                </div>
+                <select id="selectJenis"
+                    class="appearance-none bg-white border border-gray-300 text-gray-900 text-sm rounded-xl
+                   focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 
+                   block w-full pl-10 pr-10 p-2.5 shadow-sm cursor-pointer transition-all duration-200
+                   dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                    <option value="-">Semua Jenis</option>
+                    <option value="berita">Berita Utama</option>
+                    <option value="inovasi_riset">Bid.Inovasi - Riset</option>
+                    <option value="inovasi_data">Bid.Inovasi - Data</option>
+                    <option value="inovasi_kekayaan_intelektual">Bid.Inovasi - Kekayaan Intelektual</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <i class="bi bi-chevron-down text-xs text-gray-500 dark:text-gray-400"></i>
+                </div>
+            </div>
 
         </div>
         <div

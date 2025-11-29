@@ -84,7 +84,7 @@
                                 <button type="button" id="add-text" class="btn-add-item"><i
                                         class="bi bi-textarea-t mr-2"></i> Tambah Teks</button>
                                 {{-- <button type="button" id="add-quote" class="btn-add-item"><i --}}
-                                        {{-- class="bi bi-chat-left-quote-fill mr-2"></i> Tambah Kutipan</button> --}}
+                                {{-- class="bi bi-chat-left-quote-fill mr-2"></i> Tambah Kutipan</button> --}}
                                 <button type="button" id="add-image" class="btn-add-item"><i
                                         class="bi bi-image mr-2"></i> Tambah Gambar</button>
                                 <button type="button" id="add-video" class="btn-add-item"><i
@@ -101,11 +101,49 @@
                     <div
                         class="bg-white dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md">
                         <div class="mb-4">
-                            <label for="status" class="form-label">Status</label>
-                            <select id="status" name="status" class="form-input block w-full" required>
-                                <option value="draft" @selected(old('status', $berita->status) == 'draft')>Draft</option>
-                                <option value="published" @selected(old('status', $berita->status) == 'published')>Published</option>
-                            </select>
+                            <label class="form-label">Status</label>
+                            <div class="relative
+                            w-full">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <i class="bi bi-check-circle-fill text-gray-400 dark:text-gray-500"></i>
+                                </div>
+                                <select id="status" name="status"
+                                    class="appearance-none bg-white border border-gray-300 text-gray-900 text-sm rounded-xl
+                            focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 
+                            block w-full pl-10 pr-10 p-2.5 shadow-sm cursor-pointer transition-all duration-200
+                            dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                                    <option value="draft" @selected(old('status', $berita->status) == 'draft')>Draft</option>
+                                    <option value="published" @selected(old('status', $berita->status) == 'published')>Published</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <i class="bi bi-chevron-down text-xs text-gray-500 dark:text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Halaman</label>
+                            <div class="relative w-full">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <i class="bi bi-folder text-gray-400 dark:text-gray-500"></i>
+                                </div>
+                                <select id="page" name="page"
+                                    class="appearance-none bg-white border border-gray-300 text-gray-900 text-sm rounded-xl
+                                            focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 
+                                            block w-full pl-10 pr-10 p-2.5 shadow-sm cursor-pointer transition-all duration-200
+                                            dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                                    <option value="berita" @selected(old('page', $berita->page) == 'berita')>Berita Utama</option>
+                                    <option value="inovasi_riset" @selected(old('page', $berita->page) == 'inovasi_riset')>Bid.Inovasi - Riset
+                                    </option>
+                                    <option value="inovasi_data" @selected(old('page', $berita->page) == 'inovasi_data')>Bid.Inovasi - Data
+                                    </option>
+                                    <option value="inovasi_kekayaan_intelektual" @selected(old('page', $berita->page) == 'inovasi_kekayaan_intelektual')>
+                                        Bid.Inovasi - Kekayaan Intelektual
+                                    </option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <i class="bi bi-chevron-down text-xs text-gray-500 dark:text-gray-400"></i>
+                                </div>
+                            </div>
                         </div>
                         <div>
                             <label for="cover_image" class="form-label">Cover Image (Opsional)</label>
@@ -115,9 +153,12 @@
                                 class="rounded-lg mt-4 w-full h-auto object-cover">
                         </div>
                         <div class="mt-6 flex gap-2">
-                            <button type="submit" class="btn-primary w-full">Update Berita</button>
+                            <button type="submit"
+                                class="px-4 py-4 text-sm text-lg rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white transition w-full">Simpan
+                                Berita</button>
                             <a href="{{ route('admin.berita.index') }}"
-                                class="btn-secondary w-full text-center">Batal</a>
+                                class="w-full text-center px-4 py-4 text-sm text-lg rounded-2xl border border-red-300 dark:border-red-600
+                       text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-800 transition">Batal</a>
                         </div>
                     </div>
                 </div>

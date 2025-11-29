@@ -44,6 +44,9 @@ class BeritaController extends Controller
         if ($request->status != '-' && $request->status) {
             $query->where('status', $request->status);
         }
+        if ($request->jenis != '-' && $request->jenis) {
+            $query->where('page', $request->jenis);
+        }
 
         $beritas = $query->orderBy('created_at', 'desc')->paginate(10);
 
@@ -90,6 +93,7 @@ class BeritaController extends Controller
             'excerpt' => 'required|string|max:500',
             'cover_image' => 'required|image|mimes:jpeg,png,jpg,webp|max:20480', // 20MB
             'status' => 'required|in:published,draft',
+            'page' => 'required|in:berita,inovasi_kekayaan_intelektual,inovasi_riset,inovasi_data',
             'items' => 'required|array|min:1',
             'items.*.type' => 'required|in:text,image,video,embed,quote',
             'items.*.content' => 'nullable|string',
@@ -121,6 +125,7 @@ class BeritaController extends Controller
                 'excerpt' => $validatedData['excerpt'],
                 'cover_image' => $coverImagePath, // Simpan path asli
                 'status' => $validatedData['status'],
+                'page' => $validatedData['page'],
                 // views_count akan default ke 0
             ]);
 
@@ -173,6 +178,7 @@ class BeritaController extends Controller
             'excerpt' => 'required|string|max:500',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:20480', // 20MB
             'status' => 'required|in:published,draft',
+            'page' => 'required|in:berita,inovasi_kekayaan_intelektual,inovasi_riset,inovasi_data',
             'items' => 'sometimes|array',
             'items.*.type' => 'required|in:text,image,video,embed,quote',
             'items.*.content' => 'nullable|string',
@@ -188,6 +194,7 @@ class BeritaController extends Controller
                 'slug' => Str::slug($validatedData['title']) . '-' . Str::random(5),
                 'excerpt' => $validatedData['excerpt'],
                 'status' => $validatedData['status'],
+                'page' => $validatedData['page'],
             ];
 
             // 2. Handle upload Cover Image baru
