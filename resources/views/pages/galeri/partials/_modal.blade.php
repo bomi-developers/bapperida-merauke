@@ -75,7 +75,8 @@
             <!-- Footer Modal -->
             <div class="p-4  flex justify-end gap-2 flex-shrink-0">
 
-                <button type="submit" id="save-btn" class="btn-primary">Simpan</button>
+                <button type="submit" id="save-btn"
+                    class="px-4 py-2 text-sm font-medium rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white transition">Simpan</button>
             </div>
         </form>
     </div>

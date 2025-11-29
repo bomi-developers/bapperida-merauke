@@ -307,6 +307,6 @@ Route::middleware(['auth'])->group(function () {
   Route::get('/chart', [PagesController::class, 'chart'])->name('chart');
   Route::get('/form-elements', [PagesController::class, 'form_elements'])->name('form-elements');
   Route::get('/form-layout', [PagesController::class, 'form_layout'])->name('form-layout');
-  Route::get('/settings', [PagesController::class, 'settings'])->name('settings');
+  // Route::get('/settings', [PagesController::class, 'settings'])->name('settings');
   Route::get('/tables', [PagesController::class, 'tables'])->name('tables');
 });

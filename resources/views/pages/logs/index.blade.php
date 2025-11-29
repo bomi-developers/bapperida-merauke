@@ -65,7 +65,10 @@
                                     <td class="px-4 py-3 whitespace-nowrap">{{ $log->ip_address }}</td>
                                     <td class="px-4 py-3 truncate max-w-[250px]">{{ $log->user_agent }}</td>
                                     <td class="px-4 py-3 whitespace-nowrap">{{ $log->logged_in_at }}</td>
-                                    <td class="px-4 py-3 whitespace-nowrap">{{ $log->logged_out_at ?? '-' }}</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">
+                                        {!! $log->logged_out_at ??
+                                            '<span class="px-2 py-1 border border-red-700 bg-red-200 rounded-full text-red-700"> Auto </span>' !!}
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>

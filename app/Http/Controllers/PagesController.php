@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\LoginLog;
 use Spatie\Activitylog\Models\Activity;
 use App\Models\PageView;
+use App\Models\Pegawai;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PagesController extends Controller
@@ -109,6 +111,9 @@ class PagesController extends Controller
     {
         $data = [
             'title' => 'profile',
+            'pegawai' => Pegawai::find(Auth::user()->id_pegawai),
+            'logs' => LoginLog::where('id_user', Auth::id())->latest()->limit(10)->get(),
+            'pages' => PageView::where('user_id', Auth::id())->orderBy('viewed_at', 'DESC')->limit(5)->get(),
         ];
         return view('pages.profile', $data);
     }

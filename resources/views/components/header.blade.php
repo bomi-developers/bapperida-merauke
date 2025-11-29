@@ -135,11 +135,9 @@
                 <div id="profile-dropdown"
                     class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-700 rounded-lg shadow-xl hidden z-20 border border-gray-200 dark:border-slate-600">
                     <a href="{{ route('profile') }}"
-                        class="block px-4 py-2 text-sm text-gray-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600 rounded-t-lg">My
-                        Profile</a>
-                    <a href="{{ route('settings') }}"
-                        class="block px-4 py-2 text-sm text-gray-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600">Account
-                        Settings</a>
+                        class="block px-4 py-2 text-sm text-gray-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600 rounded-t-lg">
+                        Akun Saya</a>
+
                     <div class="border-t border-gray-200 dark:border-slate-600"></div>
 
                     <form method="POST" action="{{ route('logout') }}">
