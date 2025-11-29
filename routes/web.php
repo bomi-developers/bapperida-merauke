@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\PagesController;
+use App\Http\Controllers\RenjaController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\BidangController;
 use App\Http\Controllers\GaleriController;
@@ -284,6 +285,14 @@ Route::middleware(['auth'])->group(function () {
   Route::post('/triwulan/periode/{id}/toggle', [TriwulanController::class, 'togglePeriod'])->name('triwulan.period.toggle');
   Route::get('/triwulan/{id}/history', [TriwulanController::class, 'getHistory'])->name('triwulan.history');
   Route::post('/triwulan/template/upload', [TriwulanController::class, 'uploadTemplate'])->name('triwulan.template.upload');
+
+  // Index Renja (OPD & Admin)
+  Route::get('/renja', [RenjaController::class, 'index'])->name('renja.index');
+  Route::post('/renja/upload', [RenjaController::class, 'store'])->name('renja.store');
+  Route::post('/renja/tahapan', [RenjaController::class, 'updateTahapan'])->name('renja.tahapan.update');
+  Route::put('/renja/{id}/verify', [RenjaController::class, 'verify'])->name('renja.verify');
+  Route::post('/renja/tahapan/{id}/toggle', [RenjaController::class, 'toggleTahapan'])->name('renja.tahapan.toggle');
+  Route::get('/renja/{id}/history', [RenjaController::class, 'getHistory'])->name('renja.history');
 
   // setting page
   Route::get('/website-setting', [PagesController::class, 'websiteSetting'])->name('website-setting');

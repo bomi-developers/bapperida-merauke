@@ -100,6 +100,7 @@
                     ],
                 ];
                 if (Auth::user()->role == 'admin' || Auth::user()->role == 'opd') {
+                    $labelRenja = (Auth::user()->role == 'opd') ? 'Renja' : 'RKPD';
                     $menus[] = [
                         'title' => 'E-Reporting',
                         'items' => [
@@ -107,6 +108,11 @@
                                 'label' => 'Laporan Triwulan',
                                 'icon' => 'bi bi-calendar-check',
                                 'route' => 'triwulan.index',
+                            ],
+                            [
+                                'label' => $labelRenja,
+                                'icon' => 'bi bi-journal-text',
+                                'route' => 'renja.index',
                             ],
                         ],
                     ];
