@@ -78,6 +78,7 @@
                             }
                             return g.author_id === AUTH_ID;
                         }
+
                         html += `
                         <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition">
                             <td class="px-6 py-3 font-medium text-gray-900 dark:text-gray-100">${i + 1}</td>
@@ -85,7 +86,11 @@
                                 <div class="flex items-center gap-4">
                                     <img src="/storage/${g.cover_image}"
                                         alt="Cover" class="w-20 h-14 object-cover rounded-md flex-shrink-0">
-                                    <span class="font-semibold text-md whitespace-normal break-words">${g.title}</span>
+                                    
+                                    <div class="">
+                                        <span class="font-semibold text-md whitespace-normal break-words">${g.title}</span><br>
+                                        <a target="_blank" href="/berita/${g.slug}" class="mt-2 text-sm text-blue-700 hover:underline whitespace-normal break-words">${window.location.origin}/berita/${g.slug}</a>
+                                    </div>
                                 </div>
                             </td>
                              <td class="px-6 py-4">

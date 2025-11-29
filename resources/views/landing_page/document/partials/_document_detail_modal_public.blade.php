@@ -1,12 +1,13 @@
-<div id="show-modal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
+<div id="show-modal" class="fixed inset-0 z-50 hidden bg-black/20 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-md w-full max-w-4xl max-h-[90vh] flex flex-col">
         <!-- Header -->
         <div class="p-5 border-b border-gray-200 flex justify-between items-center flex-shrink-0">
             <h3 class="text-xl font-semibold text-gray-800 flex items-center gap-3">
                 <i class="bi bi-file-earmark-text text-blue-600"></i>
                 Detail Dokumen
             </h3>
-            <button type="button" class="close-show-modal text-gray-400 hover:text-gray-600">
+            <button type="button"
+                class="close-show-modal text-red-800 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800 rounded-full w-8 h-8 flex items-center justify-center">
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
@@ -46,25 +47,5 @@
                 </div>
             </div>
         </div>
-
-        <!-- Footer -->
-        <div class="p-4 bg-gray-50 border-t border-gray-200 flex justify-end flex-shrink-0">
-            <button type="button" class="btn-secondary close-show-modal">Tutup</button>
-        </div>
     </div>
 </div>
-
-{{-- Style helper (jika belum ada di file _scripts.blade.php Anda) --}}
-<style>
-    .btn-secondary {
-        background-color: #e5e7eb;
-        color: #1f2937;
-        padding: 0.6rem 1.2rem;
-        border-radius: 0.5rem;
-        font-weight: 500;
-    }
-
-    .btn-secondary:hover {
-        background-color: #d1d5db;
-    }
-</style>

@@ -27,6 +27,23 @@ class DocumentController extends Controller
         $kategori = KategoriDocument::orderBy('nama_kategori')->get();
         return view('pages.document.index', compact('documents', 'kategori'));
     }
+    public function getDokumen(Request $request)
+    {
+        $search = $request->keyword ?? '';
+
+        $query = Document::with('kategori')
+            ->latest();
+
+        // Jika ada pencarian
+        if (!empty($search)) {
+            $query->where('judul', 'like', '%' . $search . '%');
+        }
+        $dokumen = $query->limit(20)->get();
+        return response()->json([
+            'status' => 'success',
+            'data' => $dokumen
+        ]);
+    }
 
     /**
      * Menyimpan dokumen baru ke database dengan nama file kustom.

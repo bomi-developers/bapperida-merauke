@@ -80,6 +80,7 @@ Route::get('/galeri/{galeri}/filter', [GaleriController::class, 'filterItems'])-
 
 Route::get('/dokumen/kategori/{kategori}/{slug}', [DocumentController::class, 'showByCategory'])
   ->name('documents.by_category');
+Route::get('/dokumen/data', [DocumentController::class, 'getDokumen'])->name('dokumen.data');
 Route::get('/dokumen/search', [DocumentController::class, 'searchPublic'])->name('documents.search_public');
 // download 
 Route::get('/documents/{document}/download', [DocumentController::class, 'downloadFile'])->name('documents.download');
