@@ -1,3 +1,8 @@
+@section('meta_title', 'Galeri : ' . $galeri->judul)
+@section('meta_image', $meta_image ? asset('storage/' . $meta_image) : asset('default-og.png'))
+{{-- hero --}}
+@section('hero_title', 'Album : ' . $galeri->judul)
+@section('hero_bg', $meta_image ? asset('storage/' . $meta_image) : '/assets/image6.jpg')
 <x-landing.layout>
     {{-- Hapus <x-landing.heading> karena judul ada di dalam konten --}}
 
@@ -7,6 +12,32 @@
             {{-- Judul Halaman --}}
             <div class="flex justify-center mb-10">
                 <h1 class="text-4xl md:text-3xl text-blue-700 font-bold text-center">{{ $galeri->judul }}</h1>
+            </div>
+            <!-- Social Share -->
+            <div class="border-t border-gray-200 py-6 my-10">
+                <div class="flex items-center justify-center">
+                    @php
+                        $shareUrl = route('galeri.public.show', $galeri);
+                        $shareText = urlencode($galeri->judul);
+                        $shareTextWithUrl = urlencode('Album BAPPERIDA : ' . $galeri->judul . ' ' . $shareUrl);
+                    @endphp
+                    <div class="flex items-center gap-2">
+                        <span>Share Album : </span>
+                        <a href="https://api.whatsapp.com/send?text={{ $shareTextWithUrl }}" target="_blank"
+                            class="social-icon whatsapp h-14 w-14 hover:bg-green-300 hover:text-green-700 rounded-full flex items-center justify-center"
+                            title="Bagikan ke WhatsApp"><i class="bi bi-whatsapp text-2xl"></i></a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ $shareUrl }}" target="_blank"
+                            class="social-icon facebook h-14 w-14 hover:bg-blue-300 hover:text-blue-700 rounded-full flex items-center justify-center"
+                            title="Bagikan ke Facebook"><i class="bi bi-facebook text-2xl"></i></a>
+                        <a href="https://twitter.com/intent/tweet?url={{ $shareUrl }}&text={{ $shareText }}"
+                            target="_blank"
+                            class="social-icon twitter h-14 w-14 hover:bg-black hover:text-white rounded-full flex items-center justify-center"
+                            title="Bagikan ke X"><i class="bi bi-twitter-x text-2xl "></i></a>
+                        <button onclick="copyToClipboard(this, '{{ $shareUrl }}')"
+                            class="social-icon link h-14 w-14 hover:bg-gray-300 rounded-full flex items-center justify-center"
+                            title="Salin tautan"><i class="bi bi-link-45deg text-xl"></i></button>
+                    </div>
+                </div>
             </div>
 
             {{-- Filter Tipe Konten (Tabs) --}}
@@ -56,7 +87,7 @@
                             $title = $album->judul;
                             $subtitle = $album->items_count . ' Item Media';
                             $date = $album->created_at->isoFormat('D MMMM YYYY');
-                            $link = route('galeri.public.show', $album); // Link ke detail album
+                            $link = route('galeri.public.show', $album);
                         @endphp
 
                         <div

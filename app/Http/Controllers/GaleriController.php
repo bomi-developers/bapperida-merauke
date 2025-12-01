@@ -410,20 +410,20 @@ class GaleriController extends Controller
 
     public function showPublic(Galeri $galeri)
     {
-        // 1. Muat semua item untuk galeri ini
-        // Kita akan memuat semua item di sini, filter akan ditangani AJAX
+
         $items = $galeri->items()->orderBy('id', 'asc')->get();
 
-        // 2. Ambil 4 "Album Lainnya" (terbaru, kecuali yang ini)
         $albumLainnya = Galeri::with('firstItem')
             ->where('id', '!=', $galeri->id)
             ->latest()
             ->take(4)
             ->get();
 
-        $currentFilterType = 'all'; // Filter default saat halaman dimuat
+        $meta_image = $galeri->items()->orderBy('id', 'asc')->first()?->file_path;
 
-        return view('landing_page.galeri.galeri_detail', compact('galeri', 'items', 'albumLainnya', 'currentFilterType'));
+        $currentFilterType = 'all';
+
+        return view('landing_page.galeri.galeri_detail', compact('galeri', 'items', 'albumLainnya', 'currentFilterType', 'meta_image'));
     }
 
     // ==========================================================
