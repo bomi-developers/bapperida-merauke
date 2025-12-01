@@ -1,8 +1,13 @@
-   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+   <script defer src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+   {{-- <script defer src="{{ asset('assets/swiper-bundle.min.js') }}"></script> --}}
    <script>
+       document.addEventListener("DOMContentLoaded", () => {
+           document.querySelectorAll(".lazy-bg").forEach(el => {
+               const src = el.dataset.bg;
+               el.style.backgroundImage = `url('${src}')`;
+           });
+       });
        document.addEventListener('DOMContentLoaded', function() {
-
-
            // =========================================================================
            // PENGATURAN NAVBAR UTAMA (MAIN-NAV)
            // =========================================================================

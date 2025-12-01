@@ -4,7 +4,7 @@
         <div
             class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-12 items-center reveal-on-scroll">
             <div class="w-full max-w-4xl mx-auto aspect-video">
-                <iframe src="https://www.youtube.com/embed/bTXA5LxI2ZM" frameborder="0"
+                <iframe src="https://www.youtube.com/embed/bTXA5LxI2ZM" frameborder="0" loading="lazy"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen class="w-full h-full rounded-xl shadow-lg"></iframe>
             </div>
@@ -362,6 +362,6 @@
 
     </section> --}}
 </x-landing.layout>
-@push('styles')
+{{-- @push('styles')
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-@endpush
+@endpush --}}

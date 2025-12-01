@@ -14,8 +14,7 @@
         <p class="mt-2 text-gray-500">Tidak ada item yang cocok dengan filter ini.</p>
     </div>
 @else
-
-<div class="columns-2 md:columns-4 gap-4">
+    <div class="columns-2 md:columns-4 gap-4">
         @foreach ($items as $item)
             @php
                 // Logika $spanClass sudah dihapus karena kita pakai layout Masonry
@@ -45,7 +44,8 @@
                           - Menggunakan 'w-full h-auto' agar gambar mempertahankan rasio aspek aslinya.
                         --}}
                         <img src="{{ asset('storage/' . $item->file_path) }}" alt="{{ $item->caption }}"
-                            class="w-full h-auto transition-transform duration-300 group-hover:scale-105">
+                            class="w-full h-auto transition-transform duration-300 group-hover:scale-105"
+                            loading="lazy">
                     @elseif($item->tipe_file == 'video')
                         {{-- Video tetap menggunakan aspect-video agar terlihat rapi --}}
                         <div class="w-full aspect-video flex items-center justify-center bg-black">
@@ -81,5 +81,5 @@
                 @endif
             </div>
         @endforeach
-    @endif
+@endif
 </div>

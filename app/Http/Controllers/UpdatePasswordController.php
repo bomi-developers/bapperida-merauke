@@ -11,13 +11,12 @@ class UpdatePasswordController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'password' => 'required',              // password lama
-            'new_password' => 'required|min:6',    // password baru
+            'password' => 'required',
+            'new_password' => 'required|min:6',
         ]);
 
         $user = Auth::user();
 
-        // Cek password lama
         if (!Hash::check($request->password, $user->password)) {
             return response()->json([
                 'status' => false,

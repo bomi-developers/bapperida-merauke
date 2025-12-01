@@ -23,6 +23,7 @@ use App\Http\Controllers\LendingPageController;
 use App\Http\Controllers\ProfileDinasController;
 use App\Http\Controllers\UpdatePasswordController;
 use App\Http\Controllers\KategoriDocumentController;
+use App\Http\Controllers\SubscriptionController;
 
 // cache control
 
@@ -47,8 +48,9 @@ Route::get('img/{path}', function ($path) {
 //   return redirect()->route('login');
 // })->name('welcome');
 
-
-
+// subscription
+Route::post('/subscription/store', [SubscriptionController::class, 'store'])->name('subscription.store');
+// home url
 Route::get('/', [HomeController::class, 'index'])->name('welcome');
 Route::prefix('about')->name('about.')->group(function () {
   Route::get('/pegawai', [HomeController::class, 'pegawai'])->name('pegawai');

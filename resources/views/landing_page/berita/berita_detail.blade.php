@@ -1,11 +1,12 @@
 @section('meta_title', $berita->title)
 @section('meta_description', Str::limit(strip_tags($berita->caption), 160))
 @section('meta_image', $berita->cover_image ? asset('storage/' . $berita->cover_image) : asset('default-og.png'))
-
+{{-- hero --}}
+@section('hero_title', $berita->title)
+@section('hero_bg', $berita->cover_image ? asset('storage/' . $berita->cover_image) : '/assets/image6.jpg')
 <x-landing.layout>
-    {{-- Dependensi Swiper CSS (jika belum ada di global layout/app.css) --}}
     @push('styles')
-        <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+        {{-- <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" /> --}}
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     @endpush
 

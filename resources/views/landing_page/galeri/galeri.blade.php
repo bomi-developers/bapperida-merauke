@@ -39,7 +39,7 @@
                                             {{-- 2. Gambar Utama (Contain) --}}
                                             <img src="{{ asset('storage/' . $coverItem->file_path) }}"
                                                 alt="{{ $populer->judul }}"
-                                                class="relative z-10 w-full h-full object-contain">
+                                                class="relative z-10 w-full h-full object-contain" loading="lazy">
                                         @elseif($coverItem && ($coverItem->tipe_file == 'video' || $coverItem->tipe_file == 'video_url'))
                                             {{-- Placeholder gelap untuk video --}}
                                             <div
@@ -55,7 +55,8 @@
                                             <div class="absolute inset-0 bg-gray-200"></div>
                                             <img src="https://placehold.co/800x600/e2e8f0/667eea?text=Galeri"
                                                 alt="{{ $populer->judul }}"
-                                                class="relative z-10 max-w-full max-h-full object-contain">
+                                                class="relative z-10 max-w-full max-h-full object-contain"
+                                                loading="lazy">
                                         @endif
                                     </div>
 

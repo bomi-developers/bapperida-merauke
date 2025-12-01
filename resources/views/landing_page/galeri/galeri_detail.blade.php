@@ -67,7 +67,8 @@
                                         @if ($coverItem->tipe_file == 'image')
                                             <img src="{{ asset('storage/' . $coverItem->file_path) }}"
                                                 alt="{{ $title }}"
-                                                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                                                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                                loading="lazy">
                                         @elseif($coverItem->tipe_file == 'video')
                                             <div class="w-full h-full flex items-center justify-center bg-gray-900">
                                                 <i class="bi bi-film text-6xl text-gray-500"></i>

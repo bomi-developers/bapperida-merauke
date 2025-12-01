@@ -119,7 +119,7 @@
 
         <!-- Logo -->
         <a href="{{ url('/') }}" class="flex items-center gap-2">
-            <img src="{{ asset('assets/LogoKabMerauke.png') }}" alt="Logo" class="h-8 w-8 ">
+            <img src="{{ asset('assets/LogoKabMerauke.png') }}" alt="Logo" class="h-8 w-8 " loading="lazy">
             <div class="flex flex-col">
                 <span class="text-white text-xl font-bold leading-tight">BAPPERIDA</span>
                 <span class="text-white text-xs font-light leading-tight">Kab. Merauke</span>
@@ -200,10 +200,7 @@
         </div>
     </div>
 
-    <!-- Script -->
-
 </nav>
 @push('scripts')
-    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 @endpush
-<!-- Overlay Search -->

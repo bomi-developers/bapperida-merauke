@@ -69,6 +69,10 @@
                         <h3 class="text-lg font-semibold mb-6">Statistik Pengunjung</h3>
                         <ul class="space-y-1">
                             <li>
+                                <strong>Online : </strong>
+                                {{ number_format($pageViewOnline) }}
+                            </li>
+                            <li>
                                 <strong>Hari ini : </strong>
                                 {{ number_format($pageViewToday) }}
                             </li>
@@ -84,12 +88,15 @@
                         <p class="text-blue-100 text-sm mb-4">Berlangganan untuk dapat berita terupdate dari kami!</p>
 
                         <div class="space-y-3">
-                            <input type="email" placeholder="Email Address"
+                            <input id="subscribeEmail" name="email" type="email" placeholder="Email Address"
                                 class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent">
-                            <button
+
+                            <button id="subscribeBtn"
                                 class="w-full bg-[#CCFF00] hover:bg-white text-[#006FFF] font-semibold py-2 px-4 rounded-lg transition-colors">
                                 Subscribe Now
                             </button>
+
+                            <div id="subscribeMsg" class="text-sm mt-2"></div>
                         </div>
                     </div>
                 </div>
@@ -104,3 +111,46 @@
         </div>
     </div>
 </footer>
+@push('scripts')
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById('subscribeBtn').addEventListener('click', async () => {
+                const email = document.getElementById('subscribeEmail').value;
+                const msg = document.getElementById('subscribeMsg');
+
+                msg.innerHTML = "";
+                msg.className = "text-sm mt-2";
+
+                const formData = new FormData();
+                formData.append('email', email);
+
+                try {
+                    const response = await fetch("{{ route('subscription.store') }}", {
+                        method: "POST",
+                        headers: {
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
+                                .content
+                        },
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (result.status) {
+                        msg.classList.add("text-green-300");
+                        msg.innerHTML = "✔ " + result.message;
+                        document.getElementById('subscribeEmail').value = "";
+                    } else {
+                        msg.classList.add("text-red-300");
+                        msg.innerHTML = "✖ " + result.message;
+                    }
+
+                } catch (error) {
+                    console.error("ERROR:", error);
+                    msg.classList.add("text-red-300");
+                    msg.innerHTML = "✖ Terjadi kesalahan pada server.";
+                }
+            });
+        });
+    </script>
+@endpush

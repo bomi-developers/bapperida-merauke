@@ -1,6 +1,6 @@
  <section class="relative top-0 overflow-hidden h-[1200px] [clip-path:ellipse(120%_60%_at_50%_0%)]">
      <div class="absolute top-0 left-0 w-full h-full bg-cover bg-center"
-         style="background-image: url('/assets/image6.jpg');">
+         style="background-image: url('@yield('hero_bg', '/assets/image6.jpg')');">
      </div>
 
      <div class="absolute inset-0 bg-blue-800/50"></div>
@@ -129,13 +129,13 @@
      <div class="relative z-10 h-full flex flex-col items-center justify-start text-center px-4 animate-fade-in-up"
          style="padding-top: 15rem;">
          <h1 class="text-white text-4xl md:text-5xl font-extrabold max-w-4xl leading-tight">
-             {{ $hero['title'] }}
+             @yield('hero_title', $hero['title'])
          </h1>
          <h2 class="text-white text-2xl md:text-2xl font-extrabold max-w-4xl leading-tight">
-             {{ $hero['subtitle'] }}
+             @yield('hero_subtitle', $hero['subtitle'])
          </h2>
          <p class="mt-4 text-[#CCFF00] text-lg max-w-2xl">
-             {{ $hero['description'] ?? 'Bersama BAPPERIDA Kabupaten Merauke, wujudkan pembangunan berkelanjutan, inklusif, dan berbasis potensi lokal.' }}
+             @yield('hero_description', $hero['description'] ?? 'Bersama BAPPERIDA Kabupaten Merauke, wujudkan pembangunan berkelanjutan, inklusif, dan berbasis potensi lokal.')
          </p>
 
          {{-- <form class="mt-8 w-full max-w-lg">

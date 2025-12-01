@@ -32,11 +32,13 @@ class AppServiceProvider extends ServiceProvider
             $websiteSettings = WebsiteSetting::first();
             $ProfileDinas = ProfileDinas::first();
             $pageView = PageView::count();
+            $pageViewOnline = PageView::whereDate('viewed_at', Carbon::now()->subHours(3))
+                ->count();
             $pageViewToday = PageView::whereDate('viewed_at', Carbon::today())
                 ->count();
             $pageViewUrl = PageView::distinct('url')
                 ->count('url');
-            $view->with(['websiteSettings' => $websiteSettings, 'ProfileDinas' => $ProfileDinas, 'pageView' => $pageView, 'pageViewToday' => $pageViewToday, 'pageViewUrl' => $pageViewUrl]);
+            $view->with(['websiteSettings' => $websiteSettings, 'ProfileDinas' => $ProfileDinas, 'pageView' => $pageView, 'pageViewToday' => $pageViewToday, 'pageViewUrl' => $pageViewUrl, 'pageViewOnline' => $pageViewOnline]);
         });
         View::composer('components.landing.navbar', function ($view) {
             $view->with('kategoriDocuments', KategoriDocument::orderBy('nama_kategori')->orderBy('id', 'desc')->get());

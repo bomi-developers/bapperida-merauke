@@ -13,14 +13,16 @@
     <meta property="og:description" content="@yield('meta_description', 'BAPPERIDA Kabupaten Merauke')">
     <meta property="og:image" content="@yield('meta_image', asset('assets/LogoKabMerauke.png'))">
     <meta property="og:type" content="article">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
 
     {{-- Twitter Card --}}
     <meta name="twitter:title" content="@yield('meta_title', 'BAPPERIDA Kabupaten Merauke')">
     <meta name="twitter:description" content="@yield('meta_description', 'BAPPERIDA Kabupaten Merauke')">
     <meta name="twitter:image" content="@yield('meta_image', asset('assets/LogoKabMerauke.png'))">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <script>
+    {{-- <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
@@ -31,25 +33,9 @@
                 }
             }
         }
-    </script>
-    <!-- Alpine.js v3 -->
+    </script> --}}
 
     <style>
-        /* Transisi halus untuk dropdown */
-        /* .group .dropdown {
-            opacity: 0;
-            transform: scale(0.95);
-            transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
-            pointer-events: none;
-        }
-
-        .group:hover .dropdown {
-            opacity: 1;
-            transform: scale(1);
-            pointer-events: auto;
-        } */
-
-        /* Kelas untuk Animasi Scroll - PENYEMPURNAAN */
         .reveal-on-scroll {
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
         }
@@ -78,27 +64,21 @@
             }
         }
 
-        /* Menerapkan animasi ke navbar */
-        /* #main-nav {
-            animation: slide-down 0.7s ease-in-out;
-        } */
 
-        /* Mendefinisikan animasi bernama "fadeInUp" */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
                 transform: translateY(30px);
-                /* Mulai dari 30px di bawah posisi asli */
+
             }
 
             to {
                 opacity: 1;
                 transform: translateY(0);
-                /* Kembali ke posisi asli */
+
             }
         }
 
-        /* Kelas untuk menerapkan animasi */
         .animate-fade-in-up {
             animation: fadeInUp 1s ease-out forwards;
         }

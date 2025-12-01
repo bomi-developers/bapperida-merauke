@@ -54,6 +54,11 @@
                                 'icon' => 'bi bi-calendar-check',
                                 'route' => 'triwulan.index',
                             ],
+                            [
+                                'label' => 'Renja',
+                                'icon' => 'bi bi-calendar-check',
+                                'route' => 'renja.index',
+                            ],
                         ],
                     ],
                     [
@@ -100,7 +105,7 @@
                     ],
                 ];
                 if (Auth::user()->role == 'admin' || Auth::user()->role == 'opd') {
-                    $labelRenja = (Auth::user()->role == 'opd') ? 'Renja' : 'RKPD';
+                    $labelRenja = Auth::user()->role == 'opd' ? 'Renja' : 'RKPD';
                     $menus[] = [
                         'title' => 'E-Reporting',
                         'items' => [

@@ -37,7 +37,7 @@
                                     <x-input label="NIK" id="nik" name="nik" type="text"
                                         value="{{ $pegawai->nik }}" />
                                     <x-textarea label="Alamat" name="alamat" rows="4" placeholder="Alamat Rumah"
-                                        --}} slot="{{ $pegawai->alamat }}" />
+                                        slot="{{ $pegawai->alamat }}" />
 
                                     <div class="flex justify-end gap-3 pt-4">
                                         <button type="submit"

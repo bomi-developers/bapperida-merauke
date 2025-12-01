@@ -44,7 +44,7 @@
         // ===================================
         const viewerModal = document.getElementById('item-viewer-modal');
         const viewerModalContent = viewerModal.querySelector(
-        '.relative.bg-white'); // Target konten untuk animasi
+            '.relative.bg-white'); // Target konten untuk animasi
         const viewerContent = document.getElementById('viewer-content');
         const viewerCaption = document.getElementById('viewer-caption');
         const viewerCaptionContainer = document.getElementById('viewer-caption-container');
@@ -64,7 +64,7 @@
                 if (url.length === 11) videoId = url;
             }
             return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1` :
-            null; // Tambah autoplay
+                null; // Tambah autoplay
         };
 
         // Fungsi untuk membuka modal
@@ -73,15 +73,15 @@
 
             if (tipe === 'image') {
                 mediaHtml =
-                    `<img src="{{ asset('storage') }}/${path}" alt="${caption}" class="max-w-full max-h-[75vh] object-contain rounded-lg">`;
+                    `<img src="{{ asset('storage') }}/${path}" alt="${caption}" class="max-w-full max-h-[75vh] object-contain rounded-lg" loading="lazy">`;
             } else if (tipe === 'video') {
                 mediaHtml =
-                    `<video controls autoplay class="w-full max-h-[75vh] rounded-lg"><source src="{{ asset('storage') }}/${path}" type="video/mp4">Browser Anda tidak mendukung tag video.</video>`;
+                    `<video controls preload="none" autoplay class="w-full max-h-[75vh] rounded-lg"><source src="{{ asset('storage') }}/${path}" type="video/mp4">Browser Anda tidak mendukung tag video.</video>`;
             } else if (tipe === 'video_url') {
                 const embedUrl = getYouTubeEmbedUrl(path);
                 if (embedUrl) {
                     mediaHtml =
-                        `<iframe class="w-full aspect-video max-h-[75vh] rounded-lg" src="${embedUrl}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+                        `<iframe loading="lazy" class="w-full aspect-video max-h-[75vh] rounded-lg" src="${embedUrl}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
                 } else {
                     mediaHtml =
                         `<div class="text-white p-4">URL Video tidak valid atau tidak didukung: ${path}</div>`;
