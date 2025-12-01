@@ -50,7 +50,30 @@
         const AUTH_ID = {{ auth()->id() }};
         const AUTH_ROLE = "{{ auth()->user()->role }}";
 
-
+        // loading table
+        document.getElementById('berita-table').innerHTML = `
+                <div class="overflow-x-auto max-h-[75vh] overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700">
+                    <table class="w-full text-sm text-left text-gray-600 dark:text-gray-300">
+                        <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-200 sticky top-0 z-10">
+                            <tr>
+                                <th>#</th>
+                                <th>Judul</th>
+                                <th>Penulis</th>
+                                <th>Status</th>
+                                <th>Penayangan</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="6" class="text-center py-6 my-4">
+                                    <div class="w-10 h-10 border-4 border-gray-200 border-t-indigo-600 rounded-full animate-spin mx-auto"></div> Loading...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
 
         fetch(finalUrl)
             .then(res => res.json())
@@ -65,7 +88,7 @@
                                 <th scope="col" class="px-6 py-3">Penulis</th>
                                 <th scope="col" class="px-6 py-3">Status</th>
                                 <th scope="col" class="px-6 py-3">Penayangan</th>
-                                <th scope="col" class="px-6 py-3 text-center">Aksi</th>
+                                <th scope="col" class="px-6 py-3 text-center min-w-[150px]">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>`;
@@ -123,7 +146,7 @@
                                         class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 transition">
                                         <i class="bi bi-trash text-lg"></i>
                                     </button>
-                                    ` : ''}
+                                    ` : '<span class="px-2 py-1 border border-red-700 bg-red-200 rounded-full text-red-700 ">Not the Author</span>'}
                                 </div>
                             </td>
                         </tr>`;

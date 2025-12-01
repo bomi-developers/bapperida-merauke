@@ -23,13 +23,21 @@
                     class="lg:col-span-2 bg-white dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md">
                     <div class="mb-4">
                         <label for="title" class="form-label">Judul Berita</label>
-                        <input type="text" id="title" name="title" class="form-input block w-full"
+                        <input type="text" id="title" name="title"
+                            class="form-input block w-full @error('title') border border-red-500 @enderror"
                             value="{{ old('title') }}" required>
+                        @error('title')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div class="mb-4">
                         <label for="excerpt" class="form-label">Kutipan (Excerpt)</label>
-                        <textarea id="excerpt" name="excerpt" class="form-input block w-full" rows="3" required>{{ old('excerpt') }}</textarea>
+                        <textarea id="excerpt" name="excerpt"
+                            class="form-input block w-full @error('excerpt') border border-red-500 @enderror" rows="3" required>{{ old('excerpt') }}</textarea>
+                        @error('excerpt')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     {{-- Content Blocks --}}

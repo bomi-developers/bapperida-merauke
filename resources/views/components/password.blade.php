@@ -74,6 +74,7 @@
                     .then(res => {
                         if (res.status) {
                             alert("Password berhasil diganti");
+                            window.location.reload();
                         } else {
                             alert(res.message || "Gagal memperbarui password");
                         }

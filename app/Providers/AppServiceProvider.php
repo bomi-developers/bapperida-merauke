@@ -29,11 +29,12 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useTailwind();
         View::composer('*', function ($view) {
+            $start = Carbon::now()->subHour(2);
+            $end = Carbon::now();
             $websiteSettings = WebsiteSetting::first();
             $ProfileDinas = ProfileDinas::first();
             $pageView = PageView::count();
-            $pageViewOnline = PageView::whereDate('viewed_at', Carbon::now()->subHours(3))
-                ->count();
+            $pageViewOnline = PageView::whereBetween('viewed_at', [$start, $end])->count();
             $pageViewToday = PageView::whereDate('viewed_at', Carbon::today())
                 ->count();
             $pageViewUrl = PageView::distinct('url')

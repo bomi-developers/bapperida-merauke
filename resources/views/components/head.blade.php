@@ -28,8 +28,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <!-- Favicon -->
-    <link rel="icon" href="{{ asset('assets/LogoKabMerauke.png') }}">
-
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/LogoKabMerauke.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/LogoKabMerauke.png') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/LogoKabMerauke.png') }}">
     <!-- Custom Style -->
     <style>
         body {

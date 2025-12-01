@@ -35,6 +35,7 @@
                         </div>
                     </div>
 
+
                     {{-- Carousel Gambar Berita (Sesuai Permintaan) --}}
                     @php
                         // Mengumpulkan semua gambar: cover image + semua item bertipe 'image'

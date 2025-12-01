@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use App\Jobs\CompressBeritaImage;
 use App\Models\Notifikasi;
 use App\Models\User;
+use Intervention\Image\Facades\Image;
 
 class BeritaController extends Controller
 {
@@ -197,11 +198,16 @@ class BeritaController extends Controller
             // 1. Siapkan data update untuk Berita
             $updateData = [
                 'title' => $validatedData['title'],
-                'slug' => Str::slug($validatedData['title']) . '-' . Str::random(5),
+                // 'slug' => Str::slug($validatedData['title']) . '-' . Str::random(5),
                 'excerpt' => $validatedData['excerpt'],
                 'status' => $validatedData['status'],
                 'page' => $validatedData['page'],
             ];
+            if ($berita->title !== $validatedData['title']) {
+                $updateData['slug'] = Str::slug($validatedData['title']) . '-' . Str::random(5);
+            } else {
+                $updateData['slug'] = $berita->slug;
+            }
 
             // 2. Handle upload Cover Image baru
             if ($request->hasFile('cover_image')) {

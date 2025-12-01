@@ -18,6 +18,28 @@
         if (search !== "") {
             finalUrl.searchParams.set("search", search);
         }
+        // loading table
+        document.getElementById('golongan-table').innerHTML = `
+                <div class="overflow-x-auto max-h-[75vh] overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700">
+                    <table class="w-full text-sm text-left text-gray-600 dark:text-gray-300">
+                        <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-200 sticky top-0 z-10">
+                             <tr>
+                                <th class="px-4 py-3">#</th>
+                                <th class="px-4 py-3">Kode Golongan</th>
+                                <th class="px-4 py-3">Nama Golongan</th>
+                                <th class="px-4 py-3 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4" class="text-center py-6 my-4">
+                                    <div class="w-10 h-10 border-4 border-gray-200 border-t-indigo-600 rounded-full animate-spin mx-auto"></div> Loading...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
 
         fetch(finalUrl)
             .then(res => res.json())

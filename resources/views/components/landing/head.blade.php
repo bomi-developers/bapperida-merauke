@@ -2,6 +2,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/LogoKabMerauke.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/LogoKabMerauke.png') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/LogoKabMerauke.png') }}">
 
     {{-- SEO Dynamic --}}
     <title>@yield('meta_title', 'BAPPERIDA Kabupaten Merauke')</title>
@@ -11,10 +14,12 @@
     {{-- Open Graph (Facebook, WhatsApp) --}}
     <meta property="og:title" content="@yield('meta_title', 'BAPPERIDA Kabupaten Merauke')">
     <meta property="og:description" content="@yield('meta_description', 'BAPPERIDA Kabupaten Merauke')">
-    <meta property="og:image" content="@yield('meta_image', asset('assets/LogoKabMerauke.png'))">
     <meta property="og:type" content="article">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
+    {{-- gambar  --}}
+    <meta property="og:image" content="@yield('meta_image', asset('assets/LogoKabMerauke.png'))">
+
 
     {{-- Twitter Card --}}
     <meta name="twitter:title" content="@yield('meta_title', 'BAPPERIDA Kabupaten Merauke')">

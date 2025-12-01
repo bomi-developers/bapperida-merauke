@@ -623,6 +623,31 @@
         if (search !== "") {
             finalUrl.searchParams.set("search", search);
         }
+        // loading table
+        document.getElementById('galeri-table').innerHTML = `
+                <div class="overflow-x-auto max-h-[75vh] overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700">
+                    <table class="w-full text-sm text-left text-gray-600 dark:text-gray-300">
+                        <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-200 sticky top-0 z-10">
+                           <tr>
+                                            <th scope="col" class="px-6 py-3">#</th>
+                                            <th scope="col" class="px-6 py-3">Cover</th>
+                                            <th scope="col" class="px-6 py-3 min-w-[300px]">Judul Album</th>
+                                            <th scope="col" class="px-6 py-3">Jumlah Item</th>
+                                            <th scope="col" class="px-6 py-3">Tanggal Dibuat</th>
+                                            <th scope="col" class="px-6 py-3">Status</th>
+                                            <th scope="col" class="px-6 py-3 text-center">Aksi</th>
+                                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="7" class="text-center py-6 my-4">
+                                    <div class="w-10 h-10 border-4 border-gray-200 border-t-indigo-600 rounded-full animate-spin mx-auto"></div> Loading...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
 
         fetch(finalUrl)
             .then(res => res.json())
