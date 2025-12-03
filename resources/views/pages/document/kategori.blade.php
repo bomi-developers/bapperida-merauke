@@ -225,7 +225,7 @@
                 document.getElementById('kategori-table').innerHTML = `
                 <div class="overflow-x-auto max-h-[75vh] overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700">
                     <table class="w-full text-sm text-left text-gray-600 dark:text-gray-300">
-                        <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-200 sticky top-0 z-10">
+                        <thead class="text-sm uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-200 sticky top-0 z-10">
                             <tr>
                                     <th class="px-4 py-3 w-14">#</th>
                                     <th class="px-4 py-3">Kategori</th>
