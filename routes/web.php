@@ -23,7 +23,9 @@ use App\Http\Controllers\LendingPageController;
 use App\Http\Controllers\ProfileDinasController;
 use App\Http\Controllers\UpdatePasswordController;
 use App\Http\Controllers\KategoriDocumentController;
+use App\Http\Controllers\OpdController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\UserController;
 
 // cache control
 
@@ -231,8 +233,14 @@ Route::middleware(['auth'])->group(function () {
       Route::post('pegawai', [\App\Http\Controllers\PegawaiController::class, 'store'])->name('pegawai.store');
       Route::put('pegawai/{pegawai}', [\App\Http\Controllers\PegawaiController::class, 'update'])->name('pegawai.update');
       Route::delete('pegawai/{pegawai}', [\App\Http\Controllers\PegawaiController::class, 'destroy'])->name('pegawai.destroy');
+      // opd
+      Route::get('opd', [OpdController::class, 'index'])->name('opd');
+      Route::get('opd/data', [OpdController::class, 'getData'])->name('opd.data');
+      Route::post('opd', [OpdController::class, 'store'])->name('opd.store');
+      Route::put('opd/{opd}', [OpdController::class, 'update'])->name('opd.update');
+      Route::delete('opd/{opd}', [OpdController::class, 'destroy'])->name('opd.destroy');
       // akun pegawai
-      Route::get('pegawai/akun', [\App\Http\Controllers\UserController::class, 'pegawai'])->name('pegawai.akun');
+      Route::get('pegawai/akun', [UserController::class, 'pegawai'])->name('pegawai.akun');
       // profile dinas
       Route::get('/profile-dinas', [ProfileDinasController::class, 'index'])->name('profile-dinas');
       Route::post('/profile-dinas', [ProfileDinasController::class, 'store'])->name('profile-dinas.store');
@@ -249,6 +257,7 @@ Route::middleware(['auth'])->group(function () {
       Route::get('view-logs', [PagesController::class, 'viewLogs'])->name('view-logs');
       // user pegawai
       Route::get('akun/{id}', [\App\Http\Controllers\UserController::class, 'cekAkun'])->name('akun.cek');
+      Route::get('akun/opd/{id}', [\App\Http\Controllers\UserController::class, 'cekAkunOpd'])->name('akun-opd.cek');
       Route::post('akun/store', [\App\Http\Controllers\UserController::class, 'store'])->name('akun.store');
       // user admin
       Route::get('user/admin', [\App\Http\Controllers\UserController::class, 'admin'])->name('user.admin');

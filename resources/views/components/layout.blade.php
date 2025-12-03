@@ -26,6 +26,7 @@
                             ['label' => 'Golongan', 'icon' => 'bi-bar-chart-steps', 'route' => 'admin.golongan'],
                             ['label' => 'Jabatan', 'icon' => 'bi-person-badge', 'route' => 'admin.jabatan'],
                             ['label' => 'Data Pegawai', 'icon' => 'bi-people-fill', 'route' => 'admin.pegawai'],
+                            ['label' => 'Data PD', 'icon' => 'bi-people-fill', 'route' => 'admin.opd'],
                         ],
                     ],
                     [
@@ -83,7 +84,7 @@
                         ],
                     ],
                 ];
-            } else {
+            } elseif (Auth::user()->role == 'pegawai') {
                 $menus = [
                     [
                         'title' => 'Menu',
@@ -104,25 +105,25 @@
                         ],
                     ],
                 ];
-                if (Auth::user()->role == 'admin' || Auth::user()->role == 'opd') {
-                    $labelRenja = Auth::user()->role == 'opd' ? 'Renja' : 'RKPD';
-                    $menus[] = [
-                        'title' => 'E-Reporting',
-                        'items' => [
-                            [
-                                'label' => 'Laporan Triwulan',
-                                'icon' => 'bi bi-calendar-check',
-                                'route' => 'triwulan.index',
-                            ],
-                            [
-                                'label' => $labelRenja,
-                                'icon' => 'bi bi-journal-text',
-                                'route' => 'renja.index',
-                            ],
+            } elseif (Auth::user()->role == 'admin' || Auth::user()->role == 'opd') {
+                $labelRenja = Auth::user()->role == 'opd' ? 'Renja' : 'RKPD';
+                $menus[] = [
+                    'title' => 'E-Reporting',
+                    'items' => [
+                        [
+                            'label' => 'Laporan Triwulan',
+                            'icon' => 'bi bi-calendar-check',
+                            'route' => 'triwulan.index',
                         ],
-                    ];
-                }
+                        [
+                            'label' => $labelRenja,
+                            'icon' => 'bi bi-journal-text',
+                            'route' => 'renja.index',
+                        ],
+                    ],
+                ];
             }
+
         @endphp
 
         <x-sidebar :menus="$menus" />

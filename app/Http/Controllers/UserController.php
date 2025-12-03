@@ -40,16 +40,37 @@ class UserController extends Controller
             'data' => $user
         ]);
     }
+    public function cekAkunOpd($id)
+    {
+        $user = User::where('id_opd', $id)->first();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Akun untuk pegawai belum ada, sikahkan mengisi form untuk membuat akun'
+            ], 200);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Akun ditemukan',
+            'data' => $user
+        ]);
+    }
     public function store(Request $request)
     {
         $request->validate([
-            'id_pegawai' => 'required|exists:pegawais,id',
+            'id_pegawai' => 'required',
             'username'   => 'required|string',
             'email'      => 'required|email',
             'role'       => 'required',
         ]);
 
-        $user = User::where('id_pegawai', $request->id_pegawai)->first();
+        if ($request->role == 'opd') {
+            $user = User::where('id_opd', $request->id_pegawai)->first();
+        } else {
+            $user = User::where('id_pegawai', $request->id_pegawai)->first();
+        }
 
         if ($user) {
             $request->validate([
@@ -72,19 +93,32 @@ class UserController extends Controller
                 'email' => 'required|email|unique:users,email',
             ]);
 
-            $user = User::create([
-                'id_pegawai' => $request->id_pegawai,
-                'name'       => $request->username,
-                'email'      => $request->email,
-                'role'       => $request->role,
-                'password'   => bcrypt('PegawaiBAPPERIDA'),
-            ]);
+            // $user = User::create([
+            //     'id_pegawai' => $request->id_pegawai,
+            //     'name'       => $request->username,
+            //     'email'      => $request->email,
+            //     'role'       => $request->role,
+            //     'password'   => bcrypt($request->role !== 'opd' ? 'PerangkatDaerahMerauke' : 'PegawaiBAPPERIDA'),
+            // ]);
+            $userData = [
+                'name'     => $request->username,
+                'email'    => $request->email,
+                'role'     => $request->role,
+                'password' => bcrypt($request->role !== 'opd' ? 'PerangkatDaerahMerauke' : 'PegawaiBAPPERIDA'),
+            ];
+
+            if ($request->role === 'opd') {
+                $userData['id_opd'] = $request->id_pegawai;
+            } else {
+                $userData['id_pegawai'] = $request->id_pegawai;
+            }
+            $user = User::create($userData);
 
             return response()->json([
                 'status'  => true,
                 'message' => 'Akun berhasil dibuat',
                 'data'    => $user
-            ], 201);
+            ], 200);
         }
     }
     public function admin_data(Request $request)

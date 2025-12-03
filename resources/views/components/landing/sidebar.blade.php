@@ -18,7 +18,11 @@
                focus:ring focus:ring-blue-700 bg-white text-black" />
         </div>
 
-        <div id="searchResults" class="mt-4 max-h-80 overflow-auto space-y-2"></div>
+        <div id="searchResults" class="mt-4 max-h-80 overflow-auto space-y-2">
+            <div id="searchSpinner" class="absolute inset-0 flex justify-center items-center bg-white/70 hidden">
+                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+            </div>
+        </div>
     </div>
 </div>
 <div id="dokumenOverlay"
@@ -41,7 +45,11 @@
                focus:ring focus:ring-blue-700 bg-white text-black" />
         </div>
 
-        <div id="dokumenResults" class="mt-4 max-h-80 overflow-auto space-y-2"></div>
+        <div id="dokumenResults" class="mt-4 max-h-80 overflow-auto space-y-2">
+            <div id="dokumenSpinner" class="absolute inset-0 flex justify-center items-center bg-white/70 hidden">
+                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+            </div>
+        </div>
     </div>
 </div>
 {{-- side nav --}}
@@ -155,6 +163,16 @@
         const showModalDokumen = document.getElementById('show-dokumen');
         const closeModalDokumen = document.querySelectorAll('.close-show-dokumen');
         const modalDokumenBox = document.getElementById('modalDokumenBox');
+        // loading
+        function showSpinner(spinnerId) {
+            const el = document.getElementById(spinnerId);
+            if (el) el.classList.remove('hidden');
+        }
+
+        function hideSpinner(spinnerId) {
+            const el = document.getElementById(spinnerId);
+            if (el) el.classList.add('hidden');
+        }
 
         // const openShowModalDokumen = () => showModalDokumen.classList.remove('hidden');
         // const closeShowModalDokumen = () => showModalDokumen.classList.add('hidden');
@@ -238,26 +256,36 @@
         // 🔍 Live Search OnInput
         searchInput.addEventListener('input', function() {
             let keyword = this.value.trim();
+            showSpinner('searchSpinner');
 
             if (keyword.length < 2) {
                 fetch(`/berita/data?top=5`)
                     .then(res => res.json())
-                    .then(res => renderResults(res.data));
+                    .then(res => {
+                        renderResults(res.data);
+                        hideSpinner('searchSpinner');
+                    });
             }
 
             fetch(`/berita/data?keyword=${encodeURIComponent(keyword)}`)
                 .then(res => res.json())
                 .then(res => {
                     renderResults(res.data);
+                    hideSpinner('searchSpinner');
                 });
         });
         dokumenInput.addEventListener('input', function() {
             let keyword = this.value.trim();
+            showSpinner('dokumenSpinner');
 
             if (keyword.length < 2) {
                 fetch(`/dokumen/data`)
                     .then(res => res.json())
-                    .then(res => renderResultsDokumen(res.data));
+                    .then(res => {
+                        renderResultsDokumen(res.data);
+                        hideSpinner('dokumenSpinner');
+                    });
+
             }
 
             fetch(`/dokumen/data?keyword=${encodeURIComponent(keyword)}`)
@@ -301,6 +329,7 @@
 
 
         function renderResults(items) {
+
             if (items.length === 0) {
                 searchResult.innerHTML = `
                     <div class="p-3 rounded-2xl bg-white border border-red-600  transition text-red-600 shadow-sm">
