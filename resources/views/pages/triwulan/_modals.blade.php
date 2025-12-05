@@ -69,7 +69,7 @@
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md p-6">
 
         <div class="flex justify-between items-center mb-5">
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Form Periode Triwulan</h3>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Form Periode Evaluasi</h3>
             <button onclick="closePeriodModal()"
                 class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
                 <i class="bi bi-x-lg text-lg"></i>
@@ -80,14 +80,14 @@
             @csrf
 
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tahun & Triwulan</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tahun & Evaluasi</label>
                 <div class="grid grid-cols-2 gap-3">
                     <select name="triwulan" id="period_triwulan"
                         class="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5">
-                        <option value="1">Triwulan 1</option>
-                        <option value="2">Triwulan 2</option>
-                        <option value="3">Triwulan 3</option>
-                        <option value="4">Triwulan 4</option>
+                        <option value="1">Evaluasi 1</option>
+                        <option value="2">Evaluasi 2</option>
+                        <option value="3">Evaluasi 3</option>
+                        <option value="4">Evaluasi 4</option>
                     </select>
                     <input type="number" name="tahun" id="period_tahun" value="{{ date('Y') }}"
                         class="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5">

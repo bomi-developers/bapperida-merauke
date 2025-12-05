@@ -51,7 +51,7 @@
                         'title' => 'E-Reporting',
                         'items' => [
                             [
-                                'label' => 'Laporan Triwulan',
+                                'label' => 'Laporan Evaluasi',
                                 'icon' => 'bi bi-calendar-check',
                                 'route' => 'triwulan.index',
                             ],
@@ -111,7 +111,7 @@
                     'title' => 'E-Reporting',
                     'items' => [
                         [
-                            'label' => 'Laporan Triwulan',
+                            'label' => 'Laporan Evaluasi',
                             'icon' => 'bi bi-calendar-check',
                             'route' => 'triwulan.index',
                         ],

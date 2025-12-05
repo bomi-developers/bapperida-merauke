@@ -4,7 +4,7 @@
 
         {{-- Header & Judul --}}
         <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
-            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">E-Reporting Triwulan</h2>
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">E-Reporting Evaluasi</h2>
         </div>
 
         {{-- NAVIGASI TAB --}}
@@ -163,7 +163,7 @@
                                     class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
                                         <th class="px-6 py-3">Tahun</th>
-                                        <th class="px-6 py-3">Triwulan</th>
+                                        <th class="px-6 py-3">Evaluasi</th>
                                         <th class="px-6 py-3">Durasi (Mulai - Selesai)</th>
                                         <th class="px-6 py-3 text-center">Status (Buka/Tutup)</th>
                                         <th class="px-6 py-3 text-center">Aksi</th>

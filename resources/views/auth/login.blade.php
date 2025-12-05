@@ -1,4 +1,30 @@
 <x-auth>
+    <style>
+        /* Hide default browser password reveal button */
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-ms-clear {
+            display: none;
+        }
+
+        input[type="password"]::-webkit-credentials-auto-fill-button {
+            /* visibility: hidden; pointer-events: none; position: absolute; right: 0; */
+        }
+
+        /* For some WebKit browsers */
+        input[type="password"]::-webkit-textfield-decoration-container {
+            /* */
+        }
+
+        /* Standard way to hide webkit reveal button if supported */
+        input[type="password"]::-webkit-contacts-auto-fill-button,
+        input[type="password"]::-webkit-credentials-auto-fill-button {
+            visibility: hidden;
+            pointer-events: none;
+            position: absolute;
+            right: 0;
+        }
+    </style>
+
     <div class="flex items-center justify-center min-h-screen p-4">
         <div class="w-full max-w-6xl mx-auto">
             <div class="bg-white rounded-2xl shadow-2xl grid grid-cols-1 lg:grid-cols-2 overflow-hidden">
@@ -64,19 +90,35 @@
                             <div class="relative">
                                 <input type="password" id="password" name="password" placeholder="Password"
                                     class="w-full bg-white border border-gray-300 rounded-lg py-3 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
-                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                    <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+
+                                <!-- Tombol Toggle Password -->
+                                <button type="button" onclick="togglePassword()"
+                                    class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-indigo-600 focus:outline-none">
+                                    <!-- Icon Mata (Show) -->
+                                    <svg id="eye-icon" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                                         <path fill-rule="evenodd"
-                                            d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
+                                            d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
                                             clip-rule="evenodd" />
                                     </svg>
-                                </div>
+                                    <!-- Icon Mata Dicoret (Hide) - Default Hidden -->
+                                    <svg id="eye-off-icon" class="w-5 h-5 hidden" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z"
+                                            clip-rule="evenodd" />
+                                        <path
+                                            d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.064 7 9.542 7 .847 0 1.669-.105 2.454-.303z" />
+                                    </svg>
+                                </button>
                             </div>
                         </div>
+
                         <div class="flex justify-center items-center">
                             {!! NoCaptcha::display() !!}
                         </div>
+
                         <!-- Tombol Login -->
                         <button type="submit"
                             class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
@@ -87,5 +129,24 @@
             </div>
         </div>
     </div>
+
     {!! NoCaptcha::renderJs() !!}
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eye-icon');
+            const eyeOffIcon = document.getElementById('eye-off-icon');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.add('hidden');
+                eyeOffIcon.classList.remove('hidden');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('hidden');
+                eyeOffIcon.classList.add('hidden');
+            }
+        }
+    </script>
 </x-auth>
