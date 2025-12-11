@@ -52,31 +52,70 @@
             form.querySelector('#file').setAttribute('required', 'required');
         };
 
-        const renderRow = (doc) => {
-            const coverUrl = doc.cover ? `{{ asset('storage') }}/${doc.cover}` :
+        const renderRow = (doc, iteration) => {
+            const storagePath = "{{ asset('storage') }}";
+            const coverUrl = doc.cover ? `${storagePath}/${doc.cover}` :
                 'https://placehold.co/100x60/e2e8f0/e2e8f0?text=No+Cover';
-            const downloadUrl = `{{ url('admin/documents') }}/${doc.id}/download`;
-            const kategoriNama = doc.kategori ? doc.kategori.nama_kategori : 'N/A';
+            const fileUrl = `${storagePath}/${doc.file}`;
+            const createdDate = new Date(doc.created_at).toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            });
+
+            const kategoriNama = (doc.kategori && doc.kategori.nama_kategori) ? doc.kategori.nama_kategori :
+                'Tidak Berkategori';
+
+            const downloadText = doc.download > 0 ? `${doc.download} Kali` : 'Belum Pernah';
+
             return `
-                <tr id="doc-row-${doc.id}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        <div class="flex items-center gap-4">
-                            <img src="${coverUrl}" alt="Cover" class="w-24 h-14 object-cover rounded-md flex-shrink-0">
-                            <span class="font-semibold">${doc.judul}</span>
-                        </div>
-                    </th>
-                    <td class="px-6 py-4">${kategoriNama}</td>
-                    <td class="px-6 py-4"><a href="${downloadUrl}" class="text-indigo-600 hover:underline">Unduh File</a></td>
-                    <td class="px-6 py-4 text-center">
-                        <div class="flex items-center justify-center space-x-4">
-                            <button class="show-btn font-medium text-green-600 dark:text-green-500 hover:underline" title="Detail" data-id="${doc.id}"><i class="bi bi-eye-fill text-base"></i></button>
-                            <button class="edit-btn font-medium text-indigo-600 dark:text-indigo-500 hover:underline" title="Edit" data-id="${doc.id}"><i class="bi bi-pencil-square text-base"></i></button>
-                            <button class="delete-btn font-medium text-red-600 dark:text-red-500 hover:underline" title="Hapus" data-id="${doc.id}"><i class="bi bi-trash text-base"></i></button>
-                        </div>
-                    </td>
-                </tr>
-            `;
+                        <tr id="doc-row-${doc.id}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <td class="px-6 py-4">${iteration}</td>
+                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <div class="flex items-center gap-4">
+                                    <img src="${coverUrl}" alt="Cover" class="w-24 h-14 object-cover rounded-md flex-shrink-0">
+                                    <div>
+                                        <span class="font-bold text-lg">${doc.judul}</span><br>
+                                        <small>${createdDate}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="bg-indigo-200 dark:bg-indigo-600 px-2 py-1 text-indigo-800 dark:text-indigo-200 rounded-xl">
+                                    ${kategoriNama}
+                                </span>
+                            </td>
+                            
+                            {{-- ... (Sisa kolom Download, File, Aksi tetap sama) ... --}}
+                            
+                            <td class="px-6 py-4">
+                                <span class="px-3 py-2 text-md rounded-full transition-all duration-200 border border-opacity-50 bg-yellow-100 text-yellow-700 border-yellow-300 dark:bg-yellow-900 dark:text-yellow-300 dark:border-yellow-700">
+                                    ${downloadText}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <a href="${fileUrl}" target="_blank"
+                                    class="inline-flex items-center gap-1 px-3 py-2 text-md rounded-full transition-all duration-200 border border-opacity-50 bg-green-100 text-green-700 border-green-300 hover:bg-green-200 dark:bg-green-900 dark:text-green-300 dark:border-green-700">
+                                    <i class="bi bi-folder2-open text-lg"></i> Lihat File
+                                </a>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <div class="flex items-center justify-center space-x-4">
+                                    <button class="show-btn p-2 rounded-lg text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900 transition" title="Detail" data-id="${doc.id}">
+                                        <i class="bi bi-eye-fill text-base"></i>
+                                    </button>
+                                    <button class="edit-btn p-2 rounded-lg text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900 transition" title="Edit" data-id="${doc.id}">
+                                        <i class="bi bi-pencil-square text-base"></i>
+                                    </button>
+                                    <button class="delete-btn p-2 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900 transition" title="Hapus" data-id="${doc.id}">
+                                        <i class="bi bi-trash text-base"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
         };
+
 
         const updateMisiLabels = () => {
             const misiLabels = lainnyaContainer.querySelectorAll('[data-type="misi"] label');

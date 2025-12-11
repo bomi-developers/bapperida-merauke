@@ -14,20 +14,42 @@ use Illuminate\Support\Facades\Validator;
 
 class DocumentController extends Controller
 {
-    /**
-     * Menampilkan halaman manajemen dokumen.
-     */
     public function index(Request $request)
     {
-        $query = Document::query();
-        if ($request->filled('search')) {
-            $searchTerm = $request->search;
-            $query->where('judul', 'like', $searchTerm . '%');
+        // Ambil data kategori untuk dropdown filter
+        $kategori = KategoriDocument::all();
+
+        // JIKA REQUEST AJAX (SEARCH/FILTER/PAGINATION)
+        if ($request->ajax()) {
+            // Mulai query dengan Eager Loading 'kategori' agar nama kategori terbawa
+            $query = Document::with('kategori');
+
+            // 1. Filter Search (Judul)
+            if ($request->filled('search')) {
+                $query->where('judul', 'like', '%' . $request->search . '%');
+            }
+
+            // 2. Filter Tanggal
+            if ($request->filled('start_date') && $request->filled('end_date')) {
+                $query->whereBetween('created_at', [$request->start_date, $request->end_date]);
+            }
+
+            // 3. Filter Kategori (Dropdown)
+            if ($request->filled('kategori_id')) {
+                $query->where('kategori_document_id', $request->kategori_id);
+            }
+
+            // Default Order & Pagination
+            $documents = $query->latest()->paginate(10);
+
+            return response()->json($documents);
         }
-        $documents = $query->latest()->paginate(20);
-        $kategori = KategoriDocument::orderBy('nama_kategori')->get();
+
+        $documents = Document::with('kategori')->latest()->paginate(10);
+
         return view('pages.document.index', compact('documents', 'kategori'));
     }
+
     public function getDokumen(Request $request)
     {
         $search = $request->keyword ?? '';

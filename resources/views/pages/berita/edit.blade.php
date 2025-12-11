@@ -110,8 +110,7 @@
                         class="bg-white dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md">
                         <div class="mb-4">
                             <label class="form-label">Status</label>
-                            <div class="relative
-                            w-full">
+                            <div class="relative w-full">
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                     <i class="bi bi-check-circle-fill text-gray-400 dark:text-gray-500"></i>
                                 </div>
@@ -120,13 +119,21 @@
                             focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 
                             block w-full pl-10 pr-10 p-2.5 shadow-sm cursor-pointer transition-all duration-200
                             dark:bg-gray-800 dark:border-gray-600 dark:text-white">
-                                    <option value="draft" @selected(old('status', $berita->status) == 'draft')>Draft</option>
-                                    <option value="published" @selected(old('status', $berita->status) == 'published')>Published</option>
+                                    <option value="draft" @selected(old('status') == 'draft')>Draft</option>
+
+                                    {{-- LOGIKA BARU: Hanya Super Admin yang bisa melihat opsi Published --}}
+                                    @if (Auth::user()->role == 'super_admin')
+                                        <option value="published" @selected(old('status') == 'published')>Published</option>
+                                    @endif
                                 </select>
                                 <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                                     <i class="bi bi-chevron-down text-xs text-gray-500 dark:text-gray-400"></i>
                                 </div>
                             </div>
+                            @if (Auth::user()->role != 'super_admin')
+                                <p class="mt-1 text-xs text-gray-500 italic">Hanya Super Admin yang dapat
+                                    mempublikasikan berita.</p>
+                            @endif
                         </div>
                         <div class="mb-4">
                             <label class="form-label">Halaman</label>

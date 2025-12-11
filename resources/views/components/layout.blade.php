@@ -13,41 +13,87 @@
     <div class="flex h-screen bg-slate-100 dark:bg-slate-900">
         <!-- ===== Sidebar Start ===== -->
         @php
-            if (Auth::user()->role == 'super_admin') {
-                $menus = [
-                    [
-                        'title' => 'Menu',
-                        'items' => [['label' => 'Dashboard', 'icon' => 'bi-grid-1x2-fill', 'route' => 'home']],
+            $userRole = Auth::user()->role;
+            $menus = [];
+
+            $menus[] = [
+                'title' => 'Menu',
+                'items' => [['label' => 'Dashboard', 'icon' => 'bi-grid-1x2-fill', 'route' => 'home']],
+            ];
+
+            if ($userRole == 'super_admin') {
+                $menus[] = [
+                    'title' => 'Pegawai',
+                    'items' => [
+                        ['label' => 'Bidang', 'icon' => 'bi-building', 'route' => 'admin.bidang.index'],
+                        ['label' => 'Golongan', 'icon' => 'bi-bar-chart-steps', 'route' => 'admin.golongan'],
+                        ['label' => 'Jabatan', 'icon' => 'bi-person-badge', 'route' => 'admin.jabatan'],
+                        ['label' => 'Data Pegawai', 'icon' => 'bi-people-fill', 'route' => 'admin.pegawai'],
+                        ['label' => 'Data PD', 'icon' => 'bi-people-fill', 'route' => 'admin.opd'],
                     ],
-                    [
-                        'title' => 'Pegawai',
-                        'items' => [
-                            ['label' => 'Bidang', 'icon' => 'bi-building', 'route' => 'admin.bidang.index'],
-                            ['label' => 'Golongan', 'icon' => 'bi-bar-chart-steps', 'route' => 'admin.golongan'],
-                            ['label' => 'Jabatan', 'icon' => 'bi-person-badge', 'route' => 'admin.jabatan'],
-                            ['label' => 'Data Pegawai', 'icon' => 'bi-people-fill', 'route' => 'admin.pegawai'],
-                            ['label' => 'Data PD', 'icon' => 'bi-people-fill', 'route' => 'admin.opd'],
+                ];
+                $menus[] = [
+                    'title' => 'Information',
+                    'items' => [
+                        ['label' => 'Berita', 'icon' => 'bi bi-person-lines-fill', 'route' => 'admin.berita.index'],
+                        ['label' => 'Galeri', 'icon' => 'bi bi-image', 'route' => 'admin.galeri.index'],
+                    ],
+                ];
+                $menus[] = [
+                    'title' => 'Document Management',
+                    'items' => [
+                        [
+                            'label' => 'Kategori Dokumen',
+                            'icon' => 'bi bi-folder',
+                            'route' => 'admin.doctkategori.index',
                         ],
+                        ['label' => 'Dokumen', 'icon' => 'bi bi-file-earmark', 'route' => 'admin.documents.index'],
                     ],
-                    [
-                        'title' => 'Information',
-                        'items' => [
-                            ['label' => 'Berita', 'icon' => 'bi bi-person-lines-fill', 'route' => 'admin.berita.index'],
-                            ['label' => 'Galeri', 'icon' => 'bi bi-image', 'route' => 'admin.galeri.index'],
-                        ],
+                ];
+                $menus[] = [
+                    'title' => 'E-Reporting',
+                    'items' => [
+                        ['label' => 'Laporan Evaluasi', 'icon' => 'bi bi-calendar-check', 'route' => 'triwulan.index'],
+                        ['label' => 'Renja & RKPD', 'icon' => 'bi bi-journal-text', 'route' => 'renja.index'],
                     ],
-                    [
-                        'title' => 'Document Management',
-                        'items' => [
-                            [
-                                'label' => 'Kategori Dokumen',
-                                'icon' => 'bi bi-folder',
-                                'route' => 'admin.doctkategori.index',
-                            ],
-                            ['label' => 'Dokumen', 'icon' => 'bi bi-file-earmark', 'route' => 'admin.documents.index'],
-                        ],
+                ];
+                $menus[] = [
+                    'title' => 'Settings',
+                    'items' => [
+                        ['label' => 'Landing Setting', 'icon' => 'bi-gear', 'route' => 'admin.lending.index'],
+                        ['label' => 'Akun Setting', 'icon' => 'bi-person-badge', 'route' => 'profile'],
+                        ['label' => 'Profile Dinas', 'icon' => 'bi-info-circle-fill', 'route' => 'website-setting'],
                     ],
-                    [
+                ];
+                $menus[] = [
+                    'title' => 'Administrator',
+                    'items' => [['label' => 'Super Admin', 'icon' => 'bi-people', 'route' => 'admin.user.admin']],
+                ];
+                $menus[] = [
+                    'title' => 'Tracker System',
+                    'items' => [
+                        ['label' => 'Log Login', 'icon' => 'bi-box-arrow-in-right', 'route' => 'admin.login-logs'],
+                        ['label' => 'Log Aktivitas', 'icon' => 'bi-activity', 'route' => 'admin.activity-logs'],
+                        ['label' => 'Log Tampilan', 'icon' => 'bi-eye-fill', 'route' => 'admin.view-logs'],
+                    ],
+                ];
+            } elseif ($userRole == 'admin' || $userRole == 'pegawai') {
+                $menus[] = [
+                    'title' => 'Information',
+                    'items' => [
+                        ['label' => 'Berita', 'icon' => 'bi bi-person-lines-fill', 'route' => 'admin.berita.index'],
+                        ['label' => 'Galeri', 'icon' => 'bi bi-image', 'route' => 'admin.galeri.index'],
+                    ],
+                ];
+                $menus[] = [
+                    'title' => 'Document Management',
+                    'items' => [
+                        ['label' => 'Dokumen', 'icon' => 'bi bi-file-earmark', 'route' => 'admin.documents.index'],
+                    ],
+                ];
+
+                if ($userRole == 'admin') {
+                    $menus[] = [
                         'title' => 'E-Reporting',
                         'items' => [
                             [
@@ -55,75 +101,19 @@
                                 'icon' => 'bi bi-calendar-check',
                                 'route' => 'triwulan.index',
                             ],
-                            [
-                                'label' => 'Renja',
-                                'icon' => 'bi bi-calendar-check',
-                                'route' => 'renja.index',
-                            ],
+                            ['label' => 'RKPD', 'icon' => 'bi bi-journal-text', 'route' => 'renja.index'],
                         ],
-                    ],
-                    [
-                        'title' => 'Settings',
-                        'items' => [
-                            ['label' => 'Landing Setting', 'icon' => 'bi-gear', 'route' => 'admin.lending.index'],
-                            ['label' => 'Akun Setting', 'icon' => 'bi-person-badge', 'route' => 'profile'],
-                            ['label' => 'Profile Dinas', 'icon' => 'bi-info-circle-fill', 'route' => 'website-setting'],
-                        ],
-                    ],
-                    [
-                        'title' => 'Administrator',
-                        'items' => [['label' => 'Super Admin', 'icon' => 'bi-people', 'route' => 'admin.user.admin']],
-                    ],
-
-                    [
-                        'title' => 'Tracker System',
-                        'items' => [
-                            ['label' => 'Log Login', 'icon' => 'bi-box-arrow-in-right', 'route' => 'admin.login-logs'],
-                            ['label' => 'Log Aktivitas', 'icon' => 'bi-activity', 'route' => 'admin.activity-logs'],
-                            ['label' => 'Log Tampilan', 'icon' => 'bi-eye-fill', 'route' => 'admin.view-logs'],
-                        ],
-                    ],
-                ];
-            } elseif (Auth::user()->role == 'pegawai') {
-                $menus = [
-                    [
-                        'title' => 'Menu',
-                        'items' => [['label' => 'Dashboard', 'icon' => 'bi-grid-1x2-fill', 'route' => 'home']],
-                    ],
-
-                    [
-                        'title' => 'Information',
-                        'items' => [
-                            ['label' => 'Berita', 'icon' => 'bi bi-person-lines-fill', 'route' => 'admin.berita.index'],
-                            ['label' => 'Galeri', 'icon' => 'bi bi-image', 'route' => 'admin.galeri.index'],
-                        ],
-                    ],
-                    [
-                        'title' => 'Document Management',
-                        'items' => [
-                            ['label' => 'Dokumen', 'icon' => 'bi bi-file-earmark', 'route' => 'admin.documents.index'],
-                        ],
-                    ],
-                ];
-            } elseif (Auth::user()->role == 'admin' || Auth::user()->role == 'opd') {
-                $labelRenja = Auth::user()->role == 'opd' ? 'Renja' : 'RKPD';
+                    ];
+                }
+            } elseif ($userRole == 'opd') {
                 $menus[] = [
                     'title' => 'E-Reporting',
                     'items' => [
-                        [
-                            'label' => 'Laporan Evaluasi',
-                            'icon' => 'bi bi-calendar-check',
-                            'route' => 'triwulan.index',
-                        ],
-                        [
-                            'label' => $labelRenja,
-                            'icon' => 'bi bi-journal-text',
-                            'route' => 'renja.index',
-                        ],
+                        ['label' => 'Laporan Evaluasi', 'icon' => 'bi bi-calendar-check', 'route' => 'triwulan.index'],
+                        ['label' => 'Renja', 'icon' => 'bi bi-journal-text', 'route' => 'renja.index'],
                     ],
                 ];
             }
-
         @endphp
 
         <x-sidebar :menus="$menus" />
