@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Berita;
 use App\Models\KategoriDocument;
 use App\Models\LendingPage;
+use App\Models\Pegawai;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -60,7 +61,8 @@ class HomeController extends Controller
     }
     public function pegawai()
     {
-        return view('landing_page.about.pegawai', [
+        $pegawai = Pegawai::with(['bidang', 'golongan'])->get();
+        return view('landing_page.about.pegawai', compact('pegawai') +  [
             'meta_title'       => 'Pegawai BAPPERIDA MERAUKE',
             'meta_description' => 'Pegawai Bappperida MERAUKE',
         ]);

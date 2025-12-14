@@ -29,6 +29,7 @@
                            <tr>
                                     <th class="px-4 py-3 w-14">#</th>
                                     <th class="px-4 py-3">Nama Bidang</th>
+                                    <th class="px-4 py-3">Home</th>
                                     <th class="px-4 py-3">Deskripsi</th>
                                     <th class="px-4 py-3 text-center w-28">Aksi</th>
                                 </tr>
@@ -55,6 +56,7 @@
                                 <tr>
                                     <th class="px-4 py-3 w-14">#</th>
                                     <th class="px-4 py-3">Nama Bidang</th>
+                                    <th class="px-4 py-3">Home</th>
                                     <th class="px-4 py-3">Deskripsi</th>
                                     <th class="px-4 py-3 text-center w-28">Aksi</th>
                                 </tr>
@@ -70,10 +72,11 @@
                             <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition">
                                 <td class="px-4 py-3">${i + 1}</td>
                                 <td class="px-4 py-3 font-medium">${b.nama_bidang}</td>
+                                <td class="px-4 py-3">${b.tampilkan == true ? '<span class="bg-indigo-200 dark:bg-indigo-600 px-2 py-1 text-indigo-800 dark:text-indigo-200 rounded-xl">Tampil</span>' :'<span class="bg-red-200 dark:bg-red-600 px-2 py-1 text-red-800 dark:text-red-200 rounded-xl">Sembunyikan</span>'}</td>
                                 <td class="px-4 py-3">${b.deskripsi ?? ''}</td>
 
                                 <td class="px-4 py-3 flex justify-center gap-2">
-                                    <button onclick="editBidang(${b.id}, '${b.nama_bidang}', '${b.deskripsi ?? ''}')"
+                                    <button onclick="editBidang(${b.id}, '${b.nama_bidang}', '${b.deskripsi ?? ''}', ${b.tampilkan ?? ''} )"
                                         class="p-2 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900 text-blue-600 dark:text-blue-400 transition"
                                         title="Edit">
                                         <i class="bi bi-pencil-square text-lg"></i>
@@ -153,15 +156,18 @@
         document.getElementById('bidang_id').value = "";
         document.getElementById('nama_bidang').value = "";
         document.getElementById('deskripsi').value = "";
+        document.getElementById('tampilkan').value = "";
         document.getElementById('formModal').classList.remove('hidden');
     }
 
     // 🔹 Edit Form
-    function editBidang(id, nama, desk) {
+    function editBidang(id, nama, desk, tampil) {
         document.getElementById('modalTitle').innerText = "Edit Bidang";
         document.getElementById('bidang_id').value = id;
         document.getElementById('nama_bidang').value = nama;
         document.getElementById('deskripsi').value = desk;
+        document.getElementById('deskripsi').value = desk;
+        document.getElementById('tampilkan').value = tampil;
         document.getElementById('formModal').classList.remove('hidden');
     }
 
@@ -180,7 +186,8 @@
 
         const data = {
             nama_bidang: document.getElementById('nama_bidang').value,
-            deskripsi: document.getElementById('deskripsi').value
+            deskripsi: document.getElementById('deskripsi').value,
+            tampilkan: document.getElementById('tampilkan').value
         };
 
         fetch(url, {

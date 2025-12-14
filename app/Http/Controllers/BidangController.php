@@ -31,9 +31,10 @@ class BidangController extends Controller
         $request->validate([
             'nama_bidang' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
+            'tampilkan' => 'nullable',
         ]);
 
-        $bidang = Bidang::create($request->only('nama_bidang', 'deskripsi'));
+        $bidang = Bidang::create($request->only('nama_bidang', 'deskripsi', 'tampilkan'));
 
         return response()->json(['success' => true, 'message' => 'Bidang berhasil ditambahkan', 'data' => $bidang]);
     }
@@ -43,9 +44,10 @@ class BidangController extends Controller
         $request->validate([
             'nama_bidang' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
+            'tampilkan' => 'nullable',
         ]);
 
-        $bidang->update($request->only('nama_bidang', 'deskripsi'));
+        $bidang->update($request->only('nama_bidang', 'deskripsi', 'tampilkan'));
 
         return response()->json(['success' => true, 'message' => 'Bidang berhasil diupdate', 'data' => $bidang]);
     }
