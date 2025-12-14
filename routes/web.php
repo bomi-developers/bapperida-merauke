@@ -210,11 +210,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/ganti-password', [UpdatePasswordController::class, 'update'])->name('password.update');
 
     Route::middleware('role:super_admin')->group(function () {
-      Route::get('bidang', [\App\Http\Controllers\BidangController::class, 'index'])->name('bidang.index');
-      Route::get('bidang/data', [\App\Http\Controllers\BidangController::class, 'getData'])->name('bidang.data');
-      Route::post('bidang', [\App\Http\Controllers\BidangController::class, 'store'])->name('bidang.store');
-      Route::put('bidang/{bidang}', [\App\Http\Controllers\BidangController::class, 'update'])->name('bidang.update');
-      Route::delete('bidang/{bidang}', [\App\Http\Controllers\BidangController::class, 'destroy'])->name('bidang.destroy');
+      Route::get('bidang', [BidangController::class, 'index'])->name('bidang.index');
+      Route::get('bidang/data', [BidangController::class, 'getData'])->name('bidang.data');
+      Route::post('bidang', [BidangController::class, 'store'])->name('bidang.store');
+      Route::put('bidang/{bidang}', [BidangController::class, 'update'])->name('bidang.update');
+      Route::delete('bidang/{bidang}', [BidangController::class, 'destroy'])->name('bidang.destroy');
+      Route::post('bidang/{bidang}/urutan', [BidangController::class, 'updateUrutan'])->name('admin.bidang.urutan');
       // golongan
       Route::get('golongan', [\App\Http\Controllers\GolonganController::class, 'index'])->name('golongan');
       Route::get('golongan/data', [\App\Http\Controllers\GolonganController::class, 'getData'])->name('golongan.data');

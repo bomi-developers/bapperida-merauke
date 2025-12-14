@@ -10,5 +10,5 @@ class Bidang extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nama_bidang', 'deskripsi', 'tampilkan'];
+    protected $fillable = ['nama_bidang', 'deskripsi', 'tampilkan', 'urutan'];
 }

@@ -21,30 +21,31 @@
         if (search !== "") {
             finalUrl.searchParams.set("search", search);
         }
+
         // loading table
         document.getElementById('bidang-table').innerHTML = `
-                <div class="overflow-x-auto max-h-[75vh] overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700">
-                    <table class="w-full text-sm text-left text-gray-600 dark:text-gray-300">
-                        <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-200 sticky top-0 z-10">
-                           <tr>
-                                    <th class="px-4 py-3 w-14">#</th>
-                                    <th class="px-4 py-3">Nama Bidang</th>
-                                    <th class="px-4 py-3">Home</th>
-                                    <th class="px-4 py-3">Deskripsi</th>
-                                    <th class="px-4 py-3 text-center w-28">Aksi</th>
-                                </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td colspan="4" class="text-center py-6 my-4">
-                                    <div class="w-10 h-10 border-4 border-gray-200 border-t-indigo-600 rounded-full animate-spin mx-auto"></div> Loading...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            `;
-
+            <div class="overflow-x-auto max-h-[75vh] overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700">
+                <table class="w-full text-sm text-left text-gray-600 dark:text-gray-300">
+                    <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-200 sticky top-0 z-10">
+                       <tr>
+                            <th class="px-4 py-3 w-14">#</th>
+                            <th class="px-4 py-3 w-20 text-center">Urutan</th>
+                            <th class="px-4 py-3">Nama Bidang</th>
+                            <th class="px-4 py-3">Home</th>
+                            <th class="px-4 py-3">Deskripsi</th>
+                            <th class="px-4 py-3 text-center w-32">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="6" class="text-center py-6 my-4">
+                                <div class="w-10 h-10 border-4 border-gray-200 border-t-indigo-600 rounded-full animate-spin mx-auto"></div> Loading...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        `;
 
         fetch(finalUrl)
             .then(res => res.json())
@@ -55,10 +56,11 @@
                             <thead class="sticky top-0 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 uppercase text-xs font-semibold">
                                 <tr>
                                     <th class="px-4 py-3 w-14">#</th>
+                                    <th class="px-4 py-3 w-20 text-center">Urutan</th>
                                     <th class="px-4 py-3">Nama Bidang</th>
                                     <th class="px-4 py-3">Home</th>
                                     <th class="px-4 py-3">Deskripsi</th>
-                                    <th class="px-4 py-3 text-center w-28">Aksi</th>
+                                    <th class="px-4 py-3 text-center w-32">Aksi</th>
                                 </tr>
                             </thead>
 
@@ -68,9 +70,28 @@
                 // 🔹 Jika Ada Data
                 if (res.data.length > 0) {
                     res.data.forEach((b, i) => {
+                        const isFirst = i === 0;
+                        const isLast = i === res.data.length - 1;
+
                         html += `
                             <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition">
                                 <td class="px-4 py-3">${i + 1}</td>
+                                <td class="px-4 py-3">
+                                    <div class="flex justify-center gap-1">
+                                        <button onclick="changeUrutan(${b.id}, 'up')" 
+                                            ${isFirst ? 'disabled' : ''}
+                                            class="p-1 rounded ${isFirst ? 'text-gray-300 dark:text-gray-600 cursor-not-allowed' : 'text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900'} transition"
+                                            title="Naik">
+                                            <i class="bi bi-arrow-up-circle-fill text-lg"></i>
+                                        </button>
+                                        <button onclick="changeUrutan(${b.id}, 'down')"
+                                            ${isLast ? 'disabled' : ''}
+                                            class="p-1 rounded ${isLast ? 'text-gray-300 dark:text-gray-600 cursor-not-allowed' : 'text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900'} transition"
+                                            title="Turun">
+                                            <i class="bi bi-arrow-down-circle-fill text-lg"></i>
+                                        </button>
+                                    </div>
+                                </td>
                                 <td class="px-4 py-3 font-medium">${b.nama_bidang}</td>
                                 <td class="px-4 py-3">${b.tampilkan == true ? '<span class="bg-indigo-200 dark:bg-indigo-600 px-2 py-1 text-indigo-800 dark:text-indigo-200 rounded-xl">Tampil</span>' :'<span class="bg-red-200 dark:bg-red-600 px-2 py-1 text-red-800 dark:text-red-200 rounded-xl">Sembunyikan</span>'}</td>
                                 <td class="px-4 py-3">${b.deskripsi ?? ''}</td>
@@ -94,7 +115,7 @@
                 } else {
                     html += `
                         <tr>
-                            <td colspan="4" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
+                            <td colspan="6" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
                                 Tidak ada data
                             </td>
                         </tr>`;
@@ -108,7 +129,7 @@
                     <div class="mt-4 flex flex-wrap gap-2 justify-start">
                 `;
 
-                // 🔹 Pagination kiri
+                // 🔹 Pagination
                 res.links.forEach(link => {
                     let buttonUrl = link.url;
 
@@ -132,12 +153,10 @@
                     }
                 });
 
-
                 html += `</div>`;
 
                 document.getElementById('bidang-table').innerHTML = html;
             })
-
             .catch(err => {
                 console.error(err);
                 Swal.fire({
@@ -150,13 +169,48 @@
             });
     }
 
+    // 🔹 Fungsi Ubah Urutan
+    function changeUrutan(id, direction) {
+        fetch(`/admin/bidang/${id}/urutan`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    direction
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.success) {
+                    Toast.fire({
+                        icon: 'success',
+                        title: res.message
+                    });
+                    loadData();
+                } else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: res.message
+                    });
+                }
+            })
+            .catch(err => {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Gagal mengubah urutan'
+                });
+            });
+    }
+
     // 🔹 Open Form
     function openCreateForm() {
         document.getElementById('modalTitle').innerText = "Tambah Bidang";
         document.getElementById('bidang_id').value = "";
         document.getElementById('nama_bidang').value = "";
         document.getElementById('deskripsi').value = "";
-        document.getElementById('tampilkan').value = "";
+        document.getElementById('tampilkan').value = "1";
         document.getElementById('formModal').classList.remove('hidden');
     }
 
@@ -165,7 +219,6 @@
         document.getElementById('modalTitle').innerText = "Edit Bidang";
         document.getElementById('bidang_id').value = id;
         document.getElementById('nama_bidang').value = nama;
-        document.getElementById('deskripsi').value = desk;
         document.getElementById('deskripsi').value = desk;
         document.getElementById('tampilkan').value = tampil;
         document.getElementById('formModal').classList.remove('hidden');

@@ -18,9 +18,11 @@
 
             {{-- Konten Pegawai --}}
             <div class="relative z-10 space-y-12">
-                @foreach ($pegawai->groupBy('id_bidang') as $id_bidang => $pegawaiGroup)
+                @foreach ($pegawai->groupBy('id_bidang')->sortBy(function ($group) {
+        return $group->first()->bidang->urutan ?? 999;
+    }) as $id_bidang => $pegawaiGroup)
                     {{-- Section per Bidang --}}
-                    <div class="group">
+                    <div class="group ">
                         {{-- Nama Bidang --}}
                         <div class="flex items-center mb-8">
                             <div class="flex-grow border-t-2 border-gray-200"></div>
@@ -34,12 +36,13 @@
                         </div>
 
                         {{-- Grid Pegawai --}}
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 ">
                             @foreach ($pegawaiGroup as $employee)
                                 <div
                                     class="group/card relative bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-[#CCFF00] transform hover:-translate-y-2">
                                     {{-- Decorative Top Border --}}
-                                    <div class="h-2 bg-gradient-to-r from-[#004299] via-blue-500 to-[#CCFF00]"></div>
+                                    <div class="h-2 bg-gradient-to-r from-[#004299] via-blue-500 to-[#CCFF00]">
+                                    </div>
 
                                     {{-- Card Content --}}
                                     <div class="p-6">
