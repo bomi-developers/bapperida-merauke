@@ -216,6 +216,14 @@ Route::middleware(['auth'])->group(function () {
       Route::put('bidang/{bidang}', [BidangController::class, 'update'])->name('bidang.update');
       Route::delete('bidang/{bidang}', [BidangController::class, 'destroy'])->name('bidang.destroy');
       Route::post('bidang/{bidang}/urutan', [BidangController::class, 'updateUrutan'])->name('admin.bidang.urutan');
+      // proposal
+      Route::get('/proposal', [ProposalController::class, 'index'])->name('proposal.index');
+      Route::get('/proposal/data', [ProposalController::class, 'getData'])->name('proposal.data');
+      Route::get('/proposal/{id}', [ProposalController::class, 'show'])->name('proposal.show');
+      Route::put('/proposal/{id}/status', [ProposalController::class, 'updateStatus'])->name('proposal.status');
+      Route::get('/proposal/{id}/download', [ProposalController::class, 'download'])->name('proposal.download');
+      Route::delete('/proposal/{id}', [ProposalController::class, 'destroy'])->name('proposal.destroy');
+      Route::get('/proposal/export', [ProposalController::class, 'export'])->name('proposal.export');
       // golongan
       Route::get('golongan', [\App\Http\Controllers\GolonganController::class, 'index'])->name('golongan');
       Route::get('golongan/data', [\App\Http\Controllers\GolonganController::class, 'getData'])->name('golongan.data');

@@ -321,6 +321,11 @@
                     url: "/admin/documents"
                 },
                 {
+                    icon: "bi bi-file-earmark-text-fill",
+                    name: "Proposal Inovasi",
+                    url: "/admin/proposal"
+                },
+                {
                     icon: "bi bi-people-fill",
                     name: "Pegawai",
                     url: "/admin/pegawai"

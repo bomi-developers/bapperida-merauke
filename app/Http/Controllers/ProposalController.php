@@ -10,9 +10,124 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\ProposalInovasiMail;
 use App\Models\Notifikasi;
 use Exception;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProposalController extends Controller
 {
+    public function index()
+    {
+
+        return view('pages.proposal_inovasi.index');
+    }
+    public function getData(Request $request)
+    {
+        $query = ProposalInovasi::query();
+
+        // Search
+        if ($request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('nama', 'like', '%' . $request->search . '%')
+                    ->orWhere('email', 'like', '%' . $request->search . '%')
+                    ->orWhere('judul', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // Filter by status
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
+
+        // Filter by date
+        if ($request->date) {
+            $query->whereDate('created_at', $request->date);
+        }
+
+        $proposals = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        // Stats
+        $stats = [
+            'total' => ProposalInovasi::count(),
+            'pending' => ProposalInovasi::where('status', 'pending')->count(),
+            'approved' => ProposalInovasi::where('status', 'approved')->count(),
+            'rejected' => ProposalInovasi::where('status', 'rejected')->count(),
+        ];
+
+        return response()->json([
+            'data' => $proposals->items(),
+            'links' => $proposals->linkCollection()->toArray(),
+            'stats' => $stats
+        ]);
+    }
+    public function show($id)
+    {
+        $proposal = ProposalInovasi::findOrFail($id);
+        return response()->json($proposal);
+    }
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,approved,rejected',
+            'catatan' => 'nullable|string'
+        ]);
+
+        $proposal = ProposalInovasi::findOrFail($id);
+        $proposal->update([
+            'status' => $request->status,
+            'catatan' => $request->catatan
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status berhasil diupdate'
+        ]);
+    }
+    public function download($id)
+    {
+        $proposal = ProposalInovasi::findOrFail($id);
+
+        // Validasi file
+        if (!$proposal->file_path || !Storage::disk('public')->exists($proposal->file_path)) {
+            return back()->with('error', 'File tidak ditemukan atau telah dihapus.');
+        }
+
+        // Path fisik file
+        $path = storage_path('app/public/' . $proposal->file_path);
+
+        // (Opsional) simpan notifikasi
+        Notifikasi::create([
+            'title'   => 'Download proposal inovasi',
+            'message' => 'Pengguna mendownload proposal : ' . $proposal->judul,
+        ]);
+
+        // Nama file saat diunduh (SEO & user friendly)
+        $slug = Str::slug($proposal->judul ?? 'proposal-inovasi');
+        $extension = pathinfo($proposal->file_path, PATHINFO_EXTENSION);
+        $shortCode = substr(sha1($proposal->id), 0, 4);
+
+        $newFilename = "{$slug}-{$shortCode}.{$extension}";
+
+        return response()->download($path, $newFilename);
+    }
+    public function destroy($id)
+    {
+        $proposal = ProposalInovasi::findOrFail($id);
+
+        // Delete file
+        if ($proposal->file_path && Storage::disk('public')->exists($proposal->file_path)) {
+            Storage::disk('public')->delete($proposal->file_path);
+        }
+
+        $proposal->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Proposal berhasil dihapus'
+        ]);
+    }
+
+
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [

@@ -48,6 +48,11 @@
                             'route' => 'admin.doctkategori.index',
                         ],
                         ['label' => 'Dokumen', 'icon' => 'bi bi-file-earmark', 'route' => 'admin.documents.index'],
+                        [
+                            'label' => 'Proposal Inovasi',
+                            'icon' => 'bi bi-file-earmark',
+                            'route' => 'admin.proposal.index',
+                        ],
                     ],
                 ];
                 $menus[] = [
