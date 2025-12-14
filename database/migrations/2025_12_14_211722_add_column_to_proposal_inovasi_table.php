@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('proposal_inovasi', function (Blueprint $table) {
-            $table->enum('status', ['pending', 'approved', 'rejected'])->after('email_verified')->default('pending')->comment('pending,accepted,rejected');
+            $table->string('catatan')->nullable()->after('status');
         });
     }
 

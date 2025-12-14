@@ -1,8 +1,10 @@
 <x-modal id="formModal" title="Tambah Pegawai">
     <div class="max-h-[calc(100vh-200px)] overflow-y-auto p-4 custom-scrollbar">
-        <form id="formPegawai" class="space-y-4">
+        <form id="formPegawai" class="space-y-4" enctype="multipart/form-data">
             @csrf
             <input type="hidden" id="pegawai_id" name="id">
+
+            <x-input label="Foto Pegawai" id="foto" name="foto" type="file" />
 
             <x-input label="Nama Lengkap" id="nama" name="nama" type="text" />
 

@@ -37,15 +37,16 @@
 
 {{-- Modal Video --}}
 <div id="videoModal"
-    class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    class="hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-5xl overflow-hidden">
         <!-- Header -->
-        <div class="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4 flex justify-between items-center">
-            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+        <div class=" px-6 py-4 flex justify-between items-center">
+            <h3 class="text-xl font-bold text-indigo-700 dark:text-white flex items-center gap-2">
                 <i class="bi bi-camera-video"></i>
                 <span>Video Proposal</span>
             </h3>
-            <button onclick="closeVideoModal()" class="text-white hover:bg-white/20 rounded-lg p-2 transition">
+            <button onclick="closeVideoModal()"
+                class="text-red-800 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800 rounded-full w-8 h-8 flex items-center justify-center">
                 <i class="bi bi-x-lg text-xl"></i>
             </button>
         </div>
@@ -55,14 +56,6 @@
             <div id="video-container" class="aspect-video w-full bg-gray-900 rounded-lg overflow-hidden">
                 <!-- Video iframe will be loaded here -->
             </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="px-6 py-4 bg-gray-50 dark:bg-gray-900 flex justify-end">
-            <button onclick="closeVideoModal()"
-                class="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition">
-                Tutup
-            </button>
         </div>
     </div>
 </div>

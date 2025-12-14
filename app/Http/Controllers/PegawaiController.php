@@ -88,9 +88,17 @@ class PegawaiController extends Controller
             'id_golongan' => 'required|exists:golongans,id',
             'id_jabatan' => 'required|exists:jabatans,id',
             'id_bidang' => 'required|exists:bidangs,id',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:5048',
         ]);
+        $data = $request->all();
 
-        $pegawai->update($request->all());
+        if ($request->hasFile('foto')) {
+            $filename = $request->file('file')->store('foto_pegawai', 'public');
+
+            $data['foto'] = $filename;
+        }
+
+        $pegawai->update($data);
 
         return response()->json(['success' => true, 'message' => 'Pegawai berhasil diupdate', 'data' => $pegawai]);
     }

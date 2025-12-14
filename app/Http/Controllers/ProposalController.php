@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\ProposalInovasiMail;
 use App\Models\Notifikasi;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -77,6 +78,11 @@ class ProposalController extends Controller
             'catatan' => $request->catatan
         ]);
 
+        Notifikasi::create([
+            'title' => 'Proposal Inovasi ' . $request->status,
+            'message' => 'Proposal dari ' . $proposal->nama . ' Telah di ' . $request->status . ' Oleh ' . Auth::user()->name,
+        ]);
+
         return response()->json([
             'success' => true,
             'message' => 'Status berhasil diupdate'
@@ -86,21 +92,18 @@ class ProposalController extends Controller
     {
         $proposal = ProposalInovasi::findOrFail($id);
 
-        // Validasi file
+
         if (!$proposal->file_path || !Storage::disk('public')->exists($proposal->file_path)) {
             return back()->with('error', 'File tidak ditemukan atau telah dihapus.');
         }
 
-        // Path fisik file
         $path = storage_path('app/public/' . $proposal->file_path);
 
-        // (Opsional) simpan notifikasi
         Notifikasi::create([
             'title'   => 'Download proposal inovasi',
             'message' => 'Pengguna mendownload proposal : ' . $proposal->judul,
         ]);
 
-        // Nama file saat diunduh (SEO & user friendly)
         $slug = Str::slug($proposal->judul ?? 'proposal-inovasi');
         $extension = pathinfo($proposal->file_path, PATHINFO_EXTENSION);
         $shortCode = substr(sha1($proposal->id), 0, 4);

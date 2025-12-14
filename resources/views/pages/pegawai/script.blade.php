@@ -64,10 +64,16 @@
                             <tbody>`;
                 if (res.data.length > 0) {
                     res.data.forEach((b, i) => {
+                        const foto = b.foto ?
+                            `/storage/foto_pegawai/${b.foto}` :
+                            `https://ui-avatars.com/api/?name=${encodeURIComponent(b.nama)}&size=128&background=004299&color=fff&bold=true`;
+
                         html += `
                             <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition">
                                 <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">${i +1}</td>
-                                <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100"><i class="bi bi-person-bounding-box text-2xl text-indigo-600 dark:text-indigo-400"></i></td>
+                                <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100"> <img src="${foto}"
+                                                alt="${b.nama}"
+                                                class="relative w-10 h-10 rounded-full object-cover "></td>
                                 <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100"><b>${b.nama}</b><br><small class="bg-indigo-200 dark:bg-indigo-600 px-2 py-1 text-indigo-800 dark:text-indigo-200 rounded-xl">${b.nip ?? '-'}</small></td>
                                 <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100"><b>${b.bidang?.nama_bidang ?? '-'}</b><br><small class="bg-indigo-200 dark:bg-indigo-600 px-2 py-1 text-indigo-800 dark:text-indigo-200 rounded-xl">${b.jabatan?.jabatan ?? '-'}</small></td>
                                 <td class="px-4 py-3 text-gray-700 dark:text-gray-200">${b.golongan?.golongan ?? '-'}</td>
