@@ -104,7 +104,7 @@ class UserController extends Controller
                 'name'     => $request->username,
                 'email'    => $request->email,
                 'role'     => $request->role,
-                'password' => bcrypt($request->role !== 'opd' ? 'PerangkatDaerahMerauke' : 'PegawaiBAPPERIDA'),
+                'password' => bcrypt($request->role == 'opd' ? 'PerangkatDaerahMerauke' : 'PegawaiBAPPERIDA'),
             ];
 
             if ($request->role === 'opd') {

@@ -44,7 +44,7 @@ class PegawaiController extends Controller
             }
         }
 
-        $pegawais = $query->orderBy('created_at', 'desc')->paginate(5);
+        $pegawais = $query->orderBy('created_at', 'desc')->paginate(15);
         return response()->json($pegawais);
     }
 
