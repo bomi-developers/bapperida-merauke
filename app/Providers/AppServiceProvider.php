@@ -8,6 +8,7 @@ use App\Models\WebsiteSetting;
 use App\Models\KategoriDocument;
 use App\Models\PageView;
 use App\Models\ProfileDinas;
+use App\Models\Bidang;
 use Carbon\Carbon;
 use Pest\Plugins\Profile;
 use Illuminate\Pagination\Paginator;
@@ -35,6 +36,10 @@ class AppServiceProvider extends ServiceProvider
                 return WebsiteSetting::first();
             });
 
+            // Cache bidang (1 jam)
+            $Bidang = Cache::remember('bidang', 60 * 60, function () {
+                return Bidang::where('tampilkan', 1)->get();
+            });
             // Cache Profile Dinas (1 jam)
             $ProfileDinas = Cache::remember('profile_dinas', 60 * 60, function () {
                 return ProfileDinas::first();
@@ -57,6 +62,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with([
                 'websiteSettings' => $websiteSettings,
                 'ProfileDinas' => $ProfileDinas,
+                'Bidang' => $Bidang,
                 'pageView' => $stats['pageView'],
                 'pageViewToday' => $stats['pageViewToday'],
                 'pageViewUrl' => $stats['pageViewUrl'],
