@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
 class LendingPageController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:super_admin');
+    }
+
     public function index()
     {
         $pages = LendingPage::with('template')

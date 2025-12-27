@@ -2,7 +2,7 @@
     <div
         class="bg-white rounded-2xl shadow-lg flex flex-col transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/20">
         <a href="{{ route('berita.public.show', $terkini) }}">
-            <img src="{{ $terkini->cover_image ? asset('storage/' . $terkini->cover_image) : 'https://placehold.co/600x400/e2e8f0/667eea?text=Berita' }}"
+            <img loading="lazy" src="{{ $terkini->cover_image ? asset('storage/' . $terkini->cover_image) : 'https://placehold.co/600x400/e2e8f0/667eea?text=Berita' }}"
                 alt="Cover Berita {{ $terkini->title }}" class="w-full h-40 object-cover rounded-t-2xl">
         </a>
         <div class="p-4 flex flex-col flex-grow">

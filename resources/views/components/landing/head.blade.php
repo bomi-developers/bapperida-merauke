@@ -1,7 +1,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/LogoKabMerauke.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('assets/LogoKabMerauke.png') }}">
     <link rel="shortcut icon" href="{{ asset('assets/LogoKabMerauke.png') }}">
@@ -27,18 +27,7 @@
     <meta name="twitter:image" content="@yield('meta_image', asset('assets/LogoKabMerauke.png'))">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    {{-- <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Montserrat', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script> --}}
+
 
     <style>
         .reveal-on-scroll {

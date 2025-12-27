@@ -4,7 +4,13 @@
             @csrf
             <input type="hidden" id="pegawai_id" name="id">
 
-            <x-input label="Foto Pegawai" id="foto" name="foto" type="file" />
+            <!-- Preview Foto -->
+            <div id="preview-container" class="hidden mb-3 text-center">
+                <img id="preview-image" src="" alt="Preview Foto" class="mx-auto w-32 h-32 object-cover rounded-full border border-gray-300">
+                <p class="text-xs text-gray-500 mt-1">Foto saat ini/terpilih</p>
+            </div>
+            
+            <x-input label="Foto Pegawai" id="foto" name="foto" type="file" onchange="previewFile()" />
 
             <x-input label="Nama Lengkap" id="nama" name="nama" type="text" />
 

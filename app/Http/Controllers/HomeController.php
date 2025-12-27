@@ -38,21 +38,25 @@ class HomeController extends Controller
     {
         $search = $request->keyword ?? '';
 
-        $query = Berita::with('author')
-            ->select('id', 'title', 'cover_image', 'slug',  'user_id', 'views_count', 'created_at')
-            ->latest();
+        $cacheKey = 'search_berita_' . md5($search . ($request->top ?? '') . 'v1');
+        
+        $berita = \Illuminate\Support\Facades\Cache::remember($cacheKey, 600, function () use ($search, $request) {
+            $query = Berita::with('author')
+                ->select('id', 'title', 'cover_image', 'slug',  'user_id', 'views_count', 'created_at')
+                ->latest();
 
-        // Jika ada pencarian
-        if (!empty($search)) {
-            $query->where('title', 'like', '%' . $search . '%');
-        }
-        if ($request->has('top')) {
-            $query->orderBy('views_count', 'desc')->take($request->top);
-        } else {
-            $query->latest();
-        }
+            // Jika ada pencarian
+            if (!empty($search)) {
+                $query->where('title', 'like', '%' . $search . '%');
+            }
+            if ($request->has('top')) {
+                $query->orderBy('views_count', 'desc')->take($request->top);
+            } else {
+                $query->latest();
+            }
 
-        $berita = $query->limit(20)->get();
+            return $query->limit(20)->get();
+        });
 
         return response()->json([
             'status' => 'success',

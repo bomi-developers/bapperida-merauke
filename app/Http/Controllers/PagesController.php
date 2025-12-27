@@ -19,6 +19,11 @@ use Spatie\Activitylog\Models\Activity;
 
 class PagesController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:super_admin')->only(['websiteSetting', 'websiteSettingUpdate', 'loginLogs', 'activityLogs', 'viewLogs']);
+    }
+
     public function dashboard()
     {
         $dailyViewsRaw = DB::table('page_views')

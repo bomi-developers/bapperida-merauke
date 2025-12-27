@@ -250,68 +250,90 @@
             }, 200);
         }
 
+        // Utility Debounce
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        // Client-Side Cache
+        const apiCache = new Map();
+
         fetch(`/berita/data?top=5`)
             .then(res => res.json())
             .then(res => renderResults(res.data));
-        // 🔍 Live Search OnInput
-        searchInput.addEventListener('input', function() {
-            let keyword = this.value.trim();
-            showSpinner('searchSpinner');
 
-            if (keyword.length < 2) {
-                fetch(`/berita/data?top=5`)
-                    .then(res => res.json())
-                    .then(res => {
-                        renderResults(res.data);
-                        hideSpinner('searchSpinner');
-                    });
+        // 🔍 Live Search Berita (Debounced + Cached)
+        const perfomSearchBerita = debounce(function(keyword) {
+            showSpinner('searchSpinner');
+            
+            let url = keyword.length < 2 
+                ? `/berita/data?top=5` 
+                : `/berita/data?keyword=${encodeURIComponent(keyword)}`;
+
+            // Cek Cache JS Dulu
+            if (apiCache.has(url)) {
+                console.log('Serving from cache:', url);
+                renderResults(apiCache.get(url));
+                hideSpinner('searchSpinner');
+                return;
             }
 
-            fetch(`/berita/data?keyword=${encodeURIComponent(keyword)}`)
+            fetch(url)
                 .then(res => res.json())
                 .then(res => {
+                    // Simpan ke Cache JS
+                    apiCache.set(url, res.data);
                     renderResults(res.data);
                     hideSpinner('searchSpinner');
+                })
+                .catch(err => {
+                    console.error(err);
+                    hideSpinner('searchSpinner');
                 });
+        }, 500); // Wait 500ms
+
+        searchInput.addEventListener('input', function() {
+            perfomSearchBerita(this.value.trim());
         });
-        dokumenInput.addEventListener('input', function() {
-            let keyword = this.value.trim();
-            showSpinner('dokumenSpinner');
 
-            if (keyword.length < 2) {
-                fetch(`/dokumen/data`)
-                    .then(res => res.json())
-                    .then(res => {
-                        renderResultsDokumen(res.data);
-                        hideSpinner('dokumenSpinner');
-                    });
-
-            }
-
-            fetch(`/dokumen/data?keyword=${encodeURIComponent(keyword)}`)
-                .then(res => res.json())
-                .then(res => {
-                    renderResultsDokumen(res.data);
-                });
-        });
+        // Load Default Dokumen
         fetch(`/dokumen/data`)
             .then(res => res.json())
             .then(res => renderResultsDokumen(res.data));
-        // 🔍 Live Search OnInput
-        searchInput.addEventListener('input', function() {
-            let keyword = this.value.trim();
 
-            if (keyword.length < 2) {
-                fetch(`/dokumen/data`)
-                    .then(res => res.json())
-                    .then(res => renderResultsDokumen(res.data));
+        // 🔍 Live Search Dokumen (Debounced + Cached)
+        const performSearchDokumen = debounce(function(keyword) {
+            showSpinner('dokumenSpinner');
+
+            let url = keyword.length < 2
+                ? `/dokumen/data`
+                : `/dokumen/data?keyword=${encodeURIComponent(keyword)}`;
+
+            if (apiCache.has(url)) {
+                renderResultsDokumen(apiCache.get(url));
+                hideSpinner('dokumenSpinner');
+                return;
             }
 
-            fetch(`/dokumen/data?keyword=${encodeURIComponent(keyword)}`)
+            fetch(url)
                 .then(res => res.json())
                 .then(res => {
+                    apiCache.set(url, res.data);
                     renderResultsDokumen(res.data);
+                    hideSpinner('dokumenSpinner');
+                })
+                .catch(err => {
+                    console.error(err);
+                    hideSpinner('dokumenSpinner');
                 });
+        }, 500);
+
+        dokumenInput.addEventListener('input', function() {
+            performSearchDokumen(this.value.trim());
         });
 
         function formatDate(dateString) {

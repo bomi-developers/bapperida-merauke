@@ -51,9 +51,18 @@
                                             <div
                                                 class="absolute inset-0 bg-gradient-to-br from-[#004299] to-blue-500 rounded-full opacity-20 group-hover/card:opacity-30 transition-opacity">
                                             </div>
-                                            <img src="https://ui-avatars.com/api/?name={{ urlencode($employee->nama) }}&size=128&background=004299&color=fff&bold=true"
+                                            @php
+                                                $hasValidPhoto = $employee->foto && 
+                                                    !Str::contains($employee->foto, ['C:\\', 'fakepath']);
+                                                
+                                                $fotoSrc = $hasValidPhoto 
+                                                    ? asset('storage/foto_pegawai/' . $employee->foto)
+                                                    : "https://ui-avatars.com/api/?name=" . urlencode($employee->nama) . "&size=128&background=004299&color=fff&bold=true";
+                                            @endphp
+                                            <img src="{{ $fotoSrc }}"
                                                 alt="{{ $employee->nama }}"
-                                                class="relative w-full h-full rounded-full object-cover border-4 border-white shadow-lg group-hover/card:border-[#CCFF00] transition-all duration-300">
+                                                class="relative w-full h-full rounded-full object-cover border-4 border-white shadow-lg group-hover/card:border-[#CCFF00] transition-all duration-300"
+                                                onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($employee->nama) }}&size=128&background=004299&color=fff&bold=true'">
                                             {{-- Status Badge --}}
                                             <div
                                                 class="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-2 shadow-lg border-2 border-white">

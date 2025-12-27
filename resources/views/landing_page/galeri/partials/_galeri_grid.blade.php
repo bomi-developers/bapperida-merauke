@@ -25,7 +25,7 @@
                 <div class="relative w-full aspect-[4/3] rounded-t-2xl overflow-hidden bg-gray-100">
                     @if ($coverItem)
                         @if ($coverItem->tipe_file == 'image')
-                            <img src="{{ asset('storage/' . $coverItem->file_path) }}" alt="{{ $title }}"
+                            <img loading="lazy" src="{{ asset('storage/' . $coverItem->file_path) }}" alt="{{ $title }}"
                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                                 loading="lazy">
                         @elseif($coverItem->tipe_file == 'video')
@@ -38,7 +38,7 @@
                             </div>
                         @endif
                     @else
-                        <img src="https://placehold.co/400x300/e2e8f0/667eea?text=Galeri" alt="{{ $title }}"
+                        <img loading="lazy" src="https://placehold.co/400x300/e2e8f0/667eea?text=Galeri" alt="{{ $title }}"
                             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
                     @endif
                     {{-- Overlay biru sesuai UI --}}

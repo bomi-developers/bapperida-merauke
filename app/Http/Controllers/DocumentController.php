@@ -54,14 +54,19 @@ class DocumentController extends Controller
     {
         $search = $request->keyword ?? '';
 
-        $query = Document::with('kategori')
-            ->latest();
+        $cacheKey = 'search_dokumen_' . md5($search . 'v1');
 
-        // Jika ada pencarian
-        if (!empty($search)) {
-            $query->where('judul', 'like', '%' . $search . '%');
-        }
-        $dokumen = $query->limit(20)->get();
+        $dokumen = \Illuminate\Support\Facades\Cache::remember($cacheKey, 600, function () use ($search) {
+            $query = Document::with('kategori')
+                ->latest();
+
+            // Jika ada pencarian
+            if (!empty($search)) {
+                $query->where('judul', 'like', '%' . $search . '%');
+            }
+            return $query->limit(20)->get();
+        });
+
         return response()->json([
             'status' => 'success',
             'data' => $dokumen

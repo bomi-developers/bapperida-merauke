@@ -38,7 +38,7 @@
                                                             style="background-image: url('{{ $populer->cover_image ? asset('storage/' . $populer->cover_image) : 'https://placehold.co/800x600/e2e8f0/e2e8f0' }}'); filter: blur(20px) brightness(0.8); transform: scale(1.1);">
                                                         </div>
                                                         {{-- 2. Gambar Utama (Contain) --}}
-                                                        <img src="{{ $populer->cover_image ? asset('storage/' . $populer->cover_image) : 'https://placehold.co/800x600/e2e8f0/667eea?text=Berita' }}"
+                                                        <img loading="lazy" src="{{ $populer->cover_image ? asset('storage/' . $populer->cover_image) : 'https://placehold.co/800x600/e2e8f0/667eea?text=Berita' }}"
                                                             alt="{{ $populer->title }}"
                                                             class="relative z-10 max-w-full max-h-full object-contain">
                                                     </div>

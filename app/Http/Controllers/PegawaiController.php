@@ -65,7 +65,9 @@ class PegawaiController extends Controller
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
             $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/foto_pegawai', $filename);
+            
+            // Simpan ke storage/app/public/foto_pegawai
+            $file->storeAs('foto_pegawai', $filename, 'public');
 
             $data['foto'] = $filename;
         }
@@ -93,7 +95,15 @@ class PegawaiController extends Controller
         $data = $request->all();
 
         if ($request->hasFile('foto')) {
-            $filename = $request->file('file')->store('foto_pegawai', 'public');
+            // Hapus foto lama jika ada (Path relatif terhadap disk public)
+            if ($pegawai->foto && \Illuminate\Support\Facades\Storage::disk('public')->exists('foto_pegawai/' . $pegawai->foto)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete('foto_pegawai/' . $pegawai->foto);
+            }
+
+            $file = $request->file('foto');
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            // Simpan ke storage/app/public/foto_pegawai
+            $file->storeAs('foto_pegawai', $filename, 'public');
 
             $data['foto'] = $filename;
         }
@@ -105,6 +115,9 @@ class PegawaiController extends Controller
 
     public function destroy(Pegawai $pegawai)
     {
+        if ($pegawai->foto && \Illuminate\Support\Facades\Storage::disk('public')->exists('foto_pegawai/' . $pegawai->foto)) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete('foto_pegawai/' . $pegawai->foto);
+        }
         $pegawai->delete();
         return response()->json(['success' => true, 'message' => 'Pegawai berhasil dihapus']);
     }

@@ -48,7 +48,7 @@ class CompressBeritaImage implements ShouldQueue
                     $constraint->aspectRatio(); // Jaga rasio
                     $constraint->upsize();      // Jangan perbesar gambar kecil
                 })
-                ->save($fullPath, 80); // Simpan DENGAN NAMA YANG SAMA (menimpa)
+                ->save($fullPath, 70); // Simpan DENGAN NAMA YANG SAMA (menimpa) dengan kualitas 70%
 
             Log::info("Successfully compressed image: {$this->filePath}");
         } catch (\Exception $e) {

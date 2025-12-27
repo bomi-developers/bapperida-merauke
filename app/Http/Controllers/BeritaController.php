@@ -171,6 +171,11 @@ class BeritaController extends Controller
      */
     public function edit(Berita $berita)
     {
+        // Authorization Check
+        if (Auth::user()->role !== 'super_admin' && $berita->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $berita->load('items');
         return view('pages.berita.edit', compact('berita'));
     }
@@ -180,6 +185,11 @@ class BeritaController extends Controller
      */
     public function update(Request $request, Berita $berita)
     {
+        // Authorization Check
+        if (Auth::user()->role !== 'super_admin' && $berita->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'excerpt' => 'required|string|max:500',
@@ -305,6 +315,11 @@ class BeritaController extends Controller
      */
     public function destroy(Berita $berita)
     {
+        // Authorization Check
+        if (Auth::user()->role !== 'super_admin' && $berita->user_id !== Auth::id()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized action.'], 403);
+        }
+
         DB::transaction(function () use ($berita) {
             if ($berita->cover_image) {
                 Storage::disk('public')->delete($berita->cover_image);
