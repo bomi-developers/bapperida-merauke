@@ -42,9 +42,17 @@
             `;
 
 
-        fetch(
-                `${url}?search=${encodeURIComponent(search)}&golongan=${encodeURIComponent(selectGolongan)}&jabatan=${encodeURIComponent(selectJabatan)}&bidang=${encodeURIComponent(selectBidang)}&akun=${encodeURIComponent(selectAkun)}`
-            )
+        // Create URL Object
+        const targetUrl = new URL(url, window.location.origin);
+        
+        // Append/Update Query Params
+        targetUrl.searchParams.set('search', search);
+        targetUrl.searchParams.set('golongan', selectGolongan);
+        targetUrl.searchParams.set('jabatan', selectJabatan);
+        targetUrl.searchParams.set('bidang', selectBidang);
+        targetUrl.searchParams.set('akun', selectAkun);
+
+        fetch(targetUrl.toString())
             .then(res => res.json())
             .then(res => {
                 let html = `
