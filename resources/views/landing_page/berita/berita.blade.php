@@ -102,7 +102,7 @@
                         <label for="search-input" class="sr-only">Cari</label>
                         <input type="text" id="search-input"
                             class="py-2.5 px-4 ps-10 block w-full border-gray-300 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                            placeholder="Cari berdasarkan judul album...">
+                            placeholder="Cari berdasarkan judul berita...">
                         <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
                             <i class="bi bi-search text-gray-400"></i>
                         </div>

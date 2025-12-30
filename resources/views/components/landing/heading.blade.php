@@ -1,21 +1,24 @@
 @php
     // --- LOGIKA GAMBAR BACKGROUND DINAMIS ---
+
     $currentRoute = Route::currentRouteName();
 
-    // 1. Default Fallback (Gambar bawaan template jika belum ada settingan apa-apa)
+    // 1. Default fallback (gambar bawaan template)
     $bgImage = asset('assets/image6.jpg');
 
-    // 2. Cek Database: Apakah ada gambar khusus untuk route ini?
+    $sectionBg = View::getSection('hero_bg');
+
     $pageHero = \App\Models\PageHero::where('route_name', $currentRoute)->first();
+    $globalSetting = $websiteSettings;
 
-    // 3. Cek Database: Apakah ada gambar Default Global?
-    $globalSetting = \App\Models\WebsiteSetting::first();
-
-    if ($pageHero && $pageHero->hero_bg) {
-        // Prioritas 1: Pakai gambar khusus halaman ini
+    if ($sectionBg) {
+        // Prioritas 1: background dari @section('hero_bg')
+        $bgImage = $sectionBg;
+    } elseif ($pageHero && $pageHero->hero_bg) {
+        // Prioritas 2: gambar khusus halaman
         $bgImage = asset('storage/' . $pageHero->hero_bg);
     } elseif ($globalSetting && $globalSetting->hero_bg) {
-        // Prioritas 2: Pakai gambar default dari pengaturan website
+        // Prioritas 3: default global website
         $bgImage = asset('storage/' . $globalSetting->hero_bg);
     }
 @endphp

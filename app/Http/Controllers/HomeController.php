@@ -7,6 +7,7 @@ use App\Models\KategoriDocument;
 use App\Models\LendingPage;
 use App\Models\Pegawai;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
@@ -65,7 +66,11 @@ class HomeController extends Controller
     }
     public function pegawai()
     {
-        $pegawai = Pegawai::with(['bidang', 'golongan'])->get();
+        // $pegawai = Pegawai::with(['bidang', 'golongan'])->get();
+        $pegawai = Cache::remember('pegawai', 60 * 60, function () {
+            return Pegawai::select('id', 'nama', 'id_bidang', 'id_golongan', 'foto')->with(['bidang', 'golongan'])->get();
+        });
+
         return view('landing_page.about.pegawai', compact('pegawai') +  [
             'meta_title'       => 'Pegawai BAPPERIDA MERAUKE',
             'meta_description' => 'Pegawai Bappperida MERAUKE',
