@@ -5,7 +5,7 @@
             class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-12 items-center reveal-on-scroll">
             <div class="w-full max-w-4xl mx-auto aspect-video  dark:bg-gray-800 rounded-xl overflow-hidden ">
                 @php
-                    $bgImage = asset('assets/logoKabMerauke.png');
+                    $bgImage = asset('assets/LogoKabMerauke.png');
 
                     // Cek apakah file_hero ada, jika tidak pakai default
                     $file = $websiteSettings->file_hero ?? null;
@@ -71,7 +71,7 @@
                     @foreach ($Bidang as $item)
                         <button
                             @click="openModal = true; selectedBidang = '{{ $item->nama_bidang }}'; idBidang = {{ $item->id }}"
-                            class="text-center group px-5 focus:outline-none">
+                            class="text-center group p-5 focus:outline-none">
                             <div
                                 class="flex items-center justify-center h-24 w-24 mx-auto bg-blue-50 rounded-full transition-all duration-300 group-hover:bg-blue-100 group-hover:scale-110">
                                 <svg class="h-12 w-12 text-blue-600" fill="none" viewBox="0 0 24 24"
