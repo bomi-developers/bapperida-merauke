@@ -7,6 +7,7 @@ use App\Models\Berita;
 use App\Models\Galeri;
 use App\Models\Pegawai;
 use App\Models\Document;
+use App\Models\GaleriItem;
 use App\Models\LoginLog;
 use App\Models\PageView;
 use App\Models\ProfileDinas;
@@ -133,11 +134,13 @@ class PagesController extends Controller
     public function websiteSetting()
     {
         $pageHeroes = \App\Models\PageHero::pluck('hero_bg', 'route_name')->toArray();
-
+        $galeriItems = GaleriItem::where('tipe_file', '!=', 'video_link')->get();
+        // dd($galeriItems);
         $data = [
             'title' => 'Website & Profil Settings',
             'settings' => WebsiteSetting::first(),
             'profile' => ProfileDinas::first(),
+            'galeriItems' => $galeriItems,
             'pageHeroes' => $pageHeroes,
         ];
         return view('pages.setting.index', $data);
@@ -163,6 +166,9 @@ class PagesController extends Controller
             'logo_dark' => 'nullable|image|mimes:jpg,jpeg,png,svg|max:2048',
             'favicon'   => 'nullable|image|mimes:ico,png|max:2048',
             'hero_bg' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'judul_hero' => 'required|string',
+            'deskripsi_hero' => 'required|string',
+            'file_hero' => 'nullable|string',
 
             // Validasi Profil Dinas
             'visi' => 'nullable|string',
@@ -231,6 +237,9 @@ class PagesController extends Controller
         $settings->meta_title       = $request->meta_title;
         $settings->meta_description = $request->meta_description;
         $settings->meta_keywords    = $request->meta_keywords;
+        $settings->judul_hero       = $request->judul_hero;
+        $settings->deskripsi_hero   = $request->deskripsi_hero;
+        $settings->file_hero        = $request->file_hero;
         $settings->is_maintenance   = $request->has('is_maintenance') ? true : false;
         $settings->save();
 

@@ -28,8 +28,19 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $pegawai = Cache::remember('pegawai', 60 * 60, function () {
+            return Pegawai::select('id', 'nama', 'id_bidang', 'id_golongan', 'foto')->with(['bidang', 'golongan'])->get();
+        });
+        $beritaTerpopuler =  Cache::remember('beritaTerpopuler', 60 * 60, function () {
+            return Berita::where('status', 'published')
+                ->orderBy('views_count', 'desc')
+                ->take(6)
+                ->get();
+        });
         $data = [
             'dokumen' => KategoriDocument::all(),
+            'pegawai' => $pegawai,
+            'beritaTerpopuler' => $beritaTerpopuler,
             'Str' => new \Illuminate\Support\Str(),
             'LendingPage' => LendingPage::with('template')->get()->sortBy('order'),
         ];
@@ -40,7 +51,7 @@ class HomeController extends Controller
         $search = $request->keyword ?? '';
 
         $cacheKey = 'search_berita_' . md5($search . ($request->top ?? '') . 'v1');
-        
+
         $berita = \Illuminate\Support\Facades\Cache::remember($cacheKey, 600, function () use ($search, $request) {
             $query = Berita::with('author')
                 ->select('id', 'title', 'cover_image', 'slug',  'user_id', 'views_count', 'created_at')

@@ -19,7 +19,6 @@
                 {{-- Hidden fields --}}
                 <input type="hidden" name="_method" id="method-field">
                 <input type="hidden" name="galeri_id" id="galeri-id-field">
-
                 {{-- Input Judul Album --}}
                 <div>
                     <label for="judul" class="form-label">Judul Album</label>

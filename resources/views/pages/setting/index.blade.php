@@ -33,6 +33,15 @@
                         <i class="bi bi-images me-2"></i> Banner Halaman
                     </button>
                 </li>
+                {{-- tab hero homepage --}}
+                <li class="mr-2" role="presentation">
+                    <button
+                        class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 text-gray-500 dark:text-gray-400"
+                        id="homepage-tab" data-tabs-target="#homepage" type="button" role="tab"
+                        aria-controls="banner" aria-selected="false">
+                        <i class="bi bi-images me-2"></i> Banner Halaman Utama
+                    </button>
+                </li>
             </ul>
         </div>
 
@@ -135,7 +144,8 @@
                                     @if ($settings->logo_dark)
                                         <div class="mt-2 p-3 bg-gray-800 border border-gray-600 rounded text-center">
                                             <img src="{{ asset('storage/' . $settings->logo_dark) }}"
-                                                class="h-12 mx-auto object-contain"></div>
+                                                class="h-12 mx-auto object-contain">
+                                        </div>
                                     @endif
                                 </div>
                                 <div class="mb-6">
@@ -342,6 +352,161 @@
 
                     </div>
                 </div>
+                {{-- TAB 4: banner hame page --}}
+                <div class="" id="homepage" role="tabpanel" aria-labelledby="homepage-tab">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-3">
+                        {{-- KOLOM KIRI:  Informasi --}}
+                        <div
+                            class="lg:col-span-2 bg-white dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md">
+                            <h3
+                                class="text-lg font-semibold text-gray-900 dark:text-white mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">
+                                Banner Halaman Utama</h3>
+                            <div class="mb-6">
+                                <label class="form-label flex items-center gap-2"><i class="bi bi-clock-history"></i>
+                                    Judul</label>
+                                <input name="judul_hero" rows="6" class="form-input block w-full"
+                                    placeholder="Judul Hero.." value="{{ $settings->judul_hero ?? '' }}">
+                            </div>
+                            <div class="mb-6">
+                                <label class="form-label flex items-center gap-2"><i class="bi bi-clock-history"></i>
+                                    Deskripsi</label>
+                                <textarea name="deskripsi_hero" rows="6" class="form-input block w-full" placeholder="Keterangan singkat...">{{ $settings->deskripsi_hero ?? '' }}</textarea>
+                            </div>
+                        </div>
+                        {{-- {{ $galeriItems }} --}}
+                        {{-- KOLOM KANAN: file --}}
+                        <div class="lg:col-span-1">
+                            <input type="hidden" name="file_hero" id="input_file_hero"
+                                value="{{ $setting->file_hero ?? '' }}">
+
+                            <div
+                                class="bg-white dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Media Hero</h3>
+                                    <button type="button" id="btn_hapus_media"
+                                        class="text-red-500 text-xs hover:underline {{ isset($setting->file_hero) ? '' : 'hidden' }}">
+                                        Hapus Media
+                                    </button>
+                                </div>
+
+                                <div class="mb-2">
+                                    <div id="btn_buka_galeri"
+                                        class="group relative flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 transition-all overflow-hidden">
+
+                                        <div id="preview_container"
+                                            class="w-full h-full {{ isset($setting->file_hero) ? '' : 'hidden' }}">
+                                            <div id="preview_content" class="w-full h-full">
+                                                @if (isset($setting->file_hero))
+                                                    @if (preg_match('/\.(mp4|webm|ogg)$/i', $setting->file_hero))
+                                                        <video class="w-full h-full object-cover opacity-50" muted
+                                                            autoplay loop>
+                                                            <source
+                                                                src="{{ asset('storage/' . $setting->file_hero) }}">
+                                                        </video>
+                                                    @else
+                                                        <img src="{{ asset('storage/' . $setting->file_hero) }}"
+                                                            class="w-full h-full object-cover opacity-50">
+                                                    @endif
+                                                @endif
+                                            </div>
+                                            <div
+                                                class="absolute inset-0 flex flex-col items-center justify-center text-white bg-black/20">
+                                                <i class="bi bi-pencil-square text-2xl mb-2"></i>
+                                                <span class="text-xs font-medium">Ganti Media</span>
+                                            </div>
+                                        </div>
+
+                                        <div id="placeholder_empty"
+                                            class="flex flex-col items-center justify-center text-center px-4 {{ isset($setting->file_hero) ? 'hidden' : '' }}">
+                                            <i class="bi bi-plus-circle text-4xl text-gray-400 mb-3"></i>
+                                            <p class="text-sm text-gray-500">Pilih Media dari Galeri</p>
+                                        </div>
+                                    </div>
+                                    <p id="text_path_hero"
+                                        class="mt-2 text-[10px] text-gray-500 truncate italic italic">
+                                        {{ $setting->file_hero ?? '' }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="modal_galeri"
+                            class="fixed inset-0 z-[9999] hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+                            <div
+                                class="relative bg-white dark:bg-gray-800 w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden">
+                                <div class="p-4 border-b dark:border-gray-700 flex justify-between items-center">
+                                    <h3 class="font-bold dark:text-white text-lg">Pilih Media Galeri</h3>
+                                    <button type="button"
+                                        class="btn_tutup_galeri text-red-800 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800 rounded-full w-8 h-8 flex items-center justify-center">&times;</button>
+                                </div>
+                                <div
+                                    class="p-6 overflow-y-auto grid grid-cols-2 md:grid-cols-4 gap-4 bg-white dark:bg-gray-900">
+                                    @foreach ($galeriItems as $item)
+                                        @php $cleanPath = str_replace('\\', '/', $item->file_path); @endphp
+                                        <div class="item-galeri group relative aspect-video rounded-xl overflow-hidden bg-black border-2 border-transparent hover:border-indigo-500 cursor-pointer transition-all"
+                                            data-path="{{ $cleanPath }}" data-type="{{ $item->tipe_file }}">
+
+                                            @if ($item->tipe_file == 'video')
+                                                <video class="w-full h-full object-cover opacity-70">
+                                                    <source src="{{ asset('storage/' . $cleanPath) }}">
+                                                </video>
+                                            @else
+                                                <img src="{{ asset('storage/' . $cleanPath) }}"
+                                                    class="w-full h-full object-cover opacity-70">
+                                            @endif
+
+                                            <div
+                                                class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/20">
+                                                <i class="bi bi-check-circle-fill text-white text-2xl"></i>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <section
+                        class="my-5 p-6 bg-white rounded-xl border border-gray-200 dark:border-indigo-700 shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-900  mb-4 border-b border-gray-200  pb-3">
+                            Preview Hero</h3>
+                        <div
+                            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-12 items-center ">
+                            <div class="w-full max-w-4xl mx-auto aspect-video">
+                                @php
+                                    $file = $settings->file_hero;
+                                    $extension = pathinfo($file, PATHINFO_EXTENSION);
+                                    $isRemote =
+                                        str_contains($file, 'http') ||
+                                        str_contains($file, 'youtube') ||
+                                        str_contains($file, 'vimeo');
+                                @endphp
+
+                                @if ($isRemote)
+                                    <iframe src="{{ $file }}" frameborder="0" loading="lazy"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen class="w-full h-full rounded-xl shadow-lg"></iframe>
+                                @elseif (in_array(strtolower($extension), ['mp4', 'webm', 'ogg']))
+                                    <video controls class="w-full h-full rounded-xl shadow-lg object-cover">
+                                        <source src="{{ asset('storage/' . $file) }}"
+                                            type="video/{{ $extension }}">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                @else
+                                    <img src="{{ asset('storage/' . $file) }}" alt="Hero Image"
+                                        class="w-full h-full rounded-xl shadow-lg object-cover">
+                                @endif
+                            </div>
+                            <div>
+                                <h2 class="text-3xl font-bold text-[#] leading-tight text-[#004299]">
+                                    {{ $settings->judul_hero ?? '' }}
+                                </h2>
+                                <p class="mt-4 text-gray-600">
+                                    {{ $settings->deskripsi_hero ?? '' }}
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
 
             </div>
 
@@ -353,128 +518,133 @@
             </div>
         </form>
     </main>
-
-    <style>
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #374151;
-            font-size: 0.875rem;
-        }
-
-        .dark .form-label {
-            color: #d1d5db;
-        }
-
-        .form-input {
-            border: 1px solid #d1d5db;
-            border-radius: 0.5rem;
-            padding: 0.6rem 0.75rem;
-            font-size: 0.875rem;
-            background-color: #fff;
-            color: #111827;
-            transition: border-color 0.15s ease-in-out;
-        }
-
-        .dark .form-input {
-            background-color: #1f2937;
-            border-color: #4b5563;
-            color: #f9fafb;
-        }
-
-        .form-input:focus {
-            border-color: #4f46e5;
-            outline: none;
-            ring: 2px solid rgba(79, 70, 229, 0.1);
-        }
-
-        .btn-primary {
-            background-color: #4f46e5;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-weight: 500;
-            transition: background-color 0.2s;
-            cursor: pointer;
-        }
-
-        .btn-primary:hover {
-            background-color: #4338ca;
-        }
-
-        .btn-secondary {
-            background-color: #e5e7eb;
-            color: #1f2937;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-weight: 500;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-
-        .dark .btn-secondary {
-            background-color: #374151;
-            color: #e5e7eb;
-        }
-
-        .btn-secondary:hover {
-            background-color: #d1d5db;
-        }
-
-        .dark .btn-secondary:hover {
-            background-color: #4b5563;
-        }
-    </style>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // --- TABS LOGIC ---
-            const tabs = [{
-                    trigger: document.getElementById('website-tab'),
-                    content: document.getElementById('website')
-                },
-                {
-                    trigger: document.getElementById('profile-tab'),
-                    content: document.getElementById('profile')
-                },
-                {
-                    trigger: document.getElementById('banner-tab'),
-                    content: document.getElementById('banner')
-                }
-            ];
-
-            function switchTab(activeTab) {
-                tabs.forEach(tab => {
-                    if (tab.trigger === activeTab.trigger) {
-                        tab.trigger.classList.add('border-indigo-600', 'text-indigo-600',
-                            'dark:text-indigo-500', 'dark:border-indigo-500');
-                        tab.trigger.classList.remove('border-transparent', 'text-gray-500',
-                            'dark:text-gray-400');
-                        tab.content.classList.remove('hidden');
-                    } else {
-                        tab.trigger.classList.remove('border-indigo-600', 'text-indigo-600',
-                            'dark:text-indigo-500', 'dark:border-indigo-500');
-                        tab.trigger.classList.add('border-transparent', 'text-gray-500',
-                            'dark:text-gray-400');
-                        tab.content.classList.add('hidden');
-                    }
-                });
+    @push('styles')
+        <style>
+            .form-label {
+                display: block;
+                margin-bottom: 0.5rem;
+                font-weight: 600;
+                color: #374151;
+                font-size: 0.875rem;
             }
 
-            tabs.forEach(tab => {
-                tab.trigger.addEventListener('click', () => switchTab(tab));
-            });
+            .dark .form-label {
+                color: #d1d5db;
+            }
 
-            // --- DYNAMIC MISI INPUT LOGIC ---
-            const misiContainer = document.getElementById('misi-container');
-            const addMisiBtn = document.getElementById('add-misi-btn');
-            const hiddenMisiInput = document.getElementById('misi-hidden');
+            .form-input {
+                border: 1px solid #d1d5db;
+                border-radius: 0.5rem;
+                padding: 0.6rem 0.75rem;
+                font-size: 0.875rem;
+                background-color: #fff;
+                color: #111827;
+                transition: border-color 0.15s ease-in-out;
+            }
 
-            function createMisiInput(value = '') {
-                const div = document.createElement('div');
-                div.className = 'flex items-center gap-2 group';
-                div.innerHTML = `
+            .dark .form-input {
+                background-color: #1f2937;
+                border-color: #4b5563;
+                color: #f9fafb;
+            }
+
+            .form-input:focus {
+                border-color: #4f46e5;
+                outline: none;
+                ring: 2px solid rgba(79, 70, 229, 0.1);
+            }
+
+            .btn-primary {
+                background-color: #4f46e5;
+                color: white;
+                padding: 0.75rem 1.5rem;
+                border-radius: 0.5rem;
+                font-weight: 500;
+                transition: background-color 0.2s;
+                cursor: pointer;
+            }
+
+            .btn-primary:hover {
+                background-color: #4338ca;
+            }
+
+            .btn-secondary {
+                background-color: #e5e7eb;
+                color: #1f2937;
+                padding: 0.75rem 1.5rem;
+                border-radius: 0.5rem;
+                font-weight: 500;
+                transition: all 0.2s;
+                cursor: pointer;
+            }
+
+            .dark .btn-secondary {
+                background-color: #374151;
+                color: #e5e7eb;
+            }
+
+            .btn-secondary:hover {
+                background-color: #d1d5db;
+            }
+
+            .dark .btn-secondary:hover {
+                background-color: #4b5563;
+            }
+        </style>
+    @endpush
+    @push('scripts')
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // --- TABS LOGIC ---
+                const tabs = [{
+                        trigger: document.getElementById('website-tab'),
+                        content: document.getElementById('website')
+                    },
+                    {
+                        trigger: document.getElementById('profile-tab'),
+                        content: document.getElementById('profile')
+                    },
+                    {
+                        trigger: document.getElementById('banner-tab'),
+                        content: document.getElementById('banner')
+                    }, {
+                        trigger: document.getElementById('homepage-tab'),
+                        content: document.getElementById('homepage')
+                    }
+                ];
+
+                function switchTab(activeTab) {
+                    tabs.forEach(tab => {
+                        if (tab.trigger === activeTab.trigger) {
+                            tab.trigger.classList.add('border-indigo-600', 'text-indigo-600',
+                                'dark:text-indigo-500', 'dark:border-indigo-500');
+                            tab.trigger.classList.remove('border-transparent', 'text-gray-500',
+                                'dark:text-gray-400');
+                            tab.content.classList.remove('hidden');
+                        } else {
+                            tab.trigger.classList.remove('border-indigo-600', 'text-indigo-600',
+                                'dark:text-indigo-500', 'dark:border-indigo-500');
+                            tab.trigger.classList.add('border-transparent', 'text-gray-500',
+                                'dark:text-gray-400');
+                            tab.content.classList.add('hidden');
+                        }
+                    });
+                }
+
+                tabs.forEach(tab => {
+                    tab.trigger.addEventListener('click', () => switchTab(tab));
+                });
+
+                // --- DYNAMIC MISI INPUT LOGIC ---
+                const misiContainer = document.getElementById('misi-container');
+                const addMisiBtn = document.getElementById('add-misi-btn');
+                const hiddenMisiInput = document.getElementById('misi-hidden');
+
+                function createMisiInput(value = '') {
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center gap-2 group';
+                    div.innerHTML = `
                     <div class="flex-grow relative">
                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-400 font-bold text-lg">•</span>
                         <input type="text" class="form-input block w-full pl-8 py-2.5 misi-item bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:border-indigo-500" value="${value}" placeholder="Tuliskan poin misi...">
@@ -483,35 +653,90 @@
                         <i class="bi bi-trash"></i>
                     </button>
                 `;
-                misiContainer.appendChild(div);
+                    misiContainer.appendChild(div);
 
-                div.querySelector('.remove-misi-btn').addEventListener('click', function() {
-                    div.remove();
-                    updateHiddenInput();
+                    div.querySelector('.remove-misi-btn').addEventListener('click', function() {
+                        div.remove();
+                        updateHiddenInput();
+                    });
+
+                    div.querySelector('.misi-item').addEventListener('input', updateHiddenInput);
+                }
+
+                function updateHiddenInput() {
+                    const inputs = document.querySelectorAll('.misi-item');
+                    const values = Array.from(inputs).map(input => input.value).filter(val => val.trim() !== '');
+                    hiddenMisiInput.value = values.join('\n');
+                }
+
+                const initialData = hiddenMisiInput.value;
+                if (initialData.trim()) {
+                    const lines = initialData.split('\n');
+                    lines.forEach(line => createMisiInput(line));
+                } else {
+                    createMisiInput();
+                }
+
+                addMisiBtn.addEventListener('click', function() {
+                    createMisiInput();
                 });
 
-                div.querySelector('.misi-item').addEventListener('input', updateHiddenInput);
-            }
-
-            function updateHiddenInput() {
-                const inputs = document.querySelectorAll('.misi-item');
-                const values = Array.from(inputs).map(input => input.value).filter(val => val.trim() !== '');
-                hiddenMisiInput.value = values.join('\n');
-            }
-
-            const initialData = hiddenMisiInput.value;
-            if (initialData.trim()) {
-                const lines = initialData.split('\n');
-                lines.forEach(line => createMisiInput(line));
-            } else {
-                createMisiInput();
-            }
-
-            addMisiBtn.addEventListener('click', function() {
-                createMisiInput();
+                document.getElementById('settingForm').addEventListener('submit', updateHiddenInput);
             });
+        </script>
 
-            document.getElementById('settingForm').addEventListener('submit', updateHiddenInput);
-        });
-    </script>
+        <script>
+            $(document).ready(function() {
+                const storageUrl = "{{ asset('storage') }}/";
+
+                // 1. Buka Modal
+                $('#btn_buka_galeri').on('click', function() {
+                    $('#modal_galeri').removeClass('hidden').addClass('flex');
+                });
+
+                // 2. Tutup Modal
+                $('.btn_tutup_galeri').on('click', function() {
+                    $('#modal_galeri').addClass('hidden').removeClass('flex');
+                });
+
+                // 3. Pilih Item dari Galeri
+                $('.item-galeri').on('click', function() {
+                    let filePath = $(this).data('path');
+                    let fileType = $(this).data('type');
+
+                    // Update Hidden Input
+                    $('#input_file_hero').val(filePath);
+                    $('#text_path_hero').text(filePath);
+
+                    // Update Preview
+                    $('#placeholder_empty').addClass('hidden');
+                    $('#preview_container').removeClass('hidden');
+                    $('#btn_hapus_media').removeClass('hidden');
+
+                    let htmlPreview = '';
+                    if (fileType === 'video' || filePath.match(/\.(mp4|webm|ogg)$/i)) {
+                        htmlPreview = `<video class="w-full h-full object-cover opacity-50" muted autoplay loop>
+                                <source src="${storageUrl + filePath}" type="video/mp4">
+                           </video>`;
+                    } else {
+                        htmlPreview =
+                            `<img src="${storageUrl + filePath}" class="w-full h-full object-cover opacity-50">`;
+                    }
+
+                    $('#preview_content').html(htmlPreview);
+                    $('#modal_galeri').addClass('hidden').removeClass('flex');
+                });
+
+                // 4. Hapus Pilihan
+                $('#btn_hapus_media').on('click', function(e) {
+                    e.stopPropagation(); // Biar gak buka modal
+                    $('#input_file_hero').val('');
+                    $('#text_path_hero').text('');
+                    $('#preview_container').addClass('hidden');
+                    $('#placeholder_empty').removeClass('hidden');
+                    $(this).addClass('hidden');
+                });
+            });
+        </script>
+    @endpush
 </x-layout>

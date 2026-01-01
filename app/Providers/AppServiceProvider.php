@@ -46,11 +46,10 @@ class AppServiceProvider extends ServiceProvider
             });
 
             // Cache Page Views (Update tiap 5 menit agar tidak berat)
-            // Menggunakan cache tags atau simple key
             $stats = Cache::remember('global_stats', 5 * 60, function () {
                 $start = Carbon::now()->subHour(2);
                 $end = Carbon::now();
-                
+
                 return [
                     'pageView' => PageView::count(),
                     'pageViewOnline' => PageView::whereBetween('viewed_at', [$start, $end])->count(),
@@ -58,6 +57,7 @@ class AppServiceProvider extends ServiceProvider
                     'pageViewUrl' => PageView::distinct('url')->count('url')
                 ];
             });
+            // dd($websiteSettings);
 
             $view->with([
                 'websiteSettings' => $websiteSettings,
