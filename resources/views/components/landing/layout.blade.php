@@ -3,7 +3,8 @@
 {{-- head --}}
 <x-landing.head></x-landing.head>
 
-<body class="bg-[#004299]">
+<body class="bg-[#004299] ">
+
     <div class="bg-white">
         {{-- navbar --}}
         {{-- <x-landing.navbar></x-landing.navbar> --}}

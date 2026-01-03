@@ -34,7 +34,7 @@ class HomeController extends Controller
         $beritaTerpopuler =  Cache::remember('beritaTerpopuler', 60 * 60, function () {
             return Berita::where('status', 'published')
                 ->orderBy('views_count', 'desc')
-                ->take(6)
+                ->take(4)
                 ->get();
         });
         $data = [

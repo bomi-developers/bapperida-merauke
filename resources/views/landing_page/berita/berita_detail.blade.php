@@ -263,7 +263,7 @@
     @endif
 
     @push('scripts')
-        <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+        {{-- <script src="https://cdn.tailwindcss.com?plugins=typography"></script> --}}
         <script>
             // Skrip untuk Carousel Kustom
             document.addEventListener('DOMContentLoaded', function() {

@@ -9,6 +9,7 @@ use App\Models\KategoriDocument;
 use App\Models\PageView;
 use App\Models\ProfileDinas;
 use App\Models\Bidang;
+use App\Models\GaleriItem;
 use Carbon\Carbon;
 use Pest\Plugins\Profile;
 use Illuminate\Pagination\Paginator;
@@ -44,6 +45,9 @@ class AppServiceProvider extends ServiceProvider
             $ProfileDinas = Cache::remember('profile_dinas', 60 * 60, function () {
                 return ProfileDinas::first();
             });
+            $GaleriItems = Cache::remember('galeri', 10 * 60, function () {
+                return GaleriItem::with(['galeri'])->where('tipe_file', 'image')->latest()->take(6)->get();
+            });
 
             // Cache Page Views (Update tiap 5 menit agar tidak berat)
             $stats = Cache::remember('global_stats', 5 * 60, function () {
@@ -63,6 +67,7 @@ class AppServiceProvider extends ServiceProvider
                 'websiteSettings' => $websiteSettings,
                 'ProfileDinas' => $ProfileDinas,
                 'Bidang' => $Bidang,
+                'Galeri' => $GaleriItems,
                 'pageView' => $stats['pageView'],
                 'pageViewToday' => $stats['pageViewToday'],
                 'pageViewUrl' => $stats['pageViewUrl'],

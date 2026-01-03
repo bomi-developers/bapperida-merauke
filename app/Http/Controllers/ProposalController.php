@@ -208,15 +208,15 @@ class ProposalController extends Controller
             ]);
 
             // --- KIRIM EMAIL ---
-            // try {
-            //     Mail::to($proposal->email)->send(new ProposalInovasiMail($proposal));
-            // } catch (Exception $e) {
-            //     return response()->json([
-            //         'status' => 'warning',
-            //         'message' => 'Proposal berhasil disimpan, tetapi gagal mengirim email konfirmasi.',
-            //         'error' => $e->getMessage(),
-            //     ], 200);
-            // }
+            try {
+                Mail::to($proposal->email)->send(new ProposalInovasiMail($proposal));
+            } catch (Exception $e) {
+                return response()->json([
+                    'status' => 'warning',
+                    'message' => 'Proposal berhasil disimpan, tetapi gagal mengirim email konfirmasi.',
+                    'error' => $e->getMessage(),
+                ], 200);
+            }
 
             return response()->json([
                 'status' => 'success',

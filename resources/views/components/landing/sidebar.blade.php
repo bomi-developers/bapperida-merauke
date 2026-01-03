@@ -53,35 +53,71 @@
     </div>
 </div>
 {{-- side nav --}}
-<div id="side-nav" class="hidden md:flex fixed top-1/2 right-4 transform -translate-y-1/2 z-[500] items-center">
-    <div
-        class="flex flex-col items-center space-y-3 bg-white/20 backdrop-blur-md px-2 py-3 rounded-full shadow-lg ml-2">
-        <button {{-- id="toggle-search-btn" --}}
-            class="toggle-search-btn group relative flex justify-center items-center w-12 h-12 bg-white text-blue-600 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300">
-            <i class="bi bi-search"></i>
+<div class="hidden md:flex fixed top-1/2 right-4 transform -translate-y-1/2 z-[500] items-center">
+    <div class="flex flex-col justify-between h-full py-24">
+        <div id="side-nav">
+
+            <div
+                class="flex flex-col items-center space-y-3 bg-white/20 backdrop-blur-md px-2 py-3 rounded-full shadow-lg ml-2">
+                <button {{-- id="toggle-search-btn" --}}
+                    class="toggle-search-btn group relative flex justify-center items-center w-12 h-12 bg-white text-blue-600 border border-blue-600 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300">
+                    <i class="bi bi-search"></i>
+                    <span
+                        class="absolute right-full mr-3 px-3 py-1.5 bg-gray-800 text-white text-xs font-semibold rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                        Pencarian
+                    </span>
+                </button>
+                <button {{-- id="toggle-search-btn" --}}
+                    class="toggle-dokumen-btn group relative flex justify-center items-center w-12 h-12 bg-white text-blue-600 border border-blue-600 rounded-full hover:bg-blue-600  hover:text-white transition-all duration-300">
+                    <i class="bi bi-folder"></i>
+                    <span
+                        class="absolute right-full mr-3 px-3 py-1.5 bg-gray-800 text-white text-xs font-semibold rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                        Dokumen
+                    </span>
+                </button>
+                <a href="{{ route('login') }}"
+                    class="group relative flex justify-center items-center w-12 h-12 bg-white text-blue-600 rounded-full hover:bg-blue-600 hover:text-white border border-blue-600 transition-all duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span
+                        class="absolute right-full mr-3 px-3 py-1.5 bg-gray-800 text-white text-xs font-semibold rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                        Login
+                    </span>
+                </a>
+            </div>
+        </div>
+        <div id="to-top" class=" items-center mt-3">
+            <div
+                class="flex flex-col items-center space-y-3 bg-white/20 backdrop-blur-md px-2 py-3 rounded-full shadow-lg ml-2">
+                <a href="#heading"
+                    class="toggle-to-top-btn group relative flex justify-center items-center w-12 h-12 bg-white text-blue-600 rounded-full
+                            hover:bg-blue-600 hover:text-white border border-blue-600
+                            transition-all duration-300
+                            hover:scale-110 active:scale-95">
+                    <i class="bi bi-arrow-up-short text-4xl"></i>
+                    <span
+                        class="absolute right-full mr-3 px-3 py-1.5 bg-gray-800 text-white text-xs font-semibold rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                        Ke atas
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="to-top" class="md:hidden fixed bottom-4 right-4 z-[500] flex items-center">
+    <div class="flex flex-col items-center bg-white/20 backdrop-blur-md px-2 py-3 rounded-full shadow-lg">
+        <a href="#heading"
+            class="toggle-to-top-btn group relative flex justify-center items-center w-12 h-12 bg-white text-blue-600 rounded-full
+                   hover:bg-blue-600 hover:text-white border border-blue-600
+                   transition-all duration-300
+                   hover:scale-110 active:scale-95">
+            <i class="bi bi-arrow-up-short text-4xl"></i>
             <span
                 class="absolute right-full mr-3 px-3 py-1.5 bg-gray-800 text-white text-xs font-semibold rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                Pencarian
-            </span>
-        </button>
-        <button {{-- id="toggle-search-btn" --}}
-            class="toggle-dokumen-btn group relative flex justify-center items-center w-12 h-12 bg-white text-blue-600 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300">
-            <i class="bi bi-folder"></i>
-            <span
-                class="absolute right-full mr-3 px-3 py-1.5 bg-gray-800 text-white text-xs font-semibold rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                Dokumen
-            </span>
-        </button>
-        <a href="{{ route('login') }}"
-            class="group relative flex justify-center items-center w-12 h-12 bg-white text-blue-600 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24"
-                stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-            <span
-                class="absolute right-full mr-3 px-3 py-1.5 bg-gray-800 text-white text-xs font-semibold rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                Login
+                Ke atas
             </span>
         </a>
     </div>
@@ -142,6 +178,45 @@
 </div>
 {{-- Script toggle mobile menu --}}
 @push('scripts')
+    {{-- smooth scroll to top --}}
+    <script>
+        function smoothScrollTo(target, duration = 800) {
+            const start = window.pageYOffset;
+            const end = target.getBoundingClientRect().top + start;
+            const distance = end - start;
+            let startTime = null;
+
+            function easeInOutCubic(t) {
+                return t < 0.5 ?
+                    4 * t * t * t :
+                    1 - Math.pow(-2 * t + 2, 3) / 2;
+            }
+
+            function animation(currentTime) {
+                if (!startTime) startTime = currentTime;
+                const timeElapsed = currentTime - startTime;
+                const progress = Math.min(timeElapsed / duration, 1);
+
+                window.scrollTo(0, start + distance * easeInOutCubic(progress));
+
+                if (timeElapsed < duration) {
+                    requestAnimationFrame(animation);
+                }
+            }
+
+            requestAnimationFrame(animation);
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (!target) return;
+
+                e.preventDefault();
+                smoothScrollTo(target, 900); // durasi bisa diatur
+            });
+        });
+    </script>
     <script>
         document.getElementById('menu-toggle').addEventListener('click', () => {
             const menu = document.getElementById('mobile-menu');
@@ -269,10 +344,10 @@
         // 🔍 Live Search Berita (Debounced + Cached)
         const perfomSearchBerita = debounce(function(keyword) {
             showSpinner('searchSpinner');
-            
-            let url = keyword.length < 2 
-                ? `/berita/data?top=5` 
-                : `/berita/data?keyword=${encodeURIComponent(keyword)}`;
+
+            let url = keyword.length < 2 ?
+                `/berita/data?top=5` :
+                `/berita/data?keyword=${encodeURIComponent(keyword)}`;
 
             // Cek Cache JS Dulu
             if (apiCache.has(url)) {
@@ -309,9 +384,9 @@
         const performSearchDokumen = debounce(function(keyword) {
             showSpinner('dokumenSpinner');
 
-            let url = keyword.length < 2
-                ? `/dokumen/data`
-                : `/dokumen/data?keyword=${encodeURIComponent(keyword)}`;
+            let url = keyword.length < 2 ?
+                `/dokumen/data` :
+                `/dokumen/data?keyword=${encodeURIComponent(keyword)}`;
 
             if (apiCache.has(url)) {
                 renderResultsDokumen(apiCache.get(url));

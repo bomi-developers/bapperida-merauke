@@ -19,8 +19,6 @@
     <meta property="og:image:height" content="630">
     {{-- gambar  --}}
     <meta property="og:image" content="@yield('meta_image', asset('assets/LogoKabMerauke.png'))">
-
-
     {{-- Twitter Card --}}
     <meta name="twitter:title" content="@yield('meta_title', 'BAPPERIDA Kabupaten Merauke')">
     <meta name="twitter:description" content="@yield('meta_description', 'BAPPERIDA Kabupaten Merauke')">

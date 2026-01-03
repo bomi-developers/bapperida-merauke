@@ -44,6 +44,15 @@
                 </li>
             </ul>
         </div>
+        <div class="my-6">
+            <div
+                class="bg-indigo-200 dark:bg-indigo-600 border border-indigo-700 dark:border-indigo-200 px-4 py-3 rounded-xl text-indigo-700 dark:text-indigo-200">
+                <i class="bi bi-exclamation-triangle text-xl mr-3"></i>Tampilan di halaman utama akan
+                berubah
+                dalam
+                waktu sekitar 1 jam atau saat cache di perbarui.
+            </div>
+        </div>
 
         <form action="{{ route('website-setting.update') }}" method="POST" enctype="multipart/form-data"
             id="settingForm">
@@ -465,6 +474,7 @@
                             </div>
                         </div>
                     </div>
+
                     <section
                         class="my-5 p-6 bg-white rounded-xl border border-gray-200 dark:border-indigo-700 shadow-md">
                         <h3 class="text-lg font-semibold text-gray-900  mb-4 border-b border-gray-200  pb-3">
@@ -473,27 +483,50 @@
                             class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-12 items-center ">
                             <div class="w-full max-w-4xl mx-auto aspect-video">
                                 @php
-                                    $file = $settings->file_hero;
+                                    $bgImage = asset('assets/LogoKabMerauke.png');
+                                    $file = $settings->file_hero ?? null;
                                     $extension = pathinfo($file, PATHINFO_EXTENSION);
-                                    $isRemote =
-                                        str_contains($file, 'http') ||
-                                        str_contains($file, 'youtube') ||
-                                        str_contains($file, 'vimeo');
+                                    if ($file) {
+                                        $extension = pathinfo($file, PATHINFO_EXTENSION);
+                                        $isRemote =
+                                            str_contains($file, 'https') ||
+                                            str_contains($file, 'youtube') ||
+                                            str_contains($file, 'vimeo');
+                                        $filePath = $isRemote ? $file : asset('storage/' . $file);
+                                    } else {
+                                        $extension = 'png';
+                                        $isRemote = false;
+                                        $filePath = $bgImage;
+                                    }
+                                    function youtubeEmbed($url)
+                                    {
+                                        preg_match(
+                                            '%(?:youtube\.com/(?:watch\?v=|embed/)|youtu\.be/)([^&?/]+)%',
+                                            $url,
+                                            $matches,
+                                        );
+                                        return isset($matches[1])
+                                            ? 'https://www.youtube.com/embed/' . $matches[1]
+                                            : null;
+                                    }
+
+                                    $embedUrl = youtubeEmbed($file);
                                 @endphp
 
                                 @if ($isRemote)
-                                    <iframe src="{{ $file }}" frameborder="0" loading="lazy"
+                                    <iframe src="{{ $embedUrl }}" frameborder="0" loading="lazy"
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowfullscreen class="w-full h-full rounded-xl shadow-lg"></iframe>
+                                        allowfullscreen class="w-full h-full"></iframe>
                                 @elseif (in_array(strtolower($extension), ['mp4', 'webm', 'ogg']))
-                                    <video controls class="w-full h-full rounded-xl shadow-lg object-cover">
-                                        <source src="{{ asset('storage/' . $file) }}"
-                                            type="video/{{ $extension }}">
+                                    <video controls class="w-full h-full object-cover">
+                                        <source src="{{ $filePath }}" type="video/{{ $extension }}">
                                         Your browser does not support the video tag.
                                     </video>
                                 @else
-                                    <img src="{{ asset('storage/' . $file) }}" alt="Hero Image"
-                                        class="w-full h-full rounded-xl shadow-lg object-cover">
+                                    <div class="flex items-center justify-center w-full h-full">
+                                        <img src="{{ $filePath }}" alt="Hero Image"
+                                            class="w-full h-full object-contain">
+                                    </div>
                                 @endif
                             </div>
                             <div>
