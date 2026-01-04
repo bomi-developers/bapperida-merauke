@@ -45,7 +45,8 @@
                 @else
                     {{-- JIKA GAMBAR (MENGGUNAKAN FIT/CONTAIN agar tidak terpotong) --}}
                     <div class="flex items-center justify-center w-full h-full">
-                        <img src="{{ $filePath }}" alt="Hero Image" class="w-full h-full object-contain">
+                        <img src="{{ $filePath }}" loading="lazy" alt="Hero Image"
+                            class="w-full h-full object-contain">
                     </div>
                 @endif
             </div>
@@ -198,8 +199,9 @@
                                                 <div
                                                     class="absolute inset-0 bg-gradient-to-br from-[#004299] to-blue-500 rounded-full opacity-20 group-hover/card:opacity-30 transition-opacity">
                                                 </div>
-                                                <img x-bind:src="person.foto ? (storageUrl + person.foto) : (avatarUrl +
-                                                    encodeURIComponent(person.nama))"
+                                                <img loading="lazy"
+                                                    x-bind:src="person.foto ? (storageUrl + person.foto) : (avatarUrl +
+                                                        encodeURIComponent(person.nama))"
                                                     x-bind:alt="person.nama"
                                                     class="relative w-full h-full rounded-full object-cover border-4 border-white shadow-lg group-hover/card:border-[#CCFF00] transition-all duration-300"
                                                     x-on:error="$el.src = avatarUrl + encodeURIComponent(person.nama)">
@@ -313,7 +315,7 @@
 
             <div
                 class="absolute right-[-5%] top-1/2 -translate-y-1/2 hidden lg:block w-[450px] pointer-events-none select-none animate-float-slow opacity-30 mix-blend-screen">
-                <img src="{{ asset('assets/LogoKabMerauke.png') }}" alt="Watermark Logo"
+                <img src="{{ asset('assets/LogoKabMerauke.png') }}" alt="Watermark Logo" loading="lazy"
                     class="w-full h-auto transform rotate-[-12deg] drop-shadow-[0_0_30px_rgba(0,0,0,0.5)]">
             </div>
         </div>
@@ -403,6 +405,7 @@
                                 class="block relative h-[500px] md:h-[650px]">
                                 {{-- Image dengan Overlay Gelap --}}
                                 <img src="{{ $beritaUtama->cover_image ? asset('storage/' . $beritaUtama->cover_image) : 'https://placehold.co/800x1000' }}"
+                                    loading="lazy"
                                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                 <div
                                     class="absolute inset-0 bg-gradient-to-t from-[#004299] via-[#004299]/40 to-transparent">
@@ -444,7 +447,7 @@
                                 <a href="{{ route('berita.public.show', $populer) }}"
                                     class="relative w-28 h-28 sm:w-36 sm:h-36 flex-shrink-0 rounded-xl overflow-hidden shadow-lg border-2 border-transparent group-hover:border-[#CCFF00] transition-all">
                                     <img src="{{ $populer->cover_image ? asset('storage/' . $populer->cover_image) : 'https://placehold.co/400x400' }}"
-                                        alt="{{ $populer->title }}"
+                                        alt="{{ $populer->title }}" loading="lazy"
                                         class="w-full h-full object-cover transition-transform duration-500 group-hover:rotate-3 group-hover:scale-110">
                                     <div
                                         class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors">
@@ -639,7 +642,7 @@
                 {{-- KOLOM KANAN: ANIMASI/GAMBAR --}}
                 <div class="hidden relative md:flex justify-center lg:justify-end reveal-on-scroll ">
                     <div class="relative z-10 animate-float">
-                        <img src="{{ asset('img/data2.svg') }}" alt="Data Analysis Illustration"
+                        <img src="{{ asset('img/data2.svg') }}" loading="lazy" alt="Data Analysis Illustration"
                             class="max-w-full h-auto drop-shadow-2xl">
                     </div>
 

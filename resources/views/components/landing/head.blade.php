@@ -75,5 +75,16 @@
             animation: fadeInUp 1s ease-out forwards;
         }
     </style>
+    <style>
+        #heading {
+            clip-path: ellipse(140% 60% at 50% 0%);
+        }
+
+        @media (min-width: 768px) {
+            #heading {
+                clip-path: ellipse(120% 60% at 50% 0%);
+            }
+        }
+    </style>
     @stack('styles')
 </head>

@@ -139,7 +139,7 @@
             </div>
 
             <video id="hero-video" autoplay muted loop playsinline poster="{{ $bgImage }}"
-                class="absolute min-w-full min-h-full object-cover  transition-opacity duration-1000 z-0  ">
+                class="absolute w-full h-full object-cover  transition-opacity duration-1000 z-0  ">
                 <source src="{{ asset('img/drone.mp4') }}" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
@@ -154,7 +154,7 @@
     <div class="relative z-10 h-full flex flex-col items-center justify-start text-center px-3"
         style="padding-top: 15rem;">
         <div class="{{ Route::is('berita.public.show') ? 'hidden' : 'flex' }} mb-6 animate-float">
-            <img src="{{ asset('assets/LogoKabMerauke.png') }}" alt="Logo Kabupaten Merauke"
+            <img src="{{ asset('assets/LogoKabMerauke.png') }}" alt="Logo Kabupaten Merauke" loading="lazy"
                 class="h-32 md:h-42 w-auto drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
         </div>
 
@@ -177,93 +177,91 @@
 
 </section>
 @push('scripts')
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const video = document.getElementById('hero-video');
-                const placeholder = document.getElementById('video-placeholder');
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const video = document.getElementById('hero-video');
+            const placeholder = document.getElementById('video-placeholder');
 
-                if (video) {
-                    video.oncanplaythrough = () => {
-                        video.classList.remove('opacity-0');
-                        video.classList.add('opacity-100');
-                        setTimeout(() => {
-                            placeholder.classList.add('opacity-0');
-                        }, 1000);
-                    };
-
+            if (video) {
+                video.oncanplaythrough = () => {
+                    video.classList.remove('opacity-0');
+                    video.classList.add('opacity-100');
                     setTimeout(() => {
-                        if (video.readyState < 3) {
-                            console.log("Koneksi lambat, tetap menggunakan gambar statis.");
-                        }
-                    }, 5000);
-                }
+                        placeholder.classList.add('opacity-0');
+                    }, 1000);
+                };
 
-
-                const el = document.getElementById('hero-title');
-                const subtitle = document.getElementById('hero-subtitle');
-                const desc = document.getElementById('hero-desc');
-                if (!el) return;
-
-                const text = el.dataset.text;
-                const typingSpeed = 70;
-                const deletingSpeed = 40;
-                const holdAfterType = 4000;
-
-                let i = 0;
-                let isDeleting = false;
-
-                function showSubContent() {
-                    // Animasi MASUK: Turun dari atas ke posisi normal (0)
-                    setTimeout(() => {
-                        subtitle.classList.remove('opacity-0', '-translate-y-8');
-                        subtitle.classList.add('opacity-100', 'translate-y-0');
-                    }, 100);
-
-                    setTimeout(() => {
-                        desc.classList.remove('opacity-0', '-translate-y-8');
-                        desc.classList.add('opacity-100', 'translate-y-0');
-                    }, 300);
-                }
-
-                function hideSubContent() {
-                    // Animasi KELUAR: Naik ke atas dan menghilang
-                    subtitle.classList.remove('opacity-100', 'translate-y-0');
-                    subtitle.classList.add('opacity-0', '-translate-y-8');
-
-                    desc.classList.remove('opacity-100', 'translate-y-0');
-                    desc.classList.add('opacity-0', '-translate-y-8');
-                }
-
-                function typeLoop() {
-                    const currentContent = text.substring(0, i);
-                    el.textContent = currentContent;
-
-                    if (!isDeleting && i < text.length) {
-                        i++;
-                        setTimeout(typeLoop, typingSpeed);
-                    } else if (!isDeleting && i === text.length) {
-                        // SELESAI KETIK -> MASUK (TURUN)
-                        showSubContent();
-                        setTimeout(() => {
-                            isDeleting = true;
-                            typeLoop();
-                        }, holdAfterType);
-                    } else if (isDeleting && i > 0) {
-                        // MULAI HAPUS -> KELUAR (NAIK)
-                        if (i === text.length) hideSubContent();
-                        i--;
-                        setTimeout(typeLoop, deletingSpeed);
-                    } else {
-                        isDeleting = false;
-                        i = 0;
-                        // Reset posisi awal untuk animasi berikutnya agar bisa turun lagi
-                        setTimeout(typeLoop, typingSpeed);
+                setTimeout(() => {
+                    if (video.readyState < 3) {
+                        console.log("Koneksi lambat, tetap menggunakan gambar statis.");
                     }
-                }
+                }, 5000);
+            }
 
-                typeLoop();
-            });
-        </script>
-    @endpush
+
+            const el = document.getElementById('hero-title');
+            const subtitle = document.getElementById('hero-subtitle');
+            const desc = document.getElementById('hero-desc');
+            if (!el) return;
+
+            const text = el.dataset.text;
+            const typingSpeed = 70;
+            const deletingSpeed = 40;
+            const holdAfterType = 10000;
+
+            let i = 0;
+            let isDeleting = false;
+
+            function showSubContent() {
+                // Animasi MASUK: Turun dari atas ke posisi normal (0)
+                setTimeout(() => {
+                    subtitle.classList.remove('opacity-0', '-translate-y-8');
+                    subtitle.classList.add('opacity-100', 'translate-y-0');
+                }, 100);
+
+                setTimeout(() => {
+                    desc.classList.remove('opacity-0', '-translate-y-8');
+                    desc.classList.add('opacity-100', 'translate-y-0');
+                }, 300);
+            }
+
+            function hideSubContent() {
+                // Animasi KELUAR: Naik ke atas dan menghilang
+                subtitle.classList.remove('opacity-100', 'translate-y-0');
+                subtitle.classList.add('opacity-0', '-translate-y-8');
+
+                desc.classList.remove('opacity-100', 'translate-y-0');
+                desc.classList.add('opacity-0', '-translate-y-8');
+            }
+
+            function typeLoop() {
+                const currentContent = text.substring(0, i);
+                el.textContent = currentContent;
+
+                if (!isDeleting && i < text.length) {
+                    i++;
+                    setTimeout(typeLoop, typingSpeed);
+                } else if (!isDeleting && i === text.length) {
+                    // SELESAI KETIK -> MASUK (TURUN)
+                    showSubContent();
+                    setTimeout(() => {
+                        isDeleting = true;
+                        typeLoop();
+                    }, holdAfterType);
+                } else if (isDeleting && i > 0) {
+                    // MULAI HAPUS -> KELUAR (NAIK)
+                    if (i === text.length) hideSubContent();
+                    i--;
+                    setTimeout(typeLoop, deletingSpeed);
+                } else {
+                    isDeleting = false;
+                    i = 0;
+                    // Reset posisi awal untuk animasi berikutnya agar bisa turun lagi
+                    setTimeout(typeLoop, typingSpeed);
+                }
+            }
+
+            typeLoop();
+        });
+    </script>
 @endpush
