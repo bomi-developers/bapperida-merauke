@@ -52,8 +52,8 @@ class PegawaiController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'nip' => 'nullable|max:50|unique:pegawais,nip',
-            'nik' => 'nullable|max:50|unique:pegawais,nik',
+            'nip' => 'nullable|max:50',
+            'nik' => 'nullable|max:50',
             'id_golongan' => 'required|exists:golongans,id',
             'id_jabatan' => 'required|exists:jabatans,id',
             'id_bidang' => 'required|exists:bidangs,id',
@@ -65,7 +65,7 @@ class PegawaiController extends Controller
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
             $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            
+
             // Simpan ke storage/app/public/foto_pegawai
             $file->storeAs('foto_pegawai', $filename, 'public');
 

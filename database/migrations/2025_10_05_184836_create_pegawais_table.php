@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('id_jabatan')->constrained('jabatans')->onDelete('cascade');
             $table->foreignId('id_golongan')->constrained('golongans')->onDelete('cascade');
             $table->string('nama');
-            $table->string('nip')->unique();
-            $table->string('nik')->unique();
+            $table->string('nip')->nullable();
+            $table->string('nik')->nullable();
             $table->string('alamat')->nullable();
             $table->timestamps();
         });
