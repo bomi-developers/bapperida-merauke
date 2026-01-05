@@ -85,8 +85,8 @@ class PegawaiController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'nip' => "nullable|string|max:50|unique:pegawais,nip,{$pegawai->id}",
-            'nik' => "nullable|string|max:50|unique:pegawais,nik,{$pegawai->id}",
+            'nip' => "nullable|string|max:50",
+            'nik' => "nullable|string|max:50",
             'id_golongan' => 'required|exists:golongans,id',
             'id_jabatan' => 'required|exists:jabatans,id',
             'id_bidang' => 'required|exists:bidangs,id',

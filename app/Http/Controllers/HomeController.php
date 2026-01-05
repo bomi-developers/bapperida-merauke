@@ -79,7 +79,7 @@ class HomeController extends Controller
     {
         // $pegawai = Pegawai::with(['bidang', 'golongan'])->get();
         $pegawai = Cache::remember('pegawai', 60 * 60, function () {
-            return Pegawai::select('id', 'nama', 'id_bidang', 'id_golongan', 'foto')->with(['bidang', 'golongan'])->get();
+            return Pegawai::select('id', 'nama', 'id_bidang', 'id_golongan', 'id_jabatan', 'foto', 'nip')->with(['bidang', 'golongan', 'jabatan'])->get();
         });
 
         return view('landing_page.about.pegawai', compact('pegawai') +  [
