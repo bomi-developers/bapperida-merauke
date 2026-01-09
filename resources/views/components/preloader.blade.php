@@ -19,11 +19,26 @@
 
 @push('scripts')
     <script>
-        // Tutup preloader saat halaman selesai dimuat
-        window.addEventListener('load', () => {
+        // Check if we should skip the preloader (e.g. coming from form submission)
+        (function() {
             const preloader = document.getElementById('preloader');
-            preloader.classList.add('opacity-0');
-            setTimeout(() => preloader.remove(), 300); // hapus setelah animasi fade-out
-        });
+            const skipPreloader = sessionStorage.getItem('skipPreloader');
+
+            if (skipPreloader === 'true') {
+                // Skip preloader immediately
+                sessionStorage.removeItem('skipPreloader');
+                if (preloader) {
+                    preloader.remove();
+                }
+            } else {
+                // Normal preloader behavior - hide when page loads
+                window.addEventListener('load', () => {
+                    if (preloader) {
+                        preloader.classList.add('opacity-0');
+                        setTimeout(() => preloader.remove(), 300);
+                    }
+                });
+            }
+        })();
     </script>
 @endpush

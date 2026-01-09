@@ -155,6 +155,9 @@
     {{-- script components layout --}}
     <x-script></x-script>
 
+    {{-- Upload Progress Manager --}}
+    <script src="{{ asset('js/upload-progress-manager.js') }}"></script>
+
     @stack('scripts')
 </body>
 

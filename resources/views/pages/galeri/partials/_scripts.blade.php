@@ -34,7 +34,6 @@
         const showKeterangan = document.getElementById('show-keterangan');
         const showItemsGrid = document.getElementById('show-items-grid');
         const noItemsMessage = document.getElementById('no-items-message');
-        const loadingModal = document.getElementById('loading-modal');
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         let newItemCounter = 0;
@@ -42,8 +41,7 @@
         // --- Helper: Cek Dark Mode ---
         const isDarkMode = () => document.documentElement.classList.contains('dark');
         const swalColors = () => {
-            return isDarkMode() ?
-                {
+            return isDarkMode() ? {
                     background: '#1f2937',
                     color: '#f3f4f6'
                 } // bg-gray-800, text-gray-100
@@ -59,12 +57,6 @@
         const closeModal = () => modal.classList.add('hidden');
         const openShowModal = () => showModalEl.classList.remove('hidden');
         const closeShowModal = () => showModalEl.classList.add('hidden');
-        const openLoadingModal = () => {
-            if (loadingModal) loadingModal.classList.remove('hidden');
-        };
-        const closeLoadingModal = () => {
-            if (loadingModal) loadingModal.classList.add('hidden');
-        };
 
         const Toast = Swal.mixin({
             toast: true,
@@ -221,7 +213,7 @@
 
         if (closeModalBtns) closeModalBtns.forEach(btn => btn.addEventListener('click', closeModal));
         if (closeShowModalBtns) closeShowModalBtns.forEach(btn => btn.addEventListener('click',
-        closeShowModal));
+            closeShowModal));
 
         if (addImageBtn) addImageBtn.addEventListener('click', () => addNewItemInput('image'));
         if (addVideoBtn) addVideoBtn.addEventListener('click', () => addNewItemInput('video'));
@@ -412,45 +404,53 @@
         if (form) {
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const originalButtonText = saveBtn.innerHTML;
-                saveBtn.innerHTML =
-                    `<i class="bi bi-arrow-repeat animate-spin mr-2"></i> Memproses...`;
-                saveBtn.disabled = true;
-                openLoadingModal();
 
                 const formData = new FormData(form);
+                const title = judulInput.value || 'Album Galeri';
 
                 // Tambahkan checkbox manual karena jika uncheck tidak terkirim
                 if (!isHighlightedCheckbox.checked) {
                     // Jika uncheck, kita tidak perlu append apa-apa atau append '0'
-                    // Laravel biasanya handle checkbox boolean dgn validation atau default false
-                    // Tapi agar aman, FormData tidak mengirim field unchecked.
                 } else {
                     formData.set('is_highlighted', '1');
                 }
 
-                try {
-                    const response = await fetch(form.action, {
-                        method: 'POST', // Method POST (nanti _method PUT di handle Laravel jika edit)
-                        body: formData,
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken,
-                            'Accept': 'application/json'
-                        }
-                    });
-                    const res = await response.json();
+                // Close modal immediately - upload will continue in background
+                closeModal();
+                resetForm();
 
-                    if (!response.ok) {
-                        if (response.status === 422 && res.errors) {
+                // Show toast that upload has started
+                Toast.fire({
+                    icon: 'info',
+                    title: 'Upload dimulai di latar belakang...'
+                });
+
+                // Start background upload using upload progress manager
+                window.uploadProgressManager.upload(form.action, formData, {
+                    name: title,
+                    onSuccess: function(response) {
+                        console.log('Galeri berhasil disimpan:', response);
+                        Toast.fire({
+                            icon: 'success',
+                            title: response.message ||
+                                'Album galeri berhasil disimpan!'
+                        });
+                        loadData(); // Reload data tabel via AJAX
+                    },
+                    onError: function(error) {
+                        console.error('Galeri gagal disimpan:', error);
+                        const colors = swalColors();
+
+                        // Handle validation errors
+                        if (error.errors) {
                             let errorHtml =
-                            '<ul class="text-left list-disc list-inside space-y-1">';
-                            for (const key in res.errors) {
-                                res.errors[key].forEach(message => {
+                                '<ul class="text-left list-disc list-inside space-y-1">';
+                            for (const key in error.errors) {
+                                error.errors[key].forEach(message => {
                                     errorHtml += `<li>${message}</li>`;
                                 });
                             }
                             errorHtml += '</ul>';
-                            const colors = swalColors();
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Gagal Validasi',
@@ -459,32 +459,17 @@
                                 color: colors.color
                             });
                         } else {
-                            throw new Error(res.message ||
-                            `HTTP error! status: ${response.status}`);
+                            Swal.fire({
+                                title: 'Error',
+                                text: error.message ||
+                                    'Terjadi kesalahan saat menyimpan data.',
+                                icon: 'error',
+                                background: colors.background,
+                                color: colors.color
+                            });
                         }
-                    } else {
-                        // SUKSES
-                        closeModal();
-                        Toast.fire({
-                            icon: 'success',
-                            title: res.message
-                        });
-                        loadData(); // Reload data tabel via AJAX
                     }
-                } catch (error) {
-                    const colors = swalColors();
-                    Swal.fire({
-                        title: 'Error',
-                        text: error.message || 'Terjadi kesalahan saat menyimpan data.',
-                        icon: 'error',
-                        background: colors.background,
-                        color: colors.color
-                    });
-                } finally {
-                    saveBtn.innerHTML = originalButtonText;
-                    saveBtn.disabled = false;
-                    closeLoadingModal();
-                }
+                });
             });
         }
 

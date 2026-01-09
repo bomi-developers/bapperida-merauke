@@ -162,6 +162,14 @@ class BeritaController extends Controller
             }
         });
 
+        // Return JSON for AJAX requests, redirect for regular form submissions
+        if ($request->ajax() || $request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Berita berhasil ditambahkan!'
+            ]);
+        }
+
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil ditambahkan!');
     }
 
@@ -306,6 +314,14 @@ class BeritaController extends Controller
                 }
             }
         });
+
+        // Return JSON for AJAX requests, redirect for regular form submissions
+        if ($request->ajax() || $request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Berita berhasil diperbarui!'
+            ]);
+        }
 
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil diperbarui!');
     }

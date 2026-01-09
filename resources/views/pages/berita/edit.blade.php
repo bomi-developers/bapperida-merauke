@@ -183,6 +183,48 @@
 
     @push('scripts')
         @include('pages.berita._form_scripts', ['itemIndex' => $berita->items->count()])
+
+        {{-- Background Upload Script --}}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const form = document.querySelector('form[action="{{ route('admin.berita.update', $berita) }}"]');
+                if (!form) return;
+
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(form);
+                    const title = formData.get('title') || 'Update Berita';
+
+                    // Start background upload
+                    window.uploadProgressManager.upload(form.action, formData, {
+                        name: title,
+                        onSuccess: function(response) {
+                            console.log('Upload berhasil:', response);
+                        },
+                        onError: function(error) {
+                            console.error('Upload gagal:', error);
+                            if (typeof Swal !== 'undefined') {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal Upload',
+                                    text: error.message ||
+                                        'Terjadi kesalahan saat menyimpan berita.'
+                                });
+                            } else {
+                                alert('Gagal upload: ' + (error.message || 'Terjadi kesalahan'));
+                            }
+                        }
+                    });
+
+                    // Set flag to skip preloader on next page load
+                    sessionStorage.setItem('skipPreloader', 'true');
+
+                    // Redirect immediately to berita index (preloader will be skipped)
+                    window.location.href = "{{ route('admin.berita.index') }}";
+                });
+            });
+        </script>
     @endpush
 </x-layout>
 

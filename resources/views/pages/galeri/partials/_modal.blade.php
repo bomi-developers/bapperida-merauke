@@ -116,19 +116,7 @@
     </div>
 </div>
 
-{{-- ====================================== --}}
-{{-- === MODAL LOADING (PENGGANTI PROGRESS) === --}}
-{{-- ====================================== --}}
-<div id="loading-modal" class="fixed inset-0 z-[60] hidden bg-black bg-opacity-75 flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-xs p-6 text-center">
-        <div class="flex justify-center items-center mb-4">
-            <i class="bi bi-arrow-repeat text-4xl text-blue-600 animate-spin"></i>
-        </div>
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Sedang memproses...</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Harap tunggu sebentar.</p>
-    </div>
-</div>
-{{-- ====================================== --}}
+{{-- Loading modal removed - using background upload progress widget instead --}}
 
 
 <style>
