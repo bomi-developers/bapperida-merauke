@@ -285,52 +285,14 @@
                     }
                 }
 
-                // 2. LOGIK TOMBOL DELETE (DENGAN DARK MODE)
+                // 2. LOGIK TOMBOL DELETE (DENGAN deleteConfirm modal)
                 if (target.classList.contains('delete-btn')) {
-                    const colors = swalColors(); // Ambil warna sesuai mode
-
-                    Swal.fire({
-                        title: 'Anda yakin?',
-                        text: "Album ini beserta semua isinya akan dihapus permanen!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Ya, hapus!',
-                        cancelButtonText: 'Batal',
-                        background: colors.background,
-                        color: colors.color
-                    }).then(async (result) => {
-                        if (result.isConfirmed) {
-                            try {
-                                const response = await fetch(
-                                    `{{ url('admin/galeri') }}/${id}`, {
-                                        method: 'DELETE',
-                                        headers: {
-                                            'X-CSRF-TOKEN': csrfToken,
-                                            'Accept': 'application/json'
-                                        }
-                                    });
-                                const res = await response.json();
-                                if (!response.ok || !res.success) throw new Error(res
-                                    .message || 'Gagal menghapus');
-
-                                // Reload tabel agar data sinkron
-                                loadData();
-
-                                Toast.fire({
-                                    icon: 'success',
-                                    title: res.message
-                                });
-                            } catch (error) {
-                                Swal.fire({
-                                    title: 'Error',
-                                    text: error.message,
-                                    icon: 'error',
-                                    background: colors.background,
-                                    color: colors.color
-                                });
-                            }
+                    deleteConfirm({
+                        title: 'Hapus Album?',
+                        text: 'Album ini beserta semua isinya akan dihapus permanen!',
+                        url: `{{ url('admin/galeri') }}/${id}`,
+                        onSuccess: function() {
+                            loadData();
                         }
                     });
                 }

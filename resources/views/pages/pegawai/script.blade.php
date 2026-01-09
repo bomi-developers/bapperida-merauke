@@ -44,7 +44,7 @@
 
         // Create URL Object
         const targetUrl = new URL(url, window.location.origin);
-        
+
         // Append/Update Query Params
         targetUrl.searchParams.set('search', search);
         targetUrl.searchParams.set('golongan', selectGolongan);
@@ -73,8 +73,9 @@
                 if (res.data.length > 0) {
                     res.data.forEach((b, i) => {
                         // Cek apakah foto valid (bukan path lokal sampah)
-                        const hasValidPhoto = b.foto && !b.foto.includes('C:\\') && !b.foto.includes('fakepath');
-                        
+                        const hasValidPhoto = b.foto && !b.foto.includes('C:\\') && !b.foto.includes(
+                            'fakepath');
+
                         const foto = hasValidPhoto ?
                             `/storage/foto_pegawai/${b.foto}` :
                             `https://ui-avatars.com/api/?name=${encodeURIComponent(b.nama)}&size=128&background=004299&color=fff&bold=true`;
@@ -158,15 +159,15 @@
         document.getElementById('modalTitle').innerText = "Tambah Pegawai";
         document.getElementById('pegawai_id').value = "";
         document.getElementById('formPegawai').reset();
-        
+
         // Reset Preview
         document.getElementById('preview-image').src = "";
         document.getElementById('preview-container').classList.add('hidden');
-        
+
         document.getElementById('formModal').classList.remove('hidden');
     }
 
-   document.getElementById('userForm').addEventListener('submit', async function(e) {
+    document.getElementById('userForm').addEventListener('submit', async function(e) {
         e.preventDefault();
 
         let btn = e.target.querySelector('button[type="submit"]');
@@ -245,7 +246,7 @@
                         `<div class="text-red-500 dark:text-red-300 dark:bg-red-800 w-full bg-red-100 rounded-lg p-3">${result.message}</div>`;
                 } else {
                     defaultPassword.classList.add('hidden');
-                     document.getElementById('statusAkun').innerHTML = "";
+                    document.getElementById('statusAkun').innerHTML = "";
                     // Isi data user
                     document.getElementById('username').value = result.data.name ?? '';
                     document.getElementById('email').value = result.data.email ?? '';
@@ -270,7 +271,7 @@
         document.getElementById('id_jabatan').value = data.id_jabatan ?? '';
         document.getElementById('id_golongan').value = data.id_golongan ?? '';
         document.getElementById('id_bidang').value = data.id_bidang ?? '';
-        
+
         // Handle Foto Preview
         if (data.foto) {
             document.getElementById('preview-image').src = `/storage/foto_pegawai/${data.foto}`;
@@ -287,7 +288,7 @@
         document.getElementById('formModal').classList.add('hidden');
     }
 
-   
+
     function closeFormAkun() {
         document.getElementById('akunModal').classList.add('hidden');
     }
@@ -297,7 +298,7 @@
         const file = document.getElementById('foto').files[0];
         const reader = new FileReader();
 
-        reader.addEventListener("load", function () {
+        reader.addEventListener("load", function() {
             previewAx.src = reader.result;
             document.getElementById('preview-container').classList.remove('hidden');
         }, false);
@@ -312,10 +313,10 @@
 
         const id = document.getElementById('pegawai_id').value;
         const url = id ? `/admin/pegawai/${id}` : `/admin/pegawai`;
-        
+
         // Gunakan FormData untuk support file upload
         const formData = new FormData(this);
-        
+
         // Trik Laravel untuk method PUT dengan File Upload
         if (id) {
             formData.append('_method', 'PUT');
@@ -330,7 +331,7 @@
             })
             .then(res => res.json())
             .then(res => {
-                if(res.message) {
+                if (res.message) {
                     Toast.fire({
                         icon: 'success',
                         title: res.message
@@ -349,24 +350,14 @@
     });
 
     function deletePegawai(id) {
-        if (confirm("Yakin hapus pegawai ini?")) {
-            fetch(`/admin/pegawai/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                })
-                .then(res => res.json())
-                .then(res => {
-                    // alert(res.message);
-                    Toast.fire({
-                        icon: 'success',
-                        title: res.message
-                    });
-                    loadData();
-                })
-                .catch(err => console.error(err));
-        }
+        deleteConfirm({
+            title: 'Hapus Pegawai?',
+            text: 'Data pegawai ini akan dihapus permanen!',
+            url: `/admin/pegawai/${id}`,
+            onSuccess: function() {
+                loadData();
+            }
+        });
     }
 
     document.getElementById('search').addEventListener('input', () => loadData());

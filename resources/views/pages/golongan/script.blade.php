@@ -186,22 +186,14 @@
     });
 
     function deleteGolongan(id) {
-        if (confirm("Yakin hapus golongan ini?")) {
-            fetch(`/admin/golongan/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                })
-                .then(res => res.json())
-                .then(res => {
-                    Toast.fire({
-                        icon: 'success',
-                        title: res.message
-                    });
-                    loadData();
-                });
-        }
+        deleteConfirm({
+            title: 'Hapus Golongan?',
+            text: 'Data golongan ini akan dihapus permanen!',
+            url: `/admin/golongan/${id}`,
+            onSuccess: function() {
+                loadData();
+            }
+        });
     }
 
     document.getElementById('search').addEventListener('input', () => loadData());

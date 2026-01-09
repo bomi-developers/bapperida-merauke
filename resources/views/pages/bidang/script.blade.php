@@ -270,40 +270,15 @@
 
     // 🔹 Hapus
     function deleteBidang(id) {
-        deleteId = id;
-        document.getElementById('confirmModal').classList.remove('hidden');
-    }
-
-    document.getElementById('cancelDelete').addEventListener('click', () => {
-        document.getElementById('confirmModal').classList.add('hidden');
-    });
-
-    document.getElementById('confirmDelete').addEventListener('click', () => {
-        document.getElementById('confirmModal').classList.add('hidden');
-
-        if (!deleteId) return;
-
-        fetch(`/admin/bidang/${deleteId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            })
-            .then(res => res.json())
-            .then(res => {
-                Toast.fire({
-                    icon: 'success',
-                    title: res.message
-                });
+        deleteConfirm({
+            title: 'Hapus Bidang?',
+            text: 'Data bidang ini akan dihapus permanen!',
+            url: `/admin/bidang/${id}`,
+            onSuccess: function() {
                 loadData();
-            })
-            .catch(err => {
-                Toast.fire({
-                    icon: 'error',
-                    title: 'Gagal menghapus data'
-                });
-            });
-    });
+            }
+        });
+    }
 
     document.getElementById('search').addEventListener('input', () => loadData());
 

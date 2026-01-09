@@ -282,24 +282,14 @@
     });
 
     function deletePegawai(id) {
-        if (confirm("Yakin hapus pegawai ini?")) {
-            fetch(`/admin/opd/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                })
-                .then(res => res.json())
-                .then(res => {
-                    // alert(res.message);
-                    Toast.fire({
-                        icon: 'success',
-                        title: res.message
-                    });
-                    loadData();
-                })
-                .catch(err => console.error(err));
-        }
+        deleteConfirm({
+            title: 'Hapus Pegawai OPD?',
+            text: 'Data pegawai ini akan dihapus permanen!',
+            url: `/admin/opd/${id}`,
+            onSuccess: function() {
+                loadData();
+            }
+        });
     }
 
     document.getElementById('search').addEventListener('input', () => loadData());

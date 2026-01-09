@@ -126,21 +126,15 @@
             .catch(err => console.error(err));
     });
 
-    function deleteJabaran(id) {
-        if (confirm("Yakin hapus akun ini?")) {
-            fetch(`/admin/jabatan/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                })
-                .then(res => res.json())
-                .then(res => {
-                    alert(res.message);
-                    loadData();
-                })
-                .catch(err => console.error(err));
-        }
+    function deleteUser(id) {
+        deleteConfirm({
+            title: 'Hapus User?',
+            text: 'Data user ini akan dihapus permanen!',
+            url: `/admin/user/${id}`,
+            onSuccess: function() {
+                loadData();
+            }
+        });
     }
 
     document.getElementById('search').addEventListener('input', () => loadData());

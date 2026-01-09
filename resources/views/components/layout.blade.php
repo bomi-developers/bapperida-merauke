@@ -152,6 +152,8 @@
     {{-- toast --}}
     <x-toast></x-toast>
     <x-password></x-password>
+    {{-- Delete Confirmation Modal --}}
+    <x-delete-confirm-modal></x-delete-confirm-modal>
     {{-- script components layout --}}
     <x-script></x-script>
 

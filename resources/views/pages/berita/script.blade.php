@@ -208,22 +208,19 @@
     }
 
     function deleteBerita(id) {
-        if (confirm("Yakin hapus berita ini?")) {
-            fetch(`/admin/berita/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                })
-                .then(res => res.json())
-                .then(res => {
-                    Toast.fire({
-                        icon: 'success',
-                        title: res.message
-                    });
-                    loadData();
-                });
-        }
+        deleteConfirm({
+            title: 'Hapus Berita?',
+            text: 'Berita ini beserta semua kontennya akan dihapus permanen!',
+            confirmText: 'Ya, hapus!',
+            cancelText: 'Batal',
+            url: `/admin/berita/${id}`,
+            onSuccess: function(response) {
+                loadData();
+            },
+            onError: function(error) {
+                console.error('Delete error:', error);
+            }
+        });
     }
 
     document.getElementById('search').addEventListener('input', () => loadData());

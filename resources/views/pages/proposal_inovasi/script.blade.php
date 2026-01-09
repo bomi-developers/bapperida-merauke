@@ -418,40 +418,15 @@
 
     // Delete
     function deleteProposal(id) {
-        deleteId = id;
-        document.getElementById('confirmModal').classList.remove('hidden');
-    }
-
-    function closeConfirmModal() {
-        document.getElementById('confirmModal').classList.add('hidden');
-        deleteId = null;
-    }
-
-    document.getElementById('confirmDelete').addEventListener('click', () => {
-        if (!deleteId) return;
-
-        fetch(`/admin/proposal/${deleteId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            })
-            .then(res => res.json())
-            .then(res => {
-                Toast.fire({
-                    icon: 'success',
-                    title: res.message
-                });
-                closeConfirmModal();
+        deleteConfirm({
+            title: 'Hapus Proposal?',
+            text: 'Proposal inovasi ini akan dihapus permanen!',
+            url: `/admin/proposal/${id}`,
+            onSuccess: function() {
                 loadData();
-            })
-            .catch(err => {
-                Toast.fire({
-                    icon: 'error',
-                    title: 'Gagal menghapus data'
-                });
-            });
-    });
+            }
+        });
+    }
 
     // Export
     function exportData() {

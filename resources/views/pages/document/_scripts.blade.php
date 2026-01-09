@@ -280,33 +280,12 @@
                 }
 
                 if (target.classList.contains('delete-btn')) {
-                    Swal.fire({
-                        title: 'Anda yakin?',
-                        text: "Dokumen ini akan dihapus permanen!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ya, hapus!',
-                        cancelButtonText: 'Batal'
-                    }).then(async (result) => {
-                        if (result.isConfirmed) {
-                            const response = await fetch(
-                                `{{ url('admin/documents') }}/${id}`, {
-                                    method: 'DELETE',
-                                    headers: {
-                                        'X-CSRF-TOKEN': csrfToken,
-                                        'Accept': 'application/json'
-                                    }
-                                });
-                            const res = await response.json();
-                            if (res.success) {
-                                document.getElementById(`doc-row-${id}`).remove();
-                                Toast.fire({
-                                    icon: 'success',
-                                    title: res.message
-                                });
-                            }
+                    deleteConfirm({
+                        title: 'Hapus Dokumen?',
+                        text: 'Dokumen ini akan dihapus permanen!',
+                        url: `{{ url('admin/documents') }}/${id}`,
+                        onSuccess: function() {
+                            document.getElementById(`doc-row-${id}`).remove();
                         }
                     });
                 }
