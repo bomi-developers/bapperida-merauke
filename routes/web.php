@@ -272,7 +272,16 @@ Route::middleware(['auth'])->group(function () {
       Route::get('user/admin', [\App\Http\Controllers\UserController::class, 'admin'])->name('user.admin');
       Route::get('user/admin-data', [\App\Http\Controllers\UserController::class, 'admin_data'])->name('user.admin-data');
     });
+
     // berita
+    // Berita Trash Routes (Must come before resource routes to avoid conflict)
+    Route::get('berita/trash', [\App\Http\Controllers\BeritaController::class, 'trash'])->name('berita.trash');
+    Route::post('berita/{id}/restore', [\App\Http\Controllers\BeritaController::class, 'restore'])->name('berita.restore');
+    Route::delete('berita/{id}/force-delete', [\App\Http\Controllers\BeritaController::class, 'forceDelete'])->name('berita.force-delete');
+    Route::delete('berita/force-delete-all', [\App\Http\Controllers\BeritaController::class, 'forceDeleteAll'])->name('berita.force-delete-all');
+    Route::get('berita/search', [\App\Http\Controllers\BeritaController::class, 'search'])->name('berita.search'); // Search is GET, but good practice to keep specific routes first
+
+    // Berita Resource Routes
     Route::get('berita', [\App\Http\Controllers\BeritaController::class, 'index'])->name('berita.index');
     Route::get('berita/create', [\App\Http\Controllers\BeritaController::class, 'create'])->name('berita.create');
     Route::get('berita/data', [\App\Http\Controllers\BeritaController::class, 'getData'])->name('berita.data');
@@ -280,7 +289,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('berita/{berita}/edit', [\App\Http\Controllers\BeritaController::class, 'edit'])->name('berita.edit');
     Route::put('berita/{berita}', [\App\Http\Controllers\BeritaController::class, 'update'])->name('berita.update');
     Route::delete('berita/{berita}', [\App\Http\Controllers\BeritaController::class, 'destroy'])->name('berita.destroy');
-    Route::get('berita/search', [\App\Http\Controllers\BeritaController::class, 'search'])->name('berita.search');
+
     // document
     Route::get('documents', [DocumentController::class, 'index'])->name('documents.index');
     Route::post('documents', [DocumentController::class, 'store'])->name('documents.store');
@@ -288,7 +297,15 @@ Route::middleware(['auth'])->group(function () {
     Route::put('documents/{document}', [DocumentController::class, 'update'])->name('documents.update');
     Route::delete('documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
     Route::get('/documents/{document}/download', [DocumentController::class, 'downloadFile'])->name('documents.download');
+
     // galeri
+    // Galeri Trash Routes (Must come before resource routes)
+    Route::get('galeri/trash', [GaleriController::class, 'trash'])->name('galeri.trash');
+    Route::post('galeri/{id}/restore', [GaleriController::class, 'restore'])->name('galeri.restore');
+    Route::delete('galeri/{id}/force-delete', [GaleriController::class, 'forceDelete'])->name('galeri.force-delete');
+    Route::delete('galeri/force-delete-all', [GaleriController::class, 'forceDeleteAll'])->name('galeri.force-delete-all');
+
+    // Galeri Resource Routes
     Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri.index');
     Route::get('/galeri/data', [GaleriController::class, 'getData'])->name('galeri.data');
     Route::post('/galeri', [GaleriController::class, 'store'])->name('galeri.store');

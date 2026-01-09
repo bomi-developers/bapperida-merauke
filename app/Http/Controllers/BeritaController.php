@@ -331,10 +331,57 @@ class BeritaController extends Controller
     }
 
     /**
-     * Menghapus berita dan file-file terkait.
+     * Menghapus berita dan file-file terkait (Soft Delete).
      */
     public function destroy(Berita $berita)
     {
+        // Authorization Check
+        if (Auth::user()->role !== 'super_admin' && $berita->user_id !== Auth::id()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized action.'], 403);
+        }
+
+        $berita->delete(); // Soft delete
+        return response()->json(['success' => true, 'message' => 'Berita dipindahkan ke sampah']);
+    }
+
+    /**
+     * Menampilkan daftar berita yang dihapus (Trash).
+     */
+    public function trash(Request $request)
+    {
+        if ($request->ajax()) {
+            $deletedBeritas = Berita::onlyTrashed()->with('author')->latest('deleted_at')->get();
+            return response()->json([
+                'html' => view('pages.berita._trash_rows', compact('deletedBeritas'))->render(),
+                'count' => $deletedBeritas->count()
+            ]);
+        }
+        return abort(404);
+    }
+
+    /**
+     * Memulihkan berita yang dihapus.
+     */
+    public function restore($id)
+    {
+        $berita = Berita::onlyTrashed()->findOrFail($id);
+
+        // Authorization Check
+        if (Auth::user()->role !== 'super_admin' && $berita->user_id !== Auth::id()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized action.'], 403);
+        }
+
+        $berita->restore();
+        return response()->json(['success' => true, 'message' => 'Berita berhasil dipulihkan']);
+    }
+
+    /**
+     * Menghapus berita secara permanen.
+     */
+    public function forceDelete($id)
+    {
+        $berita = Berita::onlyTrashed()->findOrFail($id);
+
         // Authorization Check
         if (Auth::user()->role !== 'super_admin' && $berita->user_id !== Auth::id()) {
             return response()->json(['success' => false, 'message' => 'Unauthorized action.'], 403);
@@ -349,10 +396,45 @@ class BeritaController extends Controller
                     Storage::disk('public')->delete($item->content);
                 }
             }
-            $berita->delete(); // Hapus berita, dan items akan terhapus via cascade
+            $berita->forceDelete();
         });
-        // return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil dihapus!');
-        return response()->json(['success' => true, 'message' => 'Berita berhasil dihapus']);
+
+        return response()->json(['success' => true, 'message' => 'Berita dihapus permanen']);
+    }
+
+    /**
+     * Menghapus semua berita di sampah secara permanen.
+     */
+    public function forceDeleteAll()
+    {
+        if (Auth::user()->role !== 'super_admin') {
+            // Jika bukan super admin, hanya hapus miliknya sendiri (opsional, tergantung kebijakan)
+            $beritas = Berita::onlyTrashed()->where('user_id', Auth::id())->get();
+        } else {
+            $beritas = Berita::onlyTrashed()->get();
+        }
+
+        $count = $beritas->count();
+
+        if ($count === 0) {
+            return response()->json(['success' => false, 'message' => 'Sampah kosong']);
+        }
+
+        foreach ($beritas as $berita) {
+            DB::transaction(function () use ($berita) {
+                if ($berita->cover_image) {
+                    Storage::disk('public')->delete($berita->cover_image);
+                }
+                foreach ($berita->items as $item) {
+                    if ($item->type === 'image' && $item->content) {
+                        Storage::disk('public')->delete($item->content);
+                    }
+                }
+                $berita->forceDelete();
+            });
+        }
+
+        return response()->json(['success' => true, 'message' => "$count berita dihapus permanen"]);
     }
 
     // --- METODE PUBLIK ---

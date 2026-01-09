@@ -207,15 +207,119 @@
 
     }
 
+    // --- Recycle Bin Logic ---
+
+    // Open Modal
+    document.getElementById('open-trash-btn').addEventListener('click', () => {
+        document.getElementById('trash-modal').classList.remove('hidden');
+        loadTrash();
+    });
+
+    // Close Modal
+    document.querySelectorAll('.close-trash-modal').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.getElementById('trash-modal').classList.add('hidden');
+        });
+    });
+
+    // Load Trash Data
+    function loadTrash() {
+        const loading = document.getElementById('trash-loading');
+        const tbody = document.getElementById('trash-table-body');
+        const forceDeleteAllBtn = document.getElementById('force-delete-all-btn');
+
+        loading.classList.remove('hidden');
+        forceDeleteAllBtn.classList.add('hidden');
+
+        fetch("{{ route('admin.berita.trash') }}", {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(res => res.json())
+            .then(res => {
+                tbody.innerHTML = res.html;
+                if (res.count > 0) {
+                    forceDeleteAllBtn.classList.remove('hidden');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                tbody.innerHTML =
+                    '<tr><td colspan="2" class="text-center py-4 text-red-500">Gagal memuat data sampah.</td></tr>';
+            })
+            .finally(() => {
+                loading.classList.add('hidden');
+            });
+    }
+
+    // Event Delegation for Restore & Force Delete buttons inside the modal
+    document.getElementById('trash-table-body').addEventListener('click', function(e) {
+        const restoreBtn = e.target.closest('.btn-restore');
+        const deleteBtn = e.target.closest('.btn-force-delete');
+
+        if (restoreBtn) {
+            const id = restoreBtn.dataset.id;
+            // Use deleteConfirm with success type for Restore
+            deleteConfirm({
+                title: 'Pulihkan Berita?',
+                text: 'Berita akan dikembalikan ke daftar aktif.',
+                confirmText: 'Ya, Pulihkan!',
+                cancelText: 'Batal',
+                type: 'success',
+                iconClass: 'bi-arrow-counterclockwise',
+                url: `/admin/berita/${id}/restore`,
+                method: 'POST',
+                onSuccess: function(response) {
+                    loadTrash();
+                    loadData();
+                }
+            });
+        } else if (deleteBtn) {
+            const id = deleteBtn.dataset.id;
+            // Use deleteConfirm with danger type for Force Delete
+            deleteConfirm({
+                title: 'Hapus Permanen?',
+                text: 'Berita ini tidak dapat dikembalikan lagi!',
+                confirmText: 'Ya, Hapus Permanen!',
+                cancelText: 'Batal',
+                type: 'danger',
+                url: `/admin/berita/${id}/force-delete`,
+                method: 'DELETE',
+                onSuccess: function(response) {
+                    loadTrash();
+                    // loadData(); // No need to reload main table
+                }
+            });
+        }
+    });
+
+    // Force Delete All
+    document.getElementById('force-delete-all-btn').addEventListener('click', () => {
+        deleteConfirm({
+            title: 'Kosongkan Sampah?',
+            text: 'Semua berita di sampah akan dihapus permanen!',
+            confirmText: 'Ya, Kosongkan!',
+            cancelText: 'Batal',
+            type: 'danger',
+            url: `/admin/berita/force-delete-all`,
+            method: 'DELETE',
+            onSuccess: function(response) {
+                loadTrash();
+            }
+        });
+    });
+
     function deleteBerita(id) {
         deleteConfirm({
-            title: 'Hapus Berita?',
-            text: 'Berita ini beserta semua kontennya akan dihapus permanen!',
-            confirmText: 'Ya, hapus!',
+            title: 'Pindahkan ke Sampah?',
+            text: 'Berita ini akan dipindahkan ke Recycle Bin.',
+            confirmText: 'Ya, Hapus', // Changed from "Ya, hapus!"
             cancelText: 'Batal',
             url: `/admin/berita/${id}`,
             onSuccess: function(response) {
                 loadData();
+                // Opsional: loadTrash() jika modal terbuka, tapi biasanya delete dari main table
             },
             onError: function(error) {
                 console.error('Delete error:', error);

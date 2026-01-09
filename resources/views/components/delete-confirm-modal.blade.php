@@ -20,9 +20,10 @@
         id="delete-confirm-content" style="transform: scale(0.95); opacity: 0;">
         <!-- Header with Icon -->
         <div class="pt-6 px-6 text-center">
-            <div
-                class="mx-auto w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mb-4">
-                <i class="bi bi-exclamation-triangle-fill text-3xl text-red-600 dark:text-red-400"></i>
+            <div id="delete-confirm-icon-container"
+                class="mx-auto w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mb-4 transition-colors duration-200">
+                <i id="delete-confirm-icon"
+                    class="bi bi-exclamation-triangle-fill text-3xl text-red-600 dark:text-red-400 transition-colors duration-200"></i>
             </div>
             <h3 id="delete-confirm-title" class="text-xl font-bold text-gray-900 dark:text-white mb-2">
                 Anda yakin?
@@ -63,6 +64,10 @@
             var confirmBtnText = document.getElementById('delete-confirm-btn-text');
             var cancelBtn = document.getElementById('delete-confirm-cancel');
 
+            // New Elements for Dynamic Styling
+            var iconContainer = document.getElementById('delete-confirm-icon-container');
+            var icon = document.getElementById('delete-confirm-icon');
+
             if (!modal) {
                 console.error('Delete confirm modal not found');
                 return;
@@ -76,6 +81,8 @@
                 cancelText: options.cancelText || 'Batal',
                 url: options.url || '',
                 method: options.method || 'DELETE',
+                type: options.type || 'danger', // danger, success, info
+                iconClass: options.iconClass || null, // custom icon override
                 onSuccess: options.onSuccess || function() {},
                 onError: options.onError || function() {}
             };
@@ -85,6 +92,35 @@
             textEl.textContent = config.text;
             confirmBtnText.textContent = config.confirmText;
             cancelBtn.textContent = config.cancelText;
+
+            // Apply Styling based on Type
+            // Reset base classes
+            iconContainer.className =
+                'mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-colors duration-200';
+            icon.className = 'text-3xl transition-colors duration-200';
+            confirmBtn.className =
+                'px-5 py-2.5 text-sm font-medium rounded-xl text-white transition-colors duration-200 flex items-center gap-2';
+
+            if (config.type === 'success') {
+                iconContainer.classList.add('bg-green-100', 'dark:bg-green-900/30');
+                icon.className += ' bi ' + (config.iconClass || 'bi-check-lg') +
+                    ' text-green-600 dark:text-green-400';
+                confirmBtn.classList.add('bg-green-600', 'hover:bg-green-700', 'dark:bg-green-700',
+                    'dark:hover:bg-green-600');
+            } else if (config.type === 'info') {
+                iconContainer.classList.add('bg-blue-100', 'dark:bg-blue-900/30');
+                icon.className += ' bi ' + (config.iconClass || 'bi-info-circle-fill') +
+                    ' text-blue-600 dark:text-blue-400';
+                confirmBtn.classList.add('bg-blue-600', 'hover:bg-blue-700', 'dark:bg-blue-700',
+                    'dark:hover:bg-blue-600');
+            } else {
+                // Default: danger
+                iconContainer.classList.add('bg-red-100', 'dark:bg-red-900/30');
+                icon.className += ' bi ' + (config.iconClass || 'bi-exclamation-triangle-fill') +
+                    ' text-red-600 dark:text-red-400';
+                confirmBtn.classList.add('bg-red-600', 'hover:bg-red-700', 'dark:bg-red-700',
+                    'dark:hover:bg-red-600');
+            }
 
             // Show modal
             modal.classList.remove('hidden');
@@ -104,10 +140,24 @@
                     // Reset button
                     confirmBtn.disabled = false;
                     confirmBtnText.textContent = config.confirmText;
-                    var icon = confirmBtn.querySelector('i');
-                    if (icon) {
-                        icon.className = 'bi bi-trash3';
+
+                    // Reset Icon Spinner
+                    if (config.type === 'success') icon.className = 'bi ' + (config.iconClass ||
+                        'bi-check-lg') + ' text-green-600 dark:text-green-400';
+                    else if (config.type === 'info') icon.className = 'bi ' + (config.iconClass ||
+                        'bi-info-circle-fill') + ' text-blue-600 dark:text-blue-400';
+                    else icon.className = 'bi ' + (config.iconClass || 'bi-exclamation-triangle-fill') +
+                        ' text-red-600 dark:text-red-400';
+
+                    // Remove button icon spinner
+                    var btnIcon = confirmBtn.querySelector('i');
+                    if (btnIcon) {
+                        if (config.type === 'success') btnIcon.className = 'bi bi-check-lg';
+                        else if (config.type === 'info') btnIcon.className =
+                            'bi bi-check-lg'; // or save
+                        else btnIcon.className = 'bi bi-trash3';
                     }
+
                 }, 200);
                 // Remove listeners
                 cancelBtn.onclick = null;
@@ -126,10 +176,10 @@
             // Confirm handler
             confirmBtn.onclick = function() {
                 confirmBtn.disabled = true;
-                confirmBtnText.textContent = 'Menghapus...';
-                var icon = confirmBtn.querySelector('i');
-                if (icon) {
-                    icon.className = 'bi bi-arrow-repeat animate-spin';
+                confirmBtnText.textContent = 'Memproses...';
+                var btnIcon = confirmBtn.querySelector('i');
+                if (btnIcon) {
+                    btnIcon.className = 'bi bi-arrow-repeat animate-spin';
                 }
 
                 var csrfToken = document.querySelector('meta[name="csrf-token"]');
@@ -140,13 +190,15 @@
                         headers: {
                             'X-CSRF-TOKEN': csrfToken,
                             'Accept': 'application/json',
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json' // Ensure content type is set
                         }
                     })
                     .then(function(response) {
                         return response.json().then(function(data) {
                             if (!response.ok) throw new Error(data.message ||
                             'Gagal menghapus');
+                            if (data.success === false) throw new Error(data.message ||
+                                'Gagal menghapus');
                             return data;
                         });
                     })

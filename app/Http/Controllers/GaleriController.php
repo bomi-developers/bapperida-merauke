@@ -277,10 +277,54 @@ class GaleriController extends Controller
     }
 
     /**
-     * Menghapus album galeri.
+     * Menghapus album galeri (Soft Delete).
      */
     public function destroy(Galeri $galeri)
     {
+        try {
+            $galeri->delete(); // Soft delete
+            return response()->json(['success' => true, 'message' => 'Album galeri dipindahkan ke sampah!']);
+        } catch (\Exception $e) {
+            Log::error('Gagal menghapus galeri: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus album. Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Menampilkan daftar galeri yang dihapus (Trash).
+     */
+    public function trash(Request $request)
+    {
+        if ($request->ajax()) {
+            $deletedGaleris = Galeri::onlyTrashed()->with('firstItem')->latest('deleted_at')->get();
+            return response()->json([
+                'html' => view('pages.galeri.partials._trash_rows', compact('deletedGaleris'))->render(),
+                'count' => $deletedGaleris->count()
+            ]);
+        }
+        return abort(404);
+    }
+
+    /**
+     * Memulihkan galeri yang dihapus.
+     */
+    public function restore($id)
+    {
+        $galeri = Galeri::onlyTrashed()->findOrFail($id);
+        $galeri->restore();
+        return response()->json(['success' => true, 'message' => 'Album berhasil dipulihkan']);
+    }
+
+    /**
+     * Menghapus galeri secara permanen.
+     */
+    public function forceDelete($id)
+    {
+        $galeri = Galeri::onlyTrashed()->findOrFail($id);
+
         try {
             DB::transaction(function () use ($galeri) {
                 // 1. Hapus semua file fisik dari storage
@@ -291,20 +335,43 @@ class GaleriController extends Controller
                 }
 
                 // 2. Hapus item dari database (seharusnya otomatis jika cascade, tapi kita lakukan manual)
-                $galeri->items()->delete();
+                $galeri->items()->forceDelete(); // Force delete items
 
                 // 3. Hapus album utama
-                $galeri->delete();
+                $galeri->forceDelete();
             });
 
-            return response()->json(['success' => true, 'message' => 'Album galeri berhasil dihapus!']);
+            return response()->json(['success' => true, 'message' => 'Album dihapus permanen']);
         } catch (\Exception $e) {
-            Log::error('Gagal menghapus galeri: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal menghapus album. Error: ' . $e->getMessage()
-            ], 500);
+            return response()->json(['success' => false, 'message' => 'Gagal hapus permanen: ' . $e->getMessage()], 500);
         }
+    }
+
+    /**
+     * Menghapus semua galeri di sampah secara permanen.
+     */
+    public function forceDeleteAll()
+    {
+        $galeris = Galeri::onlyTrashed()->get();
+        $count = $galeris->count();
+
+        if ($count === 0) {
+            return response()->json(['success' => false, 'message' => 'Sampah kosong']);
+        }
+
+        foreach ($galeris as $galeri) {
+            DB::transaction(function () use ($galeri) {
+                foreach ($galeri->items as $item) {
+                    if ($item->tipe_file !== 'video_url' && $item->file_path) {
+                        Storage::disk('public')->delete($item->file_path);
+                    }
+                }
+                $galeri->items()->forceDelete();
+                $galeri->forceDelete();
+            });
+        }
+
+        return response()->json(['success' => true, 'message' => "$count album dihapus permanen"]);
     }
 
     /**
