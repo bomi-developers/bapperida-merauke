@@ -11,7 +11,7 @@
             </button>
         </div>
 
-        <form action="{{ route('triwulan.store') }}" method="POST" enctype="multipart/form-data">
+        <form id="uploadForm" action="{{ route('triwulan.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             {{-- Select Periode --}}

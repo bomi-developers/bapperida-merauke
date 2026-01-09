@@ -75,8 +75,7 @@
             // Helper Cek Dark Mode
             const isDarkMode = () => document.documentElement.classList.contains('dark');
             const swalColors = () => {
-                return isDarkMode() ?
-                    {
+                return isDarkMode() ? {
                         background: '#1f2937',
                         color: '#f3f4f6'
                     } // Gelap
@@ -311,37 +310,13 @@
                     // --- DELETE ---
                     if (deleteBtn) {
                         const id = deleteBtn.dataset.id;
-                        const colors = swalColors(); // Ambil warna dark mode
 
-                        Swal.fire({
-                            title: 'Hapus kategori?',
-                            text: "Data tidak dapat dikembalikan!",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#d33',
-                            cancelButtonColor: '#3085d6',
-                            confirmButtonText: 'Ya, hapus',
-                            cancelButtonText: 'Batal',
-                            background: colors.background,
-                            color: colors.color
-                        }).then(result => {
-                            if (result.isConfirmed) {
-                                const deleteUrl = `${baseUrl}/${id}`;
-                                fetch(deleteUrl, {
-                                        method: "DELETE",
-                                        headers: {
-                                            "X-CSRF-TOKEN": csrfToken
-                                        }
-                                    })
-                                    .then(res => res.json())
-                                    .then(res => {
-                                        Toast.fire({
-                                            icon: "success",
-                                            title: res.message
-                                        });
-                                        loadData();
-                                    })
-                                    .catch(err => console.error(err));
+                        deleteConfirm({
+                            title: 'Hapus Kategori?',
+                            text: 'Kategori ini akan dihapus permanen!',
+                            url: `${baseUrl}/${id}`,
+                            onSuccess: function() {
+                                loadData();
                             }
                         });
                     }

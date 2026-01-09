@@ -99,7 +99,7 @@ class BeritaController extends Controller
             'items' => 'required|array|min:1',
             'items.*.type' => 'required|in:text,image,video,embed,quote',
             'items.*.content' => 'nullable|string',
-            'items.*.file' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:20480', // 20MB
+            'items.*.file' => 'nullable|file|mimes:jpeg,png,jpg,webp,mp4,mov,avi,mkv|max:51200', // 50MB, added video mimes
             'items.*.caption' => 'nullable|string|max:255',
             'items.*.position' => 'required|integer',
         ]);
@@ -140,7 +140,7 @@ class BeritaController extends Controller
                 $contentToSave = $itemData['content'] ?? null;
                 $captionToSave = $itemData['caption'] ?? null;
 
-                if ($itemData['type'] === 'image' && $request->hasFile("items.{$index}.file")) {
+                if (($itemData['type'] === 'image' || $itemData['type'] === 'video') && $request->hasFile("items.{$index}.file")) {
                     $itemFile = $request->file("items.{$index}.file");
                     $slug = Str::slug($validatedData['title']);
                     $itemExtension = $itemFile->getClientOriginalExtension();
@@ -149,8 +149,10 @@ class BeritaController extends Controller
                     // Simpan file asli (ukuran besar)
                     $contentToSave = $itemFile->storeAs('berita/items', $itemFilename, 'public');
 
-                    // Kirim tugas kompresi ke antrian (Queue)
-                    CompressBeritaImage::dispatch($contentToSave);
+                    // Kirim tugas kompresi ke antrian (Queue) HANYA JIKA GAMBAR
+                    if ($itemData['type'] === 'image') {
+                        CompressBeritaImage::dispatch($contentToSave);
+                    }
                 }
 
                 $berita->items()->create([
@@ -207,7 +209,7 @@ class BeritaController extends Controller
             'items' => 'sometimes|array',
             'items.*.type' => 'required|in:text,image,video,embed,quote',
             'items.*.content' => 'nullable|string',
-            'items.*.file' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:20480', // 20MB
+            'items.*.file' => 'nullable|file|mimes:jpeg,png,jpg,webp,mp4,mov,avi,mkv|max:51200', // 50MB
             'items.*.caption' => 'nullable|string|max:255',
             'items.*.position' => 'required|integer',
         ]);
@@ -263,7 +265,7 @@ class BeritaController extends Controller
                     $captionToSave = $itemData['caption'] ?? null;
                     $oldContentPath = $itemData['content'] ?? null; // Simpan path lama (jika ada)
 
-                    if ($itemData['type'] === 'image') {
+                    if ($itemData['type'] === 'image' || $itemData['type'] === 'video') {
                         // Jika ada file BARU yang diupload untuk item ini
                         if ($request->hasFile("items.{$index}.file")) {
                             $itemFile = $request->file("items.{$index}.file");
@@ -274,8 +276,10 @@ class BeritaController extends Controller
                             // Simpan file asli baru
                             $contentToSave = $itemFile->storeAs('berita/items', $itemFilename, 'public');
 
-                            // Kirim tugas kompresi
-                            CompressBeritaImage::dispatch($contentToSave);
+                            // Kirim tugas kompresi HANYA JIKA GAMBAR
+                            if ($itemData['type'] === 'image') {
+                                CompressBeritaImage::dispatch($contentToSave);
+                            }
 
                             // Hapus file gambar lama jika ada dan berbeda
                             if (!empty($oldContentPath) && in_array($oldContentPath, $oldImagePaths) && $oldContentPath !== $contentToSave) {

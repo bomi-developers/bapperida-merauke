@@ -216,6 +216,13 @@ class RenjaController extends Controller
             $msg = 'Dokumen Renja berhasil diupload.';
         }
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $msg,
+            ]);
+        }
+
         return back()->with('success', $msg);
     }
 

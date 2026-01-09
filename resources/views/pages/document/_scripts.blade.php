@@ -363,37 +363,67 @@
                 e.preventDefault();
                 buildJsonData();
                 const formData = new FormData(form);
-                const response = await fetch(form.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Accept': 'application/json'
-                    }
-                });
-                const res = await response.json();
-                if (!response.ok) {
-                    let errorMessages = Object.values(res.errors).map(e => `<li>${e}</li>`).join(
-                        '');
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal Validasi',
-                        html: `<ul class="text-left list-disc list-inside">${errorMessages}</ul>`
-                    });
-                    return;
-                }
-                const newRowHtml = renderRow(res.data);
-                const existingRow = document.getElementById(`doc-row-${res.data.id}`);
-                if (existingRow) {
-                    existingRow.outerHTML = newRowHtml;
-                } else {
-                    document.getElementById('no-data-row')?.remove();
-                    tableBody.insertAdjacentHTML('afterbegin', newRowHtml);
-                }
+                // Close modal immediately
                 closeModal();
+                resetForm();
+
+                // Show toast that upload has started
                 Toast.fire({
-                    icon: 'success',
-                    title: res.message
+                    icon: 'info',
+                    title: 'Upload sedang berjalan di latar belakang...'
+                });
+
+                // Use UploadProgressManager
+                window.uploadProgressManager.upload(form.action, formData, {
+                    name: 'Dokumen Baru', // Atau ambil dari input judul jika ada
+                    onSuccess: function(res) {
+                        // Insert with temporary index 1
+                        const newRowHtml = renderRow(res.data, 1);
+                        const existingRow = document.getElementById(
+                            `doc-row-${res.data.id}`);
+
+                        if (existingRow) {
+                            // Update existing row, keeping its current index
+                            const currentIndex = existingRow.querySelector(
+                                'td:first-child').innerText;
+                            existingRow.outerHTML = renderRow(res.data, currentIndex);
+                        } else {
+                            // New row
+                            document.getElementById('no-data-row')?.remove();
+                            // Insert at top
+                            tableBody.insertAdjacentHTML('afterbegin', newRowHtml);
+
+                            // Re-index all rows to ensure correct numbering (1, 2, 3...)
+                            Array.from(tableBody.querySelectorAll('tr')).forEach((row,
+                                index) => {
+                                const firstTd = row.querySelector(
+                                    'td:first-child');
+                                if (firstTd) firstTd.textContent = index + 1;
+                            });
+                        }
+
+                        Toast.fire({
+                            icon: 'success',
+                            title: res.message
+                        });
+                    },
+                    onError: function(error) {
+                        console.error('Upload failed:', error);
+                        let errorMessage = 'Gagal menyimpan dokumen.';
+
+                        if (error.responseJSON && error.responseJSON.errors) {
+                            errorMessage = Object.values(error.responseJSON.errors)
+                                .flat().join('\n');
+                        } else if (error.message) {
+                            errorMessage = error.message;
+                        }
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal Upload',
+                            text: errorMessage
+                        });
+                    }
                 });
             });
         }

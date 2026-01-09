@@ -72,6 +72,60 @@
         setupFileListener('dropzone-file', 'dropzone-text');
         setupFileListener('doc-file', 'doc-text');
         setupFileListener('matrix-file', 'matrix-text');
+
+        // ==========================================
+        // 3. BACKGROUND UPLOAD LISTENER (RENJA)
+        // ==========================================
+        const uploadForm = document.getElementById('uploadForm');
+        if (uploadForm) {
+            uploadForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                // Close modal
+                document.getElementById('uploadModal').classList.add('hidden');
+
+                // Toast Info
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                });
+
+                Toast.fire({
+                    icon: 'info',
+                    title: 'Upload Renja berjalan di latar belakang...'
+                });
+
+                const formData = new FormData(this);
+
+                window.uploadProgressManager.upload(this.action, formData, {
+                    name: 'Dokumen Renja',
+                    onSuccess: function(response) {
+                        Toast.fire({
+                            icon: 'success',
+                            title: response.message || 'Upload berhasil!'
+                        });
+                        // Refresh Data Table via AJAX Search
+                        if (typeof fetchRenja === 'function') {
+                            fetchRenja();
+                        } else {
+                            // Fallback
+                            const searchInput = document.getElementById('filter-search');
+                            if (searchInput) searchInput.dispatchEvent(new Event('keyup'));
+                        }
+                    },
+                    onError: function(error) {
+                        console.error(error);
+                        let errorMessage = 'Gagal upload dokumen.';
+                        if (error.responseJSON && error.responseJSON.message) {
+                            errorMessage = error.responseJSON.message;
+                        }
+                        Swal.fire('Gagal', errorMessage, 'error');
+                    }
+                });
+            });
+        }
     });
 
     // --- MODAL FUNCTIONS ---
@@ -205,7 +259,7 @@
 
         const docText = document.getElementById('doc-text');
         if (docText) docText.innerHTML =
-        '<span class="font-semibold text-indigo-600">Klik upload</span> atau drag file';
+            '<span class="font-semibold text-indigo-600">Klik upload</span> atau drag file';
         const matrixText = document.getElementById('matrix-text');
         if (matrixText) matrixText.innerHTML =
             '<span class="font-semibold text-indigo-600">Klik upload</span> atau drag file';
@@ -303,7 +357,7 @@
         const ids = ['tahapanModal', 'uploadModal', 'verifyModal', 'detailModal', 'historyModal'];
         ids.forEach(id => {
             if (e.target == document.getElementById(id)) document.getElementById(id).classList.add(
-            'hidden');
+                'hidden');
         });
     }
 </script>

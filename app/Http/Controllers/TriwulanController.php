@@ -189,6 +189,13 @@ class TriwulanController extends Controller
             $message = 'Laporan berhasil diunggah.';
         }
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+            ]);
+        }
+
         return redirect()->back()->with('success', $message);
     }
 

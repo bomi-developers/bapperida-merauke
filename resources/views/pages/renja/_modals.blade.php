@@ -91,7 +91,7 @@
             <button onclick="document.getElementById('uploadModal').classList.add('hidden')"
                 class="text-gray-400 hover:text-gray-600 transition-colors"><i class="bi bi-x-lg text-xl"></i></button>
         </div>
-        <form action="{{ route('renja.store') }}" method="POST" enctype="multipart/form-data">
+        <form id="uploadForm" action="{{ route('renja.store') }}" method="POST" enctype="multipart/form-data">
             @csrf <input type="hidden" name="tahapan_id" id="upload_tahapan_id">
             <div class="space-y-6 mb-8">
                 <div id="container-doc">
