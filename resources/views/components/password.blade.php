@@ -3,7 +3,8 @@
     use Illuminate\Support\Facades\Auth;
 @endphp
 
-@if (Hash::check('PegawaiBAPPERIDA', Auth::user()->password))
+@if (Hash::check('PegawaiBAPPERIDA', Auth::user()->password) ||
+        Hash::check('PerangkatDaerahMerauke', Auth::user()->password))
     <div id="alertAkun" onclick="closeIfOutside(event, 'alertAkun')"
         class="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
 

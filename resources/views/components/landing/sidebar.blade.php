@@ -52,6 +52,49 @@
         </div>
     </div>
 </div>
+<div id="saranOverlay"
+    class="fixed inset-0 bg-white/5 backdrop-blur-sm z-[800] hidden 
+           flex justify-center items-center p-6">
+
+    <div id="saranBox"
+        class=" rounded-3xl bg-white w-full max-w-3xl p-6 
+               scale-90 opacity-0 transition-all duration-300 border border-white shadow-lg">
+        <div class="px-6 space-y-4 max-h-[70vh] overflow-y-auto">
+            <div class="">
+                <h2 class="text-blue-800 text-3xl font-black">Kotak Saran</h2>
+                <div class="w-20 h-1.5 bg-[#CCFF00] mt-2 rounded-full"></div>
+                <p class="text-gray-500 mt-2 max-w-md italic">Saran dan masukkan anda semangat untuk kami..</p>
+            </div>
+            <form id="saranForm">
+                @csrf
+                <div>
+                    <label for="judul" class="block text-md font-bold text-blue-700 mb-1">Nama
+                        Pengirim</label>
+                    <input type="text" id="pengirim" name="pengirim"
+                        class="w-full px-4 py-2.5 text-sm border border-gray-300  rounded-lg
+                                        bg-white text-gray-900 
+                                        focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
+                        required>
+                </div>
+                <div>
+                    <label for="judul" class="block text-md font-bold text-blue-700 mb-1">Isi Saran</label>
+                    <textarea id="isi" name="isi"
+                        class="w-full px-4 py-2.5 text-sm border border-gray-300  rounded-lg
+                                        bg-white text-gray-900 
+                                        focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
+                        required></textarea>
+                </div>
+                <div class="flex justify-end gap-3 pt-4 ">
+                    <button type="submit" id="btnKirim"
+                        class="inline-flex items-center gap-2 px-6 py-3 bg-[#004299] text-white font-bold rounded-full hover:bg-blue-800 transition-all hover:shadow-lg hover:gap-4">
+                        Kirim Saran
+                        <i class="bi bi-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {{-- side nav --}}
 <div class="hidden md:flex fixed top-1/2 right-4 transform -translate-y-1/2 z-[500] items-center">
     <div class="flex flex-col justify-between h-full py-24">
@@ -73,6 +116,14 @@
                     <span
                         class="absolute right-full mr-3 px-3 py-1.5 bg-gray-800 text-white text-xs font-semibold rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                         Dokumen
+                    </span>
+                </button>
+                <button
+                    class="toggle-saran-btn group relative flex justify-center items-center w-12 h-12 bg-white text-blue-600 rounded-full hover:bg-blue-600 hover:text-white border border-blue-600 transition-all duration-300">
+                    <i class="bi bi-chat-dots text-xl"></i>
+                    <span
+                        class="absolute right-full mr-3 px-3 py-1.5 bg-gray-800 text-white text-xs font-semibold rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                        Kotak Saran
                     </span>
                 </button>
                 <a href="{{ route('login') }}"
@@ -177,7 +228,63 @@
     </div>
 </div>
 {{-- Script toggle mobile menu --}}
+
 @push('scripts')
+    {{-- kirim kotak saran --}}
+    <script>
+        document.getElementById('saranForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('btnKirim');
+            const form = this;
+            const formData = new FormData(form);
+
+            // animasi kirim
+            btn.disabled = true;
+            btn.innerHTML = 'Mengirim... <i class="animate-pulse bi bi-send"></i>';
+
+            fetch("{{ route('kotak-saran.store') }}", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(res => {
+                    setTimeout(() => {
+                        if (res.status) {
+                            form.reset();
+                            btn.innerHTML = `
+                            Terkirim
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                                            `;
+                        } else {
+                            btn.innerHTML = `
+                            Gagal
+                            <i class="bi bi-x-circle-fill me-2"></i>
+                                        `;
+                        }
+
+                        setTimeout(() => {
+                            btn.disabled = false;
+                            btn.innerHTML = `
+                            Kirim Saran
+                            <i class="bi bi-arrow-right"></i>
+                        `;
+                        }, 1500);
+
+                    }, 3000);
+                })
+                .catch(() => {
+                    btn.innerHTML = `
+                                            <i class="bi bi-x-circle-fill me-2"></i>
+                                            Gagal
+                                        `;
+                    btn.disabled = false;
+                });
+        });
+    </script>
     {{-- smooth scroll to top --}}
     <script>
         function smoothScrollTo(target, duration = 800) {
@@ -229,6 +336,9 @@
         const searchBox = document.getElementById('searchBox');
         const searchInput = document.getElementById('liveSearchInput');
         const searchResult = document.getElementById('searchResults');
+        // saran
+        const saranOverlay = document.getElementById('saranOverlay');
+        const saranBox = document.getElementById('saranBox');
         // dokumen
         const dokumenOverlay = document.getElementById('dokumenOverlay');
         const dokumenBox = document.getElementById('dokumenBox');
@@ -293,6 +403,16 @@
                 dokumenInput.focus();
             });
         });
+        document.querySelectorAll('.toggle-saran-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                saranOverlay.classList.remove('hidden');
+                // animasi muncul
+                setTimeout(() => {
+                    saranBox.classList.remove('opacity-0', 'scale-90');
+                    saranBox.classList.add('opacity-100', 'scale-100');
+                }, 20);
+            });
+        });
 
         // Tutup jika klik di luar box
         overlay.addEventListener('click', (e) => {
@@ -300,6 +420,9 @@
         });
         dokumenOverlay.addEventListener('click', (e) => {
             if (e.target === dokumenOverlay) closeDokumen();
+        });
+        saranOverlay.addEventListener('click', (e) => {
+            if (e.target === saranOverlay) closeSaran();
         });
 
         // Tombol ESC
@@ -322,6 +445,15 @@
 
             setTimeout(() => {
                 dokumenOverlay.classList.add('hidden');
+            }, 200);
+        }
+
+        function closeSaran() {
+            saranBox.classList.add('opacity-0', 'scale-90');
+            saranBox.classList.remove('opacity-100', 'scale-100');
+
+            setTimeout(() => {
+                saranOverlay.classList.add('hidden');
             }, 200);
         }
 

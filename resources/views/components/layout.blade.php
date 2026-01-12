@@ -37,6 +37,11 @@
                     'items' => [
                         ['label' => 'Berita', 'icon' => 'bi bi-person-lines-fill', 'route' => 'admin.berita.index'],
                         ['label' => 'Galeri', 'icon' => 'bi bi-image', 'route' => 'admin.galeri.index'],
+                        [
+                            'label' => 'Kotak Saran',
+                            'icon' => 'bi bi-envelope-arrow-down-fill',
+                            'route' => 'admin.kotak-saran.index',
+                        ],
                     ],
                 ];
                 $menus[] = [
@@ -88,6 +93,11 @@
                     'items' => [
                         ['label' => 'Berita', 'icon' => 'bi bi-person-lines-fill', 'route' => 'admin.berita.index'],
                         ['label' => 'Galeri', 'icon' => 'bi bi-image', 'route' => 'admin.galeri.index'],
+                        [
+                            'label' => 'Kotak Saran',
+                            'icon' => 'bi bi-envelope-arrow-down-fill',
+                            'route' => 'admin.kotak-saran.index',
+                        ],
                     ],
                 ];
                 $menus[] = [
@@ -151,6 +161,7 @@
     </div>
     {{-- toast --}}
     <x-toast></x-toast>
+    {{-- jika password masuh default --}}
     <x-password></x-password>
     {{-- Delete Confirmation Modal --}}
     <x-delete-confirm-modal></x-delete-confirm-modal>

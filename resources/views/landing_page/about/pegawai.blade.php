@@ -2,7 +2,7 @@
 @section('meta_description', $meta_description)
 
 <x-landing.layout>
-    <section x-data="{ openModal: false, selectedPegawai: {} }" class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-[350px] pb-20 z-20">
+    <section x-data="{ openModal: false, selectedPegawai: {} }" class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-20 z-20">
         <div
             class="bg-white rounded-3xl shadow-xl p-8 md:p-16 border-t-8 border-[#CCFF00] reveal-on-scroll relative overflow-hidden">
 

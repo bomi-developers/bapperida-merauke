@@ -23,6 +23,7 @@ use App\Http\Controllers\LendingPageController;
 use App\Http\Controllers\ProfileDinasController;
 use App\Http\Controllers\UpdatePasswordController;
 use App\Http\Controllers\KategoriDocumentController;
+use App\Http\Controllers\KotakSaranController;
 use App\Http\Controllers\OpdController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
@@ -72,7 +73,9 @@ Route::prefix('riset-inovasi')->name('riset-inovasi.')->group(function () {
   // API untuk cek email
   Route::get('/api/check-email', [ProposalController::class, 'checkEmail']);
 });
-
+// saran
+Route::post('/kotak-saran', [KotakSaranController::class, 'store'])->name('kotak-saran.store');
+// berita
 Route::get('/berita', [BeritaController::class, 'home'])->name('berita.public.home');
 Route::get('/berita/data', [HomeController::class, 'getBerita'])->name('berita.data');
 Route::get('/berita/search', [BeritaController::class, 'searchPublic'])->name('berita.public.search');
@@ -208,6 +211,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/lending-page/{id}', [LendingPageController::class, 'destroy'])->name('lending.destroy');
     // update password
     Route::post('/ganti-password', [UpdatePasswordController::class, 'update'])->name('password.update');
+    // kotak Saran
+    Route::get('/kotak-saran', [KotakSaranController::class, 'index'])->name('kotak-saran.index');
+
+    Route::delete('/kotak-saran/{id}', [KotakSaranController::class, 'destroy']);
 
     Route::middleware('role:super_admin')->group(function () {
       Route::get('bidang', [BidangController::class, 'index'])->name('bidang.index');
