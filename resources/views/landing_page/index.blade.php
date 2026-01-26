@@ -101,7 +101,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-3">
-                    @foreach ($Bidang as $item)
+                    @foreach ($Bidang->sortBy('urutan') as $item)
                         <button
                             @click="openModal = true; selectedBidang = '{{ $item->nama_bidang }}'; idBidang = {{ $item->id }}"
                             class="group relative bg-white rounded-xl p-8 rounded-[2.5rem] border border-gray-100 shadow-sm hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 hover:-translate-y-2 text-left focus:outline-none overflow-hidden">

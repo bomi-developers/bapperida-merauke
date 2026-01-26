@@ -15,7 +15,7 @@
                     <div class="relative z-10">
                         <span
                             class="inline-block py-1 px-4 rounded-full bg-blue-50 text-[#004299] text-xs font-bold tracking-wider uppercase mb-6 border border-blue-100">
-                            Visi
+                            Visi Kabupaten Merauke
                         </span>
 
                         <div class="relative max-w-3xl mx-auto">

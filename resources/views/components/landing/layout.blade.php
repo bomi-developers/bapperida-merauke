@@ -37,7 +37,7 @@
                     'submenu' => [
                         ['label' => 'Visi & Misi', 'url' => '/about/visi-misi'],
                         ['label' => 'Struktur Organisasi', 'url' => '/about/struktur-organisasi'],
-                        ['label' => 'Sejarah Bapperida', 'url' => '/about/sejarah'],
+                        // ['label' => 'Sejarah Bapperida', 'url' => '/about/sejarah'],
                         ['label' => 'Tugas & Fungsi', 'url' => '/about/tugas-fungsi'],
                         ['label' => 'Profil Pegawai', 'url' => '/about/pegawai'],
                     ],

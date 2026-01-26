@@ -55,7 +55,7 @@
                                     class="group/card cursor-pointer relative bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-[#CCFF00] transform hover:-translate-y-2">
 
                                     <div class="h-2 bg-gradient-to-r from-[#004299] via-blue-500 to-[#CCFF00]"></div>
-                                    <div class="p-6">
+                                    <div class="px-2 py-5">
                                         {{-- Foto Pegawai --}}
                                         <div class="relative mb-4 mx-auto w-32 h-32">
                                             <img src="{{ $fotoUrl }}"
