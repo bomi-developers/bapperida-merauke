@@ -4,8 +4,7 @@
 <x-landing.layout>
     <section id="pegawai" x-data="{ openModal: false, selectedPegawai: {} }"
         class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 -mt-[350px] z-100">
-        <div
-            class="bg-white rounded-3xl shadow-xl p-8 md:p-16 border-t-8 border-[#CCFF00] reveal-on-scroll relative overflow-hidden">
+        <div class="bg-white rounded-3xl shadow-xl p-8 md:p-16 border-t-8 border-[#CCFF00] ">
 
             <div class="text-center mb-12 relative z-10">
                 <span
