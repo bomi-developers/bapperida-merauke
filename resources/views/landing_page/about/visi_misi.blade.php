@@ -15,7 +15,7 @@
                     <div class="relative z-10">
                         <span
                             class="inline-block py-1 px-4 rounded-full bg-blue-50 text-[#004299] text-xs font-bold tracking-wider uppercase mb-6 border border-blue-100">
-                            Visi Bapperida
+                            Visi
                         </span>
 
                         <div class="relative max-w-3xl mx-auto">
@@ -32,8 +32,7 @@
                 </div>
 
                 {{-- BAGIAN MISI --}}
-                <div
-                    class="bg-white rounded-2xl shadow-xl p-8 md:p-12 border-t-4 border-[#004299] reveal-on-scroll">
+                <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 border-t-4 border-[#004299] reveal-on-scroll">
                     <div class="flex items-center gap-4 mb-8 border-b border-gray-100 pb-4">
                         <div
                             class="h-12 w-12 rounded-xl bg-[#004299] flex items-center justify-center text-white shadow-lg">
@@ -75,8 +74,7 @@
                         </div>
                     @else
                         {{-- State Kosong --}}
-                        <div
-                            class="text-center py-16 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+                        <div class="text-center py-16 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
                             <div
                                 class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" fill="none"

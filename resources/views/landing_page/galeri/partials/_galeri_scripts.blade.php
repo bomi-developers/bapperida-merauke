@@ -1,5 +1,6 @@
 {{-- Swiper JS --}}
-<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+{{-- <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script> --}}
+<script defer src="https://unpkg.com/swiper@11/swiper-bundle.min.js"></script>
 <script>
     // Inisialisasi Swiper untuk Galeri Populer
     if (document.querySelector('.popular-gallery-slider')) {

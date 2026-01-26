@@ -63,9 +63,9 @@
         [
             'routes' => ['about.visi-misi'],
             'title' => 'Visi dan Misi',
-            'subtitle' => 'Visi dan Misi BAPPERIDA',
+            'subtitle' => 'Visi dan Misi',
             'description' =>
-                'Jelajahi visi dan misi BAPPERIDA Kabupaten Merauke dalam mewujudkan pembangunan daerah yang inklusif dan berkelanjutan.',
+                'Jelajahi visi dan misi Kabupaten Merauke dalam mewujudkan pembangunan daerah yang inklusif dan berkelanjutan.',
         ],
         [
             'routes' => ['riset-inovasi.riset'],

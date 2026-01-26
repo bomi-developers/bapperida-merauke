@@ -2,7 +2,8 @@
 @section('meta_description', $meta_description)
 
 <x-landing.layout>
-    <section x-data="{ openModal: false, selectedPegawai: {} }" class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-20 z-20">
+    <section id="pegawai" x-data="{ openModal: false, selectedPegawai: {} }"
+        class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 -mt-[350px] z-100">
         <div
             class="bg-white rounded-3xl shadow-xl p-8 md:p-16 border-t-8 border-[#CCFF00] reveal-on-scroll relative overflow-hidden">
 
@@ -43,13 +44,13 @@
                                 @endphp
                                 <div @click="
                                     selectedPegawai = {
-                                        nama: '{{ $employee->nama }}',
-                                        nip: '{{ $employee->nip ?? '-' }}',
-                                        nik: '{{ $employee->nik ?? '-' }}',
-                                        alamat: '{{ $employee->alamat ?? '-' }}',
-                                        jabatan: '{{ $employee->jabatan->jabatan ?? '-' }}',
-                                        bidang: '{{ $employee->bidang->nama_bidang ?? '-' }}',
-                                        foto: '{{ $fotoUrl }}'
+                                        nama: {{ Js::from($employee->nama) }},
+                                        nip: {{ Js::from($employee->nip ?? '-') }},
+                                        nik: {{ Js::from($employee->nik ?? '-') }},
+                                        alamat: {{ Js::from($employee->alamat ?? '-') }},
+                                        jabatan: {{ Js::from($employee->jabatan->jabatan ?? '-') }},
+                                        bidang: {{ Js::from($employee->bidang->nama_bidang ?? '-') }},
+                                        foto: {{ Js::from($fotoUrl) }}
                                     }; 
                                     openModal = true"
                                     class="group/card cursor-pointer relative bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-[#CCFF00] transform hover:-translate-y-2">
@@ -115,7 +116,7 @@
                     </div>
                     <div class="bg-white p-4 rounded-2xl">
                         <button @click="openModal = false"
-                            class="absolute right-5 top-5 text-red-800 hover:bg-red-200  rounded-full w-8 h-8 flex items-center justify-center z-50">
+                            class="absolute right-5 top-5 text-red-800 hover:bg-red-200  rounded-full w-8 h-8 flex items-center justify-center z-100">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M6 18L18 6M6 6l12 12">

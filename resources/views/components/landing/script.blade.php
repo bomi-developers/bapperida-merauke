@@ -1,4 +1,5 @@
-   <script defer src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+   {{-- <script defer src="https://unpkg.com/swiper/swiper-bundle.min.js"></script> --}}
+   <script defer src="https://unpkg.com/swiper@11/swiper-bundle.min.js"></script>
    {{-- <script defer src="{{ asset('assets/swiper-bundle.min.js') }}"></script> --}}
    <script>
        document.addEventListener("DOMContentLoaded", () => {
