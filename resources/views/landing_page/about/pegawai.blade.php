@@ -69,8 +69,8 @@
                                                 </svg>
                                             </div>
                                         </div>
-                                        <div class="text-center mb-3">
-                                            <h4 class="text-lg font-bold text-gray-900 line-clamp-2 min-h-[3.5rem]">
+                                        <div class="text-center mb-2">
+                                            <h4 class="text-md font-bold text-gray-900 line-clamp-2 ">
                                                 {{ $employee->nama }}</h4>
                                         </div>
                                         <div
