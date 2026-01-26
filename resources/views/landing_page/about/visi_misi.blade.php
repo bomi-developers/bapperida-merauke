@@ -43,7 +43,7 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="text-2xl font-bold text-gray-800">Misi Pembangunan</h3>
+                            <h3 class="text-2xl font-bold text-gray-800">Misi Kabupaten Merauke</h3>
                             <p class="text-gray-500 text-sm">Langkah strategis untuk mencapai visi.</p>
                         </div>
                     </div>
