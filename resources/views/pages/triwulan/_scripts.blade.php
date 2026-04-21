@@ -1,3 +1,4 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
@@ -426,4 +427,18 @@
                             'templateModal').classList
                         .add('hidden');
                 }
+
+                // --- EXPOSE FUNCTIONS TO GLOBAL SCOPE (agar bisa dipanggil dari onclick HTML) ---
+                window.openUploadModal = openUploadModal;
+                window.closeUploadModal = closeUploadModal;
+                window.openPeriodModal = openPeriodModal;
+                window.closePeriodModal = closePeriodModal;
+                window.editPeriod = editPeriod;
+                window.openVerifyModal = openVerifyModal;
+                window.openHistoryModal = openHistoryModal;
+                window.openDetailModal = openDetailModal;
+                window.closeDetailModal = closeDetailModal;
+                window.toggleStatus = toggleStatus;
+
+    }); // <-- Tutup DOMContentLoaded
 </script>
