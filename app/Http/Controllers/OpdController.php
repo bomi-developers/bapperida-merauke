@@ -40,8 +40,8 @@ class OpdController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'nip' => 'required|unique:opd,nip',
-            'no_hp' => 'required',
+            'nip' => 'nullable|string|unique:opd,nip',
+            'no_hp' => 'nullable|string|max:255',
             'email' => 'required',
             'instansi' => 'required',
         ]);
@@ -61,8 +61,8 @@ class OpdController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'nip' => "requidred|string|unique:opd,nip,{$opd->id}",
-            'no_hp' => 'required|string|max:255',
+            'nip' => "nullable|string|unique:opd,nip,{$opd->id}",
+            'no_hp' => 'nullable|string|max:255',
             'email' => 'required',
             'instansi' => 'required|string|max:255',
         ]);

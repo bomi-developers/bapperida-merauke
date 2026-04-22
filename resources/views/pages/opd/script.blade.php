@@ -264,13 +264,18 @@
                 method,
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify(data)
             })
-            .then(res => res.json())
             .then(res => {
-                // alert(res.message);
+                if (!res.ok) {
+                    return res.json().then(err => { throw err; });
+                }
+                return res.json();
+            })
+            .then(res => {
                 Toast.fire({
                     icon: 'success',
                     title: res.message
@@ -278,7 +283,21 @@
                 closeForm();
                 loadData();
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                if (err.errors) {
+                    let messages = Object.values(err.errors).flat().join('<br>');
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Validasi gagal',
+                        html: messages
+                    });
+                } else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: err.message || 'Terjadi kesalahan'
+                    });
+                }
+            });
     });
 
     function deletePegawai(id) {
