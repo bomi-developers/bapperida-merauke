@@ -37,9 +37,11 @@
             `;
 
 
-        fetch(
-                `${url}?search=${encodeURIComponent(search)}&akun=${encodeURIComponent(selectAkun)}`
-            )
+        const fetchUrl = new URL(url, window.location.origin);
+        fetchUrl.searchParams.set('search', search);
+        fetchUrl.searchParams.set('akun', selectAkun);
+
+        fetch(fetchUrl.toString())
             .then(res => res.json())
             .then(res => {
                 let html = `
@@ -60,7 +62,7 @@
                     res.data.forEach((b, i) => {
                         html += `
                             <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition">
-                                <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">${i +1}</td>
+                                <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">${res.from + i}</td>
                                 <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100"><i class="bi bi-person-bounding-box text-2xl text-indigo-600 dark:text-indigo-400"></i></td>
                                 <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100"><b>${b.name}</b><br><small class="bg-indigo-200 dark:bg-indigo-600 px-2 py-1 text-indigo-800 dark:text-indigo-200 rounded-xl">${b.nip ?? '-'}</small></td>
                                 <td class="px-4 py-4 font-medium text-gray-900 dark:text-gray-100 "><b>${b.instansi}</b><br><i class=" px-1 py-1  text-green-600 dark:text-green-200  bi bi-telephone-fill text-sm mr-1"></i><small class="bg-green-200 dark:bg-green-600 px-2 py-1 text-green-800 dark:text-green-200 rounded-xl">${b.no_hp ?? '-'}</small></td>
