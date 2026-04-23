@@ -307,7 +307,7 @@
 
         <div class="flex justify-between items-center mb-5">
             <h3 class="text-xl font-bold text-gray-900 dark:text-white">Upload Master Template</h3>
-            <button onclick="document.getElementById('templateModal').classList.add('hidden')"
+            <button onclick="closeTemplateModal()"
                 class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
                 <i class="bi bi-x-lg text-lg"></i>
             </button>
@@ -318,8 +318,31 @@
 
             <div class="bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-500 p-4 mb-4">
                 <p class="text-sm text-blue-700 dark:text-blue-300">
-                    File ini akan menjadi acuan format laporan untuk seluruh OPD. Mengupload file baru akan menggantikan
-                    template lama.
+                    File ini akan menjadi acuan format laporan untuk seluruh OPD. Anda bisa upload hingga <strong>3 template</strong> berbeda.
+                </p>
+            </div>
+
+            {{-- Slot Selection --}}
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pilih Slot Template</label>
+                <div class="grid grid-cols-3 gap-3" id="slot-selector">
+                    @for ($s = 1; $s <= 3; $s++)
+                        <button type="button" onclick="selectSlot({{ $s }})"
+                            class="slot-btn relative px-4 py-3 rounded-lg border-2 text-center transition-all duration-200 focus:outline-none
+                            {{ $s === 1 ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 ring-2 ring-indigo-200 dark:ring-indigo-800' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:border-gray-400' }}"
+                            data-slot="{{ $s }}">
+                            <span class="block text-sm font-bold">Template {{ $s }}</span>
+                        </button>
+                    @endfor
+                </div>
+                <input type="hidden" name="slot" id="template_slot" value="1">
+            </div>
+
+            {{-- Warning if replacing --}}
+            <div id="slot-replace-warning" class="hidden bg-amber-50 dark:bg-amber-900/30 border-l-4 border-amber-500 p-3 mb-4">
+                <p class="text-sm text-amber-700 dark:text-amber-300 flex items-center gap-2">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <span id="slot-replace-text">Template pada slot ini akan digantikan.</span>
                 </p>
             </div>
 
@@ -331,7 +354,7 @@
             </div>
 
             <div class="flex justify-end gap-3">
-                <button type="button" onclick="document.getElementById('templateModal').classList.add('hidden')"
+                <button type="button" onclick="closeTemplateModal()"
                     class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
                     Batal
                 </button>

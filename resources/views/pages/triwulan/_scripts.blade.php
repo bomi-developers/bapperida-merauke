@@ -1,5 +1,8 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    // Data slot aktif dari server (untuk peringatan replace)
+    const activeSlots = @json(isset($masterTemplates) ? $masterTemplates->keys()->toArray() : []);
+
     document.addEventListener('DOMContentLoaded', function() {
 
                 // ==========================================
@@ -160,13 +163,6 @@
                                 if (typeof fetchLaporan === 'function') {
                                     fetchLaporan();
                                 } else {
-                                    // Fallback re-fetch logic if function not accessible directly (scope issue)
-                                    // But it is in the same scope here.
-                                    // Actually fetchLaporan is defined above in the same scope.
-                                    // Wait, fetchLaporan is inside the IF block: if (searchInput && tableContainer)
-                                    // So it might not be defined if filters are missing.
-                                    // But filters should be there.
-                                    // To be safe, trigger change event on filter or reload.
                                     const searchInput = document.getElementById('filter-search');
                                     if (searchInput) searchInput.dispatchEvent(new Event('keyup'));
                                 }
@@ -191,7 +187,6 @@
                 // --- MODAL HELPERS ---
                 function openUploadModal(mode = 'new', id = null) {
                     document.getElementById('uploadModal').classList.remove('hidden');
-                    // Logic tambahan jika mode revisi bisa ditambahkan disini (misal ganti judul modal)
                 }
 
                 function closeUploadModal() {
@@ -218,6 +213,46 @@
                     document.getElementById('period_start').value = start;
                     document.getElementById('period_end').value = end;
                     document.getElementById('periodModal').classList.remove('hidden');
+                }
+
+                // ==========================================
+                // TEMPLATE MODAL FUNCTIONS (3 Slot)
+                // ==========================================
+                function openTemplateModal(slot = 1) {
+                    selectSlot(slot);
+                    document.getElementById('templateModal').classList.remove('hidden');
+                }
+
+                function closeTemplateModal() {
+                    document.getElementById('templateModal').classList.add('hidden');
+                }
+
+                function selectSlot(slot) {
+                    // Update hidden input
+                    const slotInput = document.getElementById('template_slot');
+                    if (slotInput) slotInput.value = slot;
+
+                    // Update button styles
+                    document.querySelectorAll('.slot-btn').forEach(btn => {
+                        const btnSlot = parseInt(btn.getAttribute('data-slot'));
+                        if (btnSlot === slot) {
+                            btn.className = 'slot-btn relative px-4 py-3 rounded-lg border-2 text-center transition-all duration-200 focus:outline-none border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 ring-2 ring-indigo-200 dark:ring-indigo-800';
+                        } else {
+                            btn.className = 'slot-btn relative px-4 py-3 rounded-lg border-2 text-center transition-all duration-200 focus:outline-none border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:border-gray-400';
+                        }
+                    });
+
+                    // Show/hide replace warning
+                    const warning = document.getElementById('slot-replace-warning');
+                    const warningText = document.getElementById('slot-replace-text');
+                    if (warning && warningText) {
+                        if (activeSlots.includes(slot)) {
+                            warning.classList.remove('hidden');
+                            warningText.textContent = `Template ${slot} sudah ada dan akan digantikan dengan file baru.`;
+                        } else {
+                            warning.classList.add('hidden');
+                        }
+                    }
                 }
 
                 // Verify Modal
@@ -423,9 +458,7 @@
                     if (e.target == document.getElementById('fileSizeModal')) document.getElementById(
                             'fileSizeModal').classList
                         .add('hidden');
-                    if (e.target == document.getElementById('templateModal')) document.getElementById(
-                            'templateModal').classList
-                        .add('hidden');
+                    if (e.target == document.getElementById('templateModal')) closeTemplateModal();
                 }
 
                 // --- EXPOSE FUNCTIONS TO GLOBAL SCOPE (agar bisa dipanggil dari onclick HTML) ---
@@ -439,6 +472,9 @@
                 window.openDetailModal = openDetailModal;
                 window.closeDetailModal = closeDetailModal;
                 window.toggleStatus = toggleStatus;
+                window.openTemplateModal = openTemplateModal;
+                window.closeTemplateModal = closeTemplateModal;
+                window.selectSlot = selectSlot;
 
     }); // <-- Tutup DOMContentLoaded
 </script>

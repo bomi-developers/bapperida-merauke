@@ -18,7 +18,7 @@ class TriwulanController extends Controller
     {
         $user = Auth::user();
 
-        $masterTemplate = MasterTemplateTriwulan::where('is_active', true)->latest()->first();
+        $masterTemplates = MasterTemplateTriwulan::getAllActive();
         $allPeriods = TriwulanPeriod::orderBy('tahun', 'desc')->orderBy('triwulan', 'desc')->get();
         $openPeriods = $allPeriods->where('is_open', true);
 
@@ -60,7 +60,7 @@ class TriwulanController extends Controller
         return view('pages.triwulan.index', compact(
             'laporans',
             'periods',
-            'masterTemplate',
+            'masterTemplates',
             'openPeriods',
             'allPeriods'
         ));
@@ -211,12 +211,14 @@ class TriwulanController extends Controller
         return redirect()->back()->with('success', 'Status laporan diperbarui.');
     }
 
-    public function downloadTemplate()
+    public function downloadTemplate($slot)
     {
-        $template = MasterTemplateTriwulan::where('is_active', true)->first();
+        $template = MasterTemplateTriwulan::where('is_active', true)
+            ->where('slot', $slot)
+            ->first();
 
         if (!$template) {
-            return back()->with('error', 'Template belum tersedia.');
+            return back()->with('error', 'Template untuk slot ini belum tersedia.');
         }
         try {
             // Dapatkan path fisik file pada disk 'public'
@@ -244,23 +246,28 @@ class TriwulanController extends Controller
     {
         $request->validate([
             'file_template' => 'required|mimes:doc,docx,xls,xlsx,pdf|max:20480', // Max 20MB
+            'slot' => 'required|in:1,2,3',
         ]);
 
-        // 1. Nonaktifkan template lama (jika ada)
-        MasterTemplateTriwulan::query()->update(['is_active' => false]);
+        $slot = $request->slot;
+
+        // 1. Nonaktifkan template lama HANYA pada slot yang sama
+        MasterTemplateTriwulan::where('slot', $slot)->update(['is_active' => false]);
 
         // 2. Upload file baru
         $file = $request->file('file_template');
         $originalName = $file->getClientOriginalName();
-        $path = $file->storeAs('templates_triwulan', 'MASTER_' . time() . '_' . $originalName, 'public');
+        $path = $file->storeAs('templates_triwulan', 'MASTER_SLOT' . $slot . '_' . time() . '_' . $originalName, 'public');
 
         // 3. Simpan ke database
         MasterTemplateTriwulan::create([
-            'judul' => $originalName, // Atau set nama default
+            'judul' => $originalName,
             'file_path' => $path,
-            'is_active' => true
+            'is_active' => true,
+            'slot' => $slot,
         ]);
 
-        return redirect()->back()->with('success', 'Master Template berhasil diperbarui.');
+        $slotNames = [1 => 'Template 1', 2 => 'Template 2', 3 => 'Template 3'];
+        return redirect()->back()->with('success', $slotNames[$slot] . ' berhasil diperbarui.');
     }
 }

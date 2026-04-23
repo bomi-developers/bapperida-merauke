@@ -324,7 +324,7 @@ Route::middleware(['auth'])->group(function () {
   Route::get('/triwulan', [TriwulanController::class, 'index'])->name('triwulan.index');
   Route::post('/triwulan', [TriwulanController::class, 'store'])->name('triwulan.store');
   Route::put('/triwulan/{id}/verify', [TriwulanController::class, 'verify'])->name('triwulan.verify');
-  Route::get('/triwulan/template', [TriwulanController::class, 'downloadTemplate'])->name('triwulan.template');
+  Route::get('/triwulan/template/{slot}', [TriwulanController::class, 'downloadTemplate'])->name('triwulan.template');
   Route::post('/triwulan/periode', [TriwulanController::class, 'updatePeriod'])->name('triwulan.period.update');
   Route::post('/triwulan/periode/{id}/toggle', [TriwulanController::class, 'togglePeriod'])->name('triwulan.period.toggle');
   Route::get('/triwulan/{id}/history', [TriwulanController::class, 'getHistory'])->name('triwulan.history');
