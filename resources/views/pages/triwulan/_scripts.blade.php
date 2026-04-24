@@ -110,21 +110,19 @@
                 }
 
                 // ==========================================
-                // 3. VALIDASI FILE SIZE (Max 50MB)
+                // 3. VALIDASI FILE SIZE (Max 50MB) - 3 File Inputs
                 // ==========================================
-                const fileInput = document.getElementById('fileInput');
-                if (fileInput) {
-                    fileInput.addEventListener('change', function() {
-                        const maxSize = 50 * 1024 * 1024; // 50MB
-                        if (this.files[0] && this.files[0].size > maxSize) {
-                            this.value = ""; // Reset input
-                            document.getElementById('fileSizeModal').classList.remove('hidden');
-                        }
-                        if (this.files[0] && this.files[0].size > maxSize) {
-                            this.value = ""; // Reset input
-                            document.getElementById('fileSizeModal').classList.remove('hidden');
-                        }
-                    });
+                const maxSize = 50 * 1024 * 1024; // 50MB
+                for (let i = 1; i <= 3; i++) {
+                    const fi = document.getElementById('fileInput' + i);
+                    if (fi) {
+                        fi.addEventListener('change', function() {
+                            if (this.files[0] && this.files[0].size > maxSize) {
+                                this.value = ""; // Reset input
+                                document.getElementById('fileSizeModal').classList.remove('hidden');
+                            }
+                        });
+                    }
                 }
 
                 // ==========================================
@@ -308,10 +306,20 @@
                                 </div>
                             </div>
 
-                            <a href="/storage/${item.file_path}" target="_blank" 
-                            class="inline-flex items-center px-3 py-1 text-xs font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600">
-                                <i class="bi bi-download me-2"></i> File Versi Ini
-                            </a>
+                            <div class="flex flex-wrap gap-2">
+                                ${item.file_path ? `<a href="/storage/${item.file_path}" target="_blank" 
+                                class="inline-flex items-center px-3 py-1 text-xs font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600">
+                                    <i class="bi bi-download me-2"></i> File 1
+                                </a>` : ''}
+                                ${item.file_path_2 ? `<a href="/storage/${item.file_path_2}" target="_blank" 
+                                class="inline-flex items-center px-3 py-1 text-xs font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600">
+                                    <i class="bi bi-download me-2"></i> File 2
+                                </a>` : ''}
+                                ${item.file_path_3 ? `<a href="/storage/${item.file_path_3}" target="_blank" 
+                                class="inline-flex items-center px-3 py-1 text-xs font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600">
+                                    <i class="bi bi-download me-2"></i> File 3
+                                </a>` : ''}
+                            </div>
                         </li>`;
                                 container.innerHTML += html;
                             });
@@ -321,7 +329,123 @@
                         });
                 }
 
-                // --- DETAIL & PREVIEW MODAL ---
+                // --- DETAIL & PREVIEW MODAL (3 Files Stacked) ---
+                function buildPreviewSection(fileUrl, label, index) {
+                    const section = document.createElement('div');
+                    section.className = 'bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm';
+
+                    const extension = fileUrl.split('.').pop().toLowerCase();
+                    const browserSupported = ['pdf', 'jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+                    const officeSupported = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'];
+
+                    // Header
+                    const header = document.createElement('div');
+                    header.className = 'flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700';
+                    header.innerHTML = `
+                        <div class="flex items-center gap-2">
+                            <div class="w-7 h-7 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-md flex items-center justify-center">
+                                <span class="text-white text-xs font-bold">${index}</span>
+                            </div>
+                            <span class="text-sm font-semibold text-gray-900 dark:text-white">${label}</span>
+                            <span class="text-xs text-gray-400 uppercase">.${extension}</span>
+                        </div>
+                        <a href="${fileUrl}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors">
+                            <i class="bi bi-download"></i> Download
+                        </a>
+                    `;
+                    section.appendChild(header);
+
+                    // Preview Body
+                    const body = document.createElement('div');
+                    body.className = 'relative';
+
+                    if (browserSupported.includes(extension)) {
+                        // PDF / Images → Direct iframe
+                        const iframe = document.createElement('iframe');
+                        iframe.src = fileUrl;
+                        iframe.className = 'w-full border-none bg-white';
+                        iframe.style.height = '500px';
+
+                        const loader = document.createElement('div');
+                        loader.className = 'absolute inset-0 flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-800 z-10';
+                        loader.innerHTML = `
+                            <div class="animate-spin rounded-full h-8 w-8 border-4 border-indigo-500 border-t-transparent"></div>
+                            <p class="mt-2 text-gray-500 text-xs">Memuat ${label}...</p>
+                        `;
+                        body.appendChild(loader);
+                        body.appendChild(iframe);
+
+                        iframe.onload = () => loader.remove();
+                        iframe.onerror = () => {
+                            loader.innerHTML = `
+                                <i class="bi bi-file-earmark-x text-4xl text-gray-400 mb-2"></i>
+                                <p class="text-gray-500 text-sm">Gagal memuat preview</p>
+                            `;
+                        };
+                    } else if (officeSupported.includes(extension)) {
+                        // Office files → Google Docs Viewer
+                        // Buat absolute URL jika perlu
+                        let absoluteUrl = fileUrl;
+                        if (!fileUrl.startsWith('http')) {
+                            absoluteUrl = window.location.origin + fileUrl;
+                        }
+
+                        const googleDocsUrl = `https://docs.google.com/gview?url=${encodeURIComponent(absoluteUrl)}&embedded=true`;
+
+                        const iframe = document.createElement('iframe');
+                        iframe.src = googleDocsUrl;
+                        iframe.className = 'w-full border-none bg-white';
+                        iframe.style.height = '500px';
+                        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups');
+
+                        const loader = document.createElement('div');
+                        loader.className = 'absolute inset-0 flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-800 z-10';
+                        loader.innerHTML = `
+                            <div class="animate-spin rounded-full h-8 w-8 border-4 border-indigo-500 border-t-transparent"></div>
+                            <p class="mt-2 text-gray-500 text-xs">Memuat ${label} via Google Docs Viewer...</p>
+                        `;
+                        body.appendChild(loader);
+                        body.appendChild(iframe);
+
+                        // Fallback: hapus loader setelah 4 detik
+                        const fallbackTimeout = setTimeout(() => {
+                            if (loader.parentNode) {
+                                loader.remove();
+                            }
+                        }, 4000);
+
+                        iframe.onload = () => {
+                            clearTimeout(fallbackTimeout);
+                            if (loader.parentNode) loader.remove();
+                        };
+
+                        iframe.onerror = () => {
+                            clearTimeout(fallbackTimeout);
+                            loader.innerHTML = `
+                                <div class="text-center">
+                                    <i class="bi bi-file-earmark-richtext text-4xl text-indigo-400 mb-3"></i>
+                                    <p class="text-gray-600 dark:text-gray-300 text-sm font-medium mb-1">Preview tidak tersedia di localhost</p>
+                                    <p class="text-gray-400 text-xs mb-3">Google Docs viewer memerlukan URL publik.</p>
+                                    <a href="${fileUrl}" target="_blank" class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors">
+                                        <i class="bi bi-download"></i> Download untuk melihat
+                                    </a>
+                                </div>
+                            `;
+                        };
+                    } else {
+                        // Unsupported format
+                        body.className = 'p-8 text-center';
+                        body.innerHTML = `
+                            <i class="bi bi-file-earmark-x text-4xl text-gray-300 dark:text-gray-600 mb-3"></i>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Preview tidak tersedia untuk format .${extension}</p>
+                            <p class="text-xs text-gray-400 mt-1">Silakan download file untuk melihat isinya.</p>
+                        `;
+                    }
+
+                    section.appendChild(body);
+                    return section;
+                }
+
                 function openDetailModal(button) {
                     // Ambil Data
                     const name = button.getAttribute('data-name');
@@ -330,7 +454,9 @@
                     const start = button.getAttribute('data-start');
                     const end = button.getAttribute('data-end');
                     const status = button.getAttribute('data-status');
-                    const fileUrl = button.getAttribute('data-file');
+                    const fileUrl1 = button.getAttribute('data-file') || '';
+                    const fileUrl2 = button.getAttribute('data-file-2') || '';
+                    const fileUrl3 = button.getAttribute('data-file-3') || '';
                     const opdNote = button.getAttribute('data-opd-note');
                     const adminNote = button.getAttribute('data-admin-note');
 
@@ -342,10 +468,6 @@
                     document.getElementById('detail-opd-note').innerText = opdNote;
                     document.getElementById('detail-admin-note').innerText = adminNote;
 
-                    // Tombol Download
-                    document.getElementById('detail-download-btn').href = fileUrl;
-                    document.getElementById('error-download-btn').href = fileUrl;
-
                     // Styling Status
                     const statusEl = document.getElementById('detail-status');
                     statusEl.innerText = status;
@@ -354,51 +476,68 @@
                     else if (status === 'REVISI') statusEl.classList.add('bg-red-100', 'text-red-800');
                     else statusEl.classList.add('bg-green-100', 'text-green-800');
 
-                    // PREVIEW LOGIC
-                    const iframe = document.getElementById('file-preview');
-                    const loading = document.getElementById('preview-loading');
-                    const error = document.getElementById('preview-error');
+                    // Build file download list (left panel)
+                    const filesList = document.getElementById('detail-files-list');
+                    filesList.innerHTML = '';
+                    const files = [
+                        { url: fileUrl1, label: 'File 1' },
+                        { url: fileUrl2, label: 'File 2' },
+                        { url: fileUrl3, label: 'File 3' },
+                    ];
 
-                    iframe.classList.add('hidden');
-                    error.classList.add('hidden');
-                    loading.classList.remove('hidden');
-                    iframe.src = '';
+                    let hasFiles = false;
+                    files.forEach((f) => {
+                        if (f.url) {
+                            hasFiles = true;
+                            const div = document.createElement('div');
+                            div.innerHTML = `
+                                <a href="${f.url}" target="_blank"
+                                    class="flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:border-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all duration-200">
+                                    <i class="bi bi-download text-indigo-500"></i> ${f.label}
+                                </a>
+                            `;
+                            filesList.appendChild(div);
+                        }
+                    });
 
-                    const extension = fileUrl.split('.').pop().toLowerCase();
-                    const browserSupported = ['pdf', 'jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
-                    const officeSupported = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'];
-
-                    if (browserSupported.includes(extension)) {
-                        iframe.src = fileUrl;
-                        iframe.onload = function() {
-                            loading.classList.add('hidden');
-                            iframe.classList.remove('hidden');
-                        };
-                        iframe.onerror = function() {
-                            loading.classList.add('hidden');
-                            error.classList.remove('hidden');
-                        };
-                    } else if (officeSupported.includes(extension)) {
-                        // Google Docs Viewer
-                        const googleDocsUrl =
-                            `https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`;
-                        iframe.src = googleDocsUrl;
-                        // Timer fallback karena google docs kadang tidak trigger onload
-                        setTimeout(() => {
-                            loading.classList.add('hidden');
-                            iframe.classList.remove('hidden');
-                        }, 2500);
-                    } else {
-                        loading.classList.add('hidden');
-                        error.classList.remove('hidden');
+                    if (!hasFiles) {
+                        filesList.innerHTML = '<p class="text-xs text-gray-400">Tidak ada file</p>';
                     }
+
+                    // Build stacked preview (right panel)
+                    const previewContainer = document.getElementById('preview-all-files');
+                    previewContainer.innerHTML = '';
+
+                    if (!hasFiles) {
+                        previewContainer.innerHTML = `
+                            <div class="flex flex-col items-center justify-center py-20 text-center">
+                                <i class="bi bi-file-earmark text-6xl text-gray-300 dark:text-gray-600 mb-4"></i>
+                                <p class="text-gray-400 dark:text-gray-500 font-medium">Tidak ada file untuk ditampilkan.</p>
+                            </div>
+                        `;
+                    } else {
+                        files.forEach((f, idx) => {
+                            if (f.url) {
+                                const section = buildPreviewSection(f.url, f.label, idx + 1);
+                                previewContainer.appendChild(section);
+                            }
+                        });
+                    }
+
+                    // Scroll preview to top
+                    document.getElementById('preview-container').scrollTop = 0;
 
                     document.getElementById('detailModal').classList.remove('hidden');
                 }
 
                 function closeDetailModal() {
                     document.getElementById('detailModal').classList.add('hidden');
-                    document.getElementById('file-preview').src = ''; // Stop loading
+                    // Clear all iframes to stop loading
+                    const container = document.getElementById('preview-all-files');
+                    if (container) {
+                        container.querySelectorAll('iframe').forEach(iframe => iframe.src = '');
+                        container.innerHTML = '';
+                    }
                 }
 
                 // --- TOGGLE STATUS PERIODE (AJAX) ---

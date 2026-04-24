@@ -29,10 +29,29 @@
 
                     {{-- File --}}
                     <td class="px-6 py-4">
-                        <a href="{{ asset('storage/' . $item->file_path) }}" target="_blank"
-                            class="text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1">
-                            <i class="bi bi-file-earmark-text"></i> File
-                        </a>
+                        <div class="flex flex-col gap-1">
+                            @if ($item->file_path)
+                                <a href="{{ asset('storage/' . $item->file_path) }}" target="_blank"
+                                    class="text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 text-xs">
+                                    <i class="bi bi-file-earmark-text"></i> File 1
+                                </a>
+                            @endif
+                            @if ($item->file_path_2)
+                                <a href="{{ asset('storage/' . $item->file_path_2) }}" target="_blank"
+                                    class="text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 text-xs">
+                                    <i class="bi bi-file-earmark-text"></i> File 2
+                                </a>
+                            @endif
+                            @if ($item->file_path_3)
+                                <a href="{{ asset('storage/' . $item->file_path_3) }}" target="_blank"
+                                    class="text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 text-xs">
+                                    <i class="bi bi-file-earmark-text"></i> File 3
+                                </a>
+                            @endif
+                            @if (!$item->file_path && !$item->file_path_2 && !$item->file_path_3)
+                                <span class="text-gray-400 text-xs">-</span>
+                            @endif
+                        </div>
                     </td>
 
                     {{-- Status --}}
@@ -84,7 +103,9 @@
                                 data-start="{{ date('d M Y', strtotime($item->period->start_date)) }}"
                                 data-end="{{ date('d M Y', strtotime($item->period->end_date)) }}"
                                 data-status="{{ $item->status }}"
-                                data-file="{{ asset('storage/' . $item->file_path) }}"
+                                data-file="{{ $item->file_path ? asset('storage/' . $item->file_path) : '' }}"
+                                data-file-2="{{ $item->file_path_2 ? asset('storage/' . $item->file_path_2) : '' }}"
+                                data-file-3="{{ $item->file_path_3 ? asset('storage/' . $item->file_path_3) : '' }}"
                                 data-opd-note="{{ $item->keterangan_opd ?? '-' }}"
                                 data-admin-note="{{ $item->catatan_admin ?? '-' }}"
                                 class="text-indigo-500 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-200"

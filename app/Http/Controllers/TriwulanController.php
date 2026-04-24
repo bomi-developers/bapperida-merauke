@@ -125,66 +125,90 @@ class TriwulanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            // Ubah max menjadi 51200 (50MB dalam Kilobytes)
-            'file_laporan' => 'required|mimes:pdf,doc,docx,xls,xlsx|max:51200',
+            'file_laporan_1' => 'nullable|mimes:pdf,doc,docx,xls,xlsx|max:51200',
+            'file_laporan_2' => 'nullable|mimes:pdf,doc,docx,xls,xlsx|max:51200',
+            'file_laporan_3' => 'nullable|mimes:pdf,doc,docx,xls,xlsx|max:51200',
             'keterangan_opd' => 'nullable|string',
             'period_id' => 'required|exists:triwulan_periods,id',
         ]);
 
+        // Minimal 1 file harus diupload
+        if (!$request->hasFile('file_laporan_1') && !$request->hasFile('file_laporan_2') && !$request->hasFile('file_laporan_3')) {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'Minimal 1 file laporan harus diunggah.'], 422);
+            }
+            return redirect()->back()->withErrors(['file_laporan' => 'Minimal 1 file laporan harus diunggah.']);
+        }
+
         $userId = Auth::id();
 
-        // --- LOGIKA PENAMAAN FILE CUSTOM ---
-        $file = $request->file('file_laporan');
+        // --- PROSES UPLOAD 3 FILE ---
+        $filePaths = ['file_path' => null, 'file_path_2' => null, 'file_path_3' => null];
+        $fileFields = [
+            'file_laporan_1' => 'file_path',
+            'file_laporan_2' => 'file_path_2',
+            'file_laporan_3' => 'file_path_3',
+        ];
 
-        // Ambil nama asli tanpa ekstensi
-        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        foreach ($fileFields as $inputName => $dbColumn) {
+            if ($request->hasFile($inputName)) {
+                $file = $request->file($inputName);
+                $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeName = Str::slug($originalName);
+                $extension = $file->getClientOriginalExtension();
+                $fileName = $safeName . '_bapperidaMrk' . rand(1000, 9999) . '.' . $extension;
+                $filePaths[$dbColumn] = $file->storeAs('laporan_triwulan', $fileName, 'public');
+            }
+        }
 
-        // Bersihkan nama dari karakter aneh & spasi (opsional tapi disarankan agar URL aman)
-        // Jika ingin benar-benar nama asli mentah, hapus Str::slug()
-        $safeName = Str::slug($originalName);
-
-        $extension = $file->getClientOriginalExtension();
-
-        // Format: NamaFile_bapperidaMrk + 4 Angka Acak
-        $fileName = $safeName . '_bapperidaMrk' . rand(1000, 9999) . '.' . $extension;
-
-        // Simpan dengan storeAs
-        $path = $file->storeAs('laporan_triwulan', $fileName, 'public');
-        // -----------------------------------
-
+        // Cari laporan yang BELUM disetujui (bisa di-update)
         $laporan = LaporanTriwulan::where('user_id', $userId)
             ->where('period_id', $request->period_id)
+            ->where('status', '!=', 'DISETUJUI')
             ->first();
 
         if ($laporan) {
-            // ... (Logic Update/Revisi sama seperti sebelumnya) ...
-
+            // Simpan history sebelum update
             LaporanHistory::create([
                 'laporan_id' => $laporan->id,
                 'file_path' => $laporan->file_path,
+                'file_path_2' => $laporan->file_path_2,
+                'file_path_3' => $laporan->file_path_3,
                 'keterangan_opd' => $laporan->keterangan_opd,
                 'catatan_admin' => $laporan->catatan_admin,
                 'status_snapshot' => $laporan->status
             ]);
 
-            $laporan->update([
-                'file_path' => $path, // Path baru dengan nama custom
+            // Update: hanya timpa file yang diupload baru, sisanya tetap
+            $updateData = [
                 'keterangan_opd' => $request->keterangan_opd,
                 'status' => 'MENUNGGU',
                 'catatan_admin' => null,
                 'verified_at' => null
-            ]);
+            ];
+
+            foreach ($filePaths as $col => $path) {
+                if ($path !== null) {
+                    $updateData[$col] = $path;
+                }
+            }
+
+            $laporan->update($updateData);
 
             $message = 'Laporan revisi berhasil diunggah.';
         } else {
-            // ... (Logic Create Baru) ...
-            LaporanTriwulan::create([
+            // Buat laporan baru (termasuk jika yang lama sudah DISETUJUI)
+            $createData = [
                 'user_id' => $userId,
                 'period_id' => $request->period_id,
-                'file_path' => $path, // Path baru dengan nama custom
+                'file_path' => $filePaths['file_path'] ?? '',
+                'file_path_2' => $filePaths['file_path_2'],
+                'file_path_3' => $filePaths['file_path_3'],
                 'keterangan_opd' => $request->keterangan_opd,
                 'status' => 'MENUNGGU'
-            ]);
+            ];
+
+            LaporanTriwulan::create($createData);
 
             $message = 'Laporan berhasil diunggah.';
         }
@@ -286,9 +310,11 @@ class TriwulanController extends Controller
             return response()->json(['success' => false, 'message' => 'Anda tidak memiliki akses untuk menghapus laporan ini.'], 403);
         }
 
-        // Hapus file dari storage
-        if ($laporan->file_path && Storage::disk('public')->exists($laporan->file_path)) {
-            Storage::disk('public')->delete($laporan->file_path);
+        // Hapus semua file dari storage
+        foreach (['file_path', 'file_path_2', 'file_path_3'] as $col) {
+            if ($laporan->$col && Storage::disk('public')->exists($laporan->$col)) {
+                Storage::disk('public')->delete($laporan->$col);
+            }
         }
 
         // Hapus history terkait
