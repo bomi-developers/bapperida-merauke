@@ -270,4 +270,33 @@ class TriwulanController extends Controller
         $slotNames = [1 => 'Template 1', 2 => 'Template 2', 3 => 'Template 3'];
         return redirect()->back()->with('success', $slotNames[$slot] . ' berhasil diperbarui.');
     }
+
+    public function destroy($id)
+    {
+        $laporan = LaporanTriwulan::findOrFail($id);
+        $user = Auth::user();
+
+        // Hanya boleh hapus jika belum disetujui
+        if ($laporan->status === 'DISETUJUI') {
+            return response()->json(['success' => false, 'message' => 'Laporan yang sudah disetujui tidak bisa dihapus.'], 403);
+        }
+
+        // OPD hanya bisa hapus miliknya sendiri
+        if ($user->role === 'opd' && $laporan->user_id !== $user->id) {
+            return response()->json(['success' => false, 'message' => 'Anda tidak memiliki akses untuk menghapus laporan ini.'], 403);
+        }
+
+        // Hapus file dari storage
+        if ($laporan->file_path && Storage::disk('public')->exists($laporan->file_path)) {
+            Storage::disk('public')->delete($laporan->file_path);
+        }
+
+        // Hapus history terkait
+        LaporanHistory::where('laporan_id', $laporan->id)->delete();
+
+        // Hapus laporan
+        $laporan->delete();
+
+        return response()->json(['success' => true, 'message' => 'Laporan berhasil dihapus.']);
+    }
 }

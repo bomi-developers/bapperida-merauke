@@ -109,6 +109,17 @@
                                     <i class="bi bi-clock-history text-lg"></i>
                                 </button>
                             @endif
+
+                            {{-- Tombol Hapus (hanya muncul jika belum disetujui dan milik user sendiri atau admin) --}}
+                            @if ($item->status !== 'DISETUJUI')
+                                @if (Auth::user()->role == 'admin' || Auth::user()->role == 'super_admin' || (Auth::user()->role == 'opd' && $item->user_id == Auth::id()))
+                                    <button onclick="deleteLaporan({{ $item->id }})"
+                                        class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                                        title="Hapus">
+                                        <i class="bi bi-trash text-lg"></i>
+                                    </button>
+                                @endif
+                            @endif
                         </div>
                     </td>
                 </tr>

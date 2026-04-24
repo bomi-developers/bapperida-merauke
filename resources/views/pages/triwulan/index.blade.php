@@ -86,48 +86,51 @@
 
                     {{-- Tombol Action untuk OPD --}}
                     @if (Auth::user()->role == 'opd')
-                        <div class="mb-4 flex flex-col gap-4">
-
-                            {{-- Template Download Cards untuk OPD --}}
-                            @if ($masterTemplates->count() > 0)
-                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                    @for ($slot = 1; $slot <= 3; $slot++)
-                                        @php $tmpl = $masterTemplates->get($slot); @endphp
-                                        @if ($tmpl)
-                                            <a href="{{ route('triwulan.template', $slot) }}"
-                                                class="group flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md hover:border-indigo-300 dark:hover:border-indigo-700 transition-all duration-200">
-                                                <div class="flex-shrink-0 w-9 h-9 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                                                    <i class="bi bi-file-earmark-excel text-white text-sm"></i>
-                                                </div>
-                                                <div class="min-w-0 flex-1">
-                                                    <p class="text-xs font-bold text-gray-900 dark:text-white truncate">{{ $tmpl->judul }}</p>
-                                                    <p class="text-[10px] text-gray-400 dark:text-gray-500">Template {{ $slot }}</p>
-                                                </div>
-                                                <i class="bi bi-download text-indigo-500 group-hover:text-indigo-600 transition-colors"></i>
-                                            </a>
-                                        @endif
-                                    @endfor
+                        <div class="flex items-center gap-3 flex-shrink-0">
+                            {{-- Upload Button --}}
+                            @if ($openPeriods->count() > 0)
+                                <button onclick="openUploadModal()"
+                                    class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-700 text-white font-medium rounded-lg shadow-md flex items-center gap-2 transition-colors duration-200">
+                                    <i class="bi bi-cloud-upload"></i>
+                                    <span>Upload Baru</span>
+                                </button>
+                            @else
+                                <div
+                                    class="px-4 py-2 bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800 rounded-lg text-sm font-medium flex items-center">
+                                    <i class="bi bi-lock-fill me-2"></i> Periode Tutup
                                 </div>
                             @endif
-
-                            {{-- Upload Button --}}
-                            <div class="flex justify-end">
-                                @if ($openPeriods->count() > 0)
-                                    <button onclick="openUploadModal()"
-                                        class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-700 text-white font-medium rounded-lg shadow-md flex items-center gap-2 transition-colors duration-200">
-                                        <i class="bi bi-cloud-upload"></i>
-                                        <span>Upload Baru</span>
-                                    </button>
-                                @else
-                                    <div
-                                        class="px-4 py-2 bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800 rounded-lg text-sm font-medium flex items-center">
-                                        <i class="bi bi-lock-fill me-2"></i> Periode Tutup
-                                    </div>
-                                @endif
-                            </div>
                         </div>
                     @endif
                 </div>
+
+                {{-- Template Download Section untuk OPD --}}
+                @if (Auth::user()->role == 'opd' && $masterTemplates->count() > 0)
+                    <div class="mb-5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 shadow-sm">
+                        <div class="flex items-center gap-2 mb-3">
+                            <i class="bi bi-file-earmark-spreadsheet text-indigo-500"></i>
+                            <h4 class="text-sm font-bold text-gray-900 dark:text-white">Download Template Format</h4>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                            @for ($slot = 1; $slot <= 3; $slot++)
+                                @php $tmpl = $masterTemplates->get($slot); @endphp
+                                @if ($tmpl)
+                                    <a href="{{ route('triwulan.template', $slot) }}"
+                                        class="group flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/20 hover:border-indigo-300 dark:hover:border-indigo-700 transition-all duration-200">
+                                        <div class="flex-shrink-0 w-9 h-9 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <i class="bi bi-file-earmark-excel text-white text-sm"></i>
+                                        </div>
+                                        <div class="min-w-0 flex-1">
+                                            <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">{{ $tmpl->judul }}</p>
+                                            <p class="text-xs text-gray-400 dark:text-gray-500">Template {{ $slot }}</p>
+                                        </div>
+                                        <i class="bi bi-download text-gray-400 group-hover:text-indigo-500 transition-colors"></i>
+                                    </a>
+                                @endif
+                            @endfor
+                        </div>
+                    </div>
+                @endif
 
                 {{-- CONTAINER UNTUK AJAX --}}
                 <section
@@ -157,71 +160,62 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             @for ($slot = 1; $slot <= 3; $slot++)
                                 @php $tmpl = $masterTemplates->get($slot); @endphp
-                                <div class="relative group rounded-xl border-2 transition-all duration-300
+                                <div class="relative rounded-xl border transition-all duration-300 flex flex-col
                                     {{ $tmpl
-                                        ? 'border-indigo-200 dark:border-indigo-800 bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-indigo-950/40 dark:via-gray-800 dark:to-purple-950/30 shadow-md hover:shadow-lg hover:border-indigo-400 dark:hover:border-indigo-600'
-                                        : 'border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800/50 hover:border-gray-400 dark:hover:border-gray-500' }}
-                                    overflow-hidden">
+                                        ? 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md hover:border-indigo-300 dark:hover:border-indigo-700'
+                                        : 'border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800/50 hover:border-gray-400 dark:hover:border-gray-500' }}">
 
-                                    {{-- Slot Badge --}}
-                                    <div class="absolute top-3 right-3">
-                                        <span class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full
-                                            {{ $tmpl
-                                                ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-700'
-                                                : 'bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400 border border-gray-300 dark:border-gray-600' }}">
-                                            Slot {{ $slot }}
+                                    {{-- Card Header --}}
+                                    <div class="flex items-center justify-between px-4 pt-4 pb-2">
+                                        <span class="text-xs font-bold uppercase tracking-wider
+                                            {{ $tmpl ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-400 dark:text-gray-500' }}">
+                                            Template {{ $slot }}
                                         </span>
+                                        @if ($tmpl)
+                                            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse" title="Aktif"></span>
+                                        @endif
                                     </div>
 
-                                    <div class="p-5">
+                                    {{-- Card Body --}}
+                                    <div class="px-4 pb-4 flex-1 flex flex-col">
                                         @if ($tmpl)
-                                            {{-- Filled State --}}
-                                            <div class="flex items-start gap-3 mb-3">
-                                                <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center shadow-sm">
+                                            <div class="flex items-center gap-3 mb-3">
+                                                <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
                                                     <i class="bi bi-file-earmark-excel text-white text-lg"></i>
                                                 </div>
                                                 <div class="min-w-0 flex-1">
-                                                    <p class="text-sm font-bold text-gray-900 dark:text-white truncate" title="{{ $tmpl->judul }}">
+                                                    <p class="text-sm font-semibold text-gray-900 dark:text-white truncate" title="{{ $tmpl->judul }}">
                                                         {{ $tmpl->judul }}
                                                     </p>
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                                        <i class="bi bi-clock me-1"></i>
+                                                    <p class="text-xs text-gray-400 dark:text-gray-500">
                                                         {{ $tmpl->created_at->format('d M Y, H:i') }}
                                                     </p>
                                                 </div>
                                             </div>
 
-                                            {{-- Action Buttons --}}
-                                            <div class="flex gap-2 mt-4">
+                                            <div class="flex gap-2 mt-auto">
                                                 <a href="{{ route('triwulan.template', $slot) }}"
-                                                    class="flex-1 px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium rounded-lg text-center flex items-center justify-center gap-1.5 transition-colors shadow-sm">
+                                                    class="flex-1 px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium rounded-lg text-center transition-colors inline-flex items-center justify-center gap-1.5">
                                                     <i class="bi bi-download"></i> Download
                                                 </a>
                                                 <button onclick="openTemplateModal({{ $slot }})"
-                                                    class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-xs font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors flex items-center gap-1.5">
+                                                    class="px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 text-xs font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors inline-flex items-center gap-1.5">
                                                     <i class="bi bi-arrow-repeat"></i> Ganti
                                                 </button>
                                             </div>
                                         @else
-                                            {{-- Empty State --}}
-                                            <div class="text-center py-4">
+                                            <div class="text-center py-6 flex-1 flex flex-col items-center justify-center">
                                                 <div class="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-3">
                                                     <i class="bi bi-cloud-upload text-xl text-gray-400 dark:text-gray-500"></i>
                                                 </div>
-                                                <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mb-1">Template {{ $slot }}</p>
                                                 <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">Belum diupload</p>
                                                 <button onclick="openTemplateModal({{ $slot }})"
-                                                    class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium rounded-lg transition-colors shadow-sm flex items-center gap-1.5 mx-auto">
-                                                    <i class="bi bi-upload"></i> Upload Template
+                                                    class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium rounded-lg transition-colors shadow-sm inline-flex items-center gap-1.5">
+                                                    <i class="bi bi-upload"></i> Upload
                                                 </button>
                                             </div>
                                         @endif
                                     </div>
-
-                                    {{-- Active Indicator Bar --}}
-                                    @if ($tmpl)
-                                        <div class="h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
-                                    @endif
                                 </div>
                             @endfor
                         </div>

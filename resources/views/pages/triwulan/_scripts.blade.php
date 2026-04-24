@@ -461,6 +461,24 @@
                     if (e.target == document.getElementById('templateModal')) closeTemplateModal();
                 }
 
+                // --- DELETE LAPORAN (SweetAlert2 Confirmation) ---
+                function deleteLaporan(id) {
+                    deleteConfirm({
+                        title: 'Hapus Laporan?',
+                        text: 'Laporan ini akan dihapus permanen beserta file dan riwayatnya!',
+                        url: `/triwulan/${id}`,
+                        onSuccess: function() {
+                            // Refresh tabel via AJAX
+                            const searchInput = document.getElementById('filter-search');
+                            if (searchInput) {
+                                searchInput.dispatchEvent(new Event('keyup'));
+                            } else {
+                                location.reload();
+                            }
+                        }
+                    });
+                }
+
                 // --- EXPOSE FUNCTIONS TO GLOBAL SCOPE (agar bisa dipanggil dari onclick HTML) ---
                 window.openUploadModal = openUploadModal;
                 window.closeUploadModal = closeUploadModal;
@@ -475,6 +493,7 @@
                 window.openTemplateModal = openTemplateModal;
                 window.closeTemplateModal = closeTemplateModal;
                 window.selectSlot = selectSlot;
+                window.deleteLaporan = deleteLaporan;
 
     }); // <-- Tutup DOMContentLoaded
 </script>

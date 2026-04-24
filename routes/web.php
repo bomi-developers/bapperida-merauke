@@ -329,6 +329,7 @@ Route::middleware(['auth'])->group(function () {
   Route::post('/triwulan/periode/{id}/toggle', [TriwulanController::class, 'togglePeriod'])->name('triwulan.period.toggle');
   Route::get('/triwulan/{id}/history', [TriwulanController::class, 'getHistory'])->name('triwulan.history');
   Route::post('/triwulan/template/upload', [TriwulanController::class, 'uploadTemplate'])->name('triwulan.template.upload');
+  Route::delete('/triwulan/{id}', [TriwulanController::class, 'destroy'])->name('triwulan.destroy');
 
   // Index Renja (OPD & Admin)
   Route::get('/renja', [RenjaController::class, 'index'])->name('renja.index');
