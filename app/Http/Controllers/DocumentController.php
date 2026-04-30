@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreDocumentRequest;
 use App\Models\Document;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Models\KategoriDocument;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 use App\Models\Notifikasi;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class DocumentController extends Controller
 {
@@ -26,7 +25,7 @@ class DocumentController extends Controller
 
             // 1. Filter Search (Judul)
             if ($request->filled('search')) {
-                $query->where('judul', 'like', '%' . $request->search . '%');
+                $query->where('judul', 'like', '%'.$request->search.'%');
             }
 
             // 2. Filter Tanggal
@@ -54,43 +53,32 @@ class DocumentController extends Controller
     {
         $search = $request->keyword ?? '';
 
-        $cacheKey = 'search_dokumen_' . md5($search . 'v1');
+        $cacheKey = 'search_dokumen_'.md5($search.'v1');
 
         $dokumen = \Illuminate\Support\Facades\Cache::remember($cacheKey, 600, function () use ($search) {
             $query = Document::with('kategori')
                 ->latest();
 
             // Jika ada pencarian
-            if (!empty($search)) {
-                $query->where('judul', 'like', '%' . $search . '%');
+            if (! empty($search)) {
+                $query->where('judul', 'like', '%'.$search.'%');
             }
+
             return $query->limit(20)->get();
         });
 
         return response()->json([
             'status' => 'success',
-            'data' => $dokumen
+            'data' => $dokumen,
         ]);
     }
 
     /**
      * Menyimpan dokumen baru ke database dengan nama file kustom.
      */
-    public function store(Request $request)
+    public function store(StoreDocumentRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'judul' => 'required|string|max:255',
-            'kategori_document_id' => 'required|exists:kategori_documents,id',
-            'cover' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx|max:102400', // Maks 10MB
-            'lainnya' => 'nullable|json',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $validated = $validator->validated();
+        $validated = $request->validated();
 
         // Logika penamaan file kustom
         $slug = Str::slug($validated['judul']);
@@ -116,7 +104,7 @@ class DocumentController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Dokumen berhasil ditambahkan!',
-            'data' => $document
+            'data' => $document,
         ]);
     }
 
@@ -126,27 +114,16 @@ class DocumentController extends Controller
     public function show(Document $document)
     {
         $document->load('kategori');
+
         return response()->json($document);
     }
 
     /**
      * Mengupdate data dokumen di database dengan nama file kustom jika ada file baru.
      */
-    public function update(Request $request, Document $document)
+    public function update(UpdateDocumentRequest $request, Document $document)
     {
-        $validator = Validator::make($request->all(), [
-            'judul' => 'required|string|max:255',
-            'kategori_document_id' => 'required|exists:kategori_documents,id',
-            'cover' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx|max:102400',
-            'lainnya' => 'nullable|json',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $validated = $validator->validated();
+        $validated = $request->validated();
 
         $slug = Str::slug($validated['judul']);
         $shortCode = strtolower(Str::random(4));
@@ -193,6 +170,7 @@ class DocumentController extends Controller
             Storage::disk('public')->delete($document->file);
         }
         $document->delete();
+
         return response()->json(['success' => true, 'message' => 'Dokumen berhasil dihapus!']);
     }
 
@@ -201,17 +179,16 @@ class DocumentController extends Controller
      */
     public function downloadFile(Document $document)
     {
-        $path = storage_path('app/public/' . $document->file);
+        $path = storage_path('app/public/'.$document->file);
 
-        if (!Storage::disk('public')->exists($document->file)) {
+        if (! Storage::disk('public')->exists($document->file)) {
             return back()->with('error', 'File tidak ditemukan atau telah dihapus.');
         }
         $document->increment('download');
         Notifikasi::create([
             'title' => 'Download dokumen baru',
-            'message' => 'Pengguna mendownload dokumen : ' . $document->judul,
+            'message' => 'Pengguna mendownload dokumen : '.$document->judul,
         ]);
-
 
         // Nama file saat diunduh sudah sesuai dengan judul dokumen
         $slug = Str::slug($document->judul);
@@ -220,7 +197,11 @@ class DocumentController extends Controller
 
         $newFilename = "{$slug}-{$shortCode}.{$extension}";
 
-        return response()->download($path, $newFilename);
+        // Force download sebagai attachment, jangan execute
+        return response()->download($path, $newFilename, [
+            'Content-Type' => 'application/octet-stream',
+            'Content-Disposition' => 'attachment; filename="'.$newFilename.'"',
+        ]);
     }
 
     /**
@@ -253,8 +234,8 @@ class DocumentController extends Controller
             if ($request->filled('search')) {
                 $searchTerm = $request->search;
                 $query->where(function ($q) use ($searchTerm) {
-                    $q->where('judul', 'like', '%' . $searchTerm . '%')
-                        ->orWhere('lainnya->visi', 'like', '%' . $searchTerm . '%');
+                    $q->where('judul', 'like', '%'.$searchTerm.'%')
+                        ->orWhere('lainnya->visi', 'like', '%'.$searchTerm.'%');
                 });
             }
 
@@ -275,6 +256,7 @@ class DocumentController extends Controller
                 'pagination_html' => $documents->links()->toHtml(),
             ]);
         }
+
         return abort(404);
     }
 }

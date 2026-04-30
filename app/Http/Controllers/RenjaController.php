@@ -275,4 +275,47 @@ class RenjaController extends Controller
         $histories = RenjaHistory::where('renja_document_id', $id)->latest()->get();
         return response()->json($histories);
     }
+
+    public function destroy($id)
+    {
+        $renja = RenjaDocument::findOrFail($id);
+
+        // Delete files from storage
+        if ($renja->file_dokumen_renja) {
+            Storage::disk('public')->delete($renja->file_dokumen_renja);
+        }
+        if ($renja->file_matriks_renja) {
+            Storage::disk('public')->delete($renja->file_matriks_renja);
+        }
+        if ($renja->file_dokumen_verifikasi) {
+            Storage::disk('public')->delete($renja->file_dokumen_verifikasi);
+        }
+        if ($renja->file_matriks_verifikasi) {
+            Storage::disk('public')->delete($renja->file_matriks_verifikasi);
+        }
+
+        // Delete associated histories
+        $renja->histories()->delete();
+
+        // Delete the document
+        $renja->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data RENJA berhasil dihapus.'
+        ]);
+    }
+
+    public function checkPassword(Request $request)
+    {
+        $request->validate([
+            'password' => 'required'
+        ]);
+
+        if (\Illuminate\Support\Facades\Hash::check($request->password, Auth::user()->password)) {
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Password salah.']);
+    }
 }

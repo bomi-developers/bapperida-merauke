@@ -91,17 +91,28 @@
                         @endif
                     </td>
                     <td class="px-6 py-4 text-center">
-                        <div class="flex justify-center gap-2">
+                        <div class="flex justify-center gap-3">
                             @if (Auth::user()->role == 'admin' || Auth::user()->role == 'super_admin')
+                                @if ($item->status == 'MENUNGGU')
+                                    <button onclick="openDeleteModal({{ $item->id }}, '{{ $item->opd->name }}')"
+                                        class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 text-xl"
+                                        title="Delete"><i class="bi bi-trash"></i></button>
+                                @else
+                                    <button onclick="openDeletePasswordModal({{ $item->id }}, '{{ $item->opd->name }}')"
+                                        class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 text-xl"
+                                        title="Delete"><i class="bi bi-trash"></i></button>
+                                @endif
                                 <button onclick="openVerifyModal({{ $item->id }}, '{{ $item->opd->name }}')"
                                     class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-xl"
                                     title="Verifikasi"><i class="bi bi-check-circle-fill"></i></button>
                             @endif
-                            @if (Auth::user()->role == 'opd' &&
+                            @if (
+                                    Auth::user()->role == 'opd' &&
                                     $item->status == 'REVISI' &&
                                     isset($tahapanAktif) &&
                                     $tahapanAktif &&
-                                    $tahapanAktif->id == $item->tahapan_id)
+                                    $tahapanAktif->id == $item->tahapan_id
+                                )
                                 <button
                                     onclick="openUploadModal({{ $item->tahapan_id }}, '{{ $item->status_dokumen }}', '{{ $item->status_matriks }}')"
                                     class="text-orange-500 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 text-xl"

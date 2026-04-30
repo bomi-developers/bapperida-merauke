@@ -359,3 +359,85 @@
         </div>
     </div>
 </div>
+
+<!-- 6. MODAL DELETE (ADMIN) -->
+<div id="deleteModal"
+    class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-70 flex justify-center items-center backdrop-blur-sm p-4">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-lg p-8 transform transition-all scale-100">
+        <div class="flex justify-between items-start mb-6 border-b border-gray-100 dark:border-gray-700 pb-4">
+            <div>
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-1">Konfirmasi Hapus</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400" id="delete-opd-name">OPD: -</p>
+            </div>
+            <button onclick="closeDeleteModal()" class="text-gray-400 hover:text-gray-600 transition-colors"><i
+                    class="bi bi-x-lg text-xl"></i></button>
+        </div>
+
+        <div
+            class="mb-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 rounded-xl flex items-start gap-3">
+            <i class="bi bi-exclamation-octagon-fill text-red-600 text-xl mt-0.5"></i>
+            <div>
+                <p class="font-bold text-red-800 dark:text-red-400">Peringatan Penting</p>
+                <p class="text-sm text-red-700 dark:text-red-300">Anda akan menghapus file RENJA PD? Tindakan ini tidak
+                    dapat dibatalkan.</p>
+            </div>
+        </div>
+
+        <form id="formDelete" method="POST">
+            @csrf @method('DELETE')
+            <div class="flex justify-end gap-3 pt-6 border-t border-gray-100 dark:border-gray-700">
+                <button type="button" onclick="closeDeleteModal()"
+                    class="px-6 py-2.5 rounded-xl text-gray-700 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 font-medium transition-colors">Batal</button>
+                <button type="submit"
+                    class="px-6 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 font-bold shadow-lg transition-all flex items-center gap-2">
+                    <i class="bi bi-trash-fill"></i> Ya, Hapus Data
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 7. MODAL DELETE WITH PASSWORD (ADMIN) -->
+<div id="deletePasswordModal"
+    class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-70 flex justify-center items-center backdrop-blur-sm p-4">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-lg p-8 transform transition-all scale-100">
+        <div class="flex justify-between items-start mb-6 border-b border-gray-100 dark:border-gray-700 pb-4">
+            <div>
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-1">Hapus dengan Password</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400" id="delete-pw-opd-name">OPD: -</p>
+            </div>
+            <button onclick="closeDeletePasswordModal()" class="text-gray-400 hover:text-gray-600 transition-colors"><i
+                    class="bi bi-x-lg text-xl"></i></button>
+        </div>
+
+        <div
+            class="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 rounded-xl flex items-start gap-3">
+            <i class="bi bi-shield-lock-fill text-amber-600 text-xl mt-0.5"></i>
+            <div>
+                <p class="font-bold text-amber-800 dark:text-amber-400">Keamanan Tambahan</p>
+                <p class="text-sm text-amber-700 dark:text-amber-300">Dokumen ini sudah dalam proses verifikasi/revisi.
+                    Silakan masukkan password Anda untuk melanjutkan penghapusan.</p>
+            </div>
+        </div>
+
+        <form id="formDeletePassword" method="POST">
+            @csrf @method('DELETE')
+            <div class="mb-6">
+                <label class="block text-sm font-semibold mb-2">Konfirmasi Password</label>
+                <input type="password" id="delete_confirm_password"
+                    class="block w-full rounded-xl border-gray-300 dark:bg-gray-700 p-3 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="Masukkan password Anda...">
+                <span id="password-error-msg" class="text-red-500 text-xs mt-1 hidden">Password salah.</span>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-6 border-t border-gray-100 dark:border-gray-700">
+                <button type="button" onclick="closeDeletePasswordModal()"
+                    class="px-6 py-2.5 rounded-xl text-gray-700 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 font-medium transition-colors">Batal</button>
+                <button type="submit" id="btnSubmitDeletePassword" disabled
+                    class="px-6 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 font-bold shadow-lg transition-all flex items-center gap-2 opacity-50 cursor-not-allowed">
+                    <i class="bi bi-trash-fill"></i> Hapus Sekarang
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

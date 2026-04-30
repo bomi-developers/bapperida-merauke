@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ProposalInovasi;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Mail;
 use App\Mail\ProposalInovasiMail;
 use App\Models\Notifikasi;
+use App\Models\ProposalInovasi;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -21,6 +20,7 @@ class ProposalController extends Controller
 
         return view('pages.proposal_inovasi.index');
     }
+
     public function getData(Request $request)
     {
         $query = ProposalInovasi::query();
@@ -28,9 +28,9 @@ class ProposalController extends Controller
         // Search
         if ($request->search) {
             $query->where(function ($q) use ($request) {
-                $q->where('nama', 'like', '%' . $request->search . '%')
-                    ->orWhere('email', 'like', '%' . $request->search . '%')
-                    ->orWhere('judul', 'like', '%' . $request->search . '%');
+                $q->where('nama', 'like', '%'.$request->search.'%')
+                    ->orWhere('email', 'like', '%'.$request->search.'%')
+                    ->orWhere('judul', 'like', '%'.$request->search.'%');
             });
         }
 
@@ -57,51 +57,54 @@ class ProposalController extends Controller
         return response()->json([
             'data' => $proposals->items(),
             'links' => $proposals->linkCollection()->toArray(),
-            'stats' => $stats
+            'stats' => $stats,
         ]);
     }
+
     public function show($id)
     {
         $proposal = ProposalInovasi::findOrFail($id);
+
         return response()->json($proposal);
     }
+
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
             'status' => 'required|in:pending,approved,rejected',
-            'catatan' => 'nullable|string'
+            'catatan' => 'nullable|string',
         ]);
 
         $proposal = ProposalInovasi::findOrFail($id);
         $proposal->update([
             'status' => $request->status,
-            'catatan' => $request->catatan
+            'catatan' => $request->catatan,
         ]);
 
         Notifikasi::create([
-            'title' => 'Proposal Inovasi ' . $request->status,
-            'message' => 'Proposal dari ' . $proposal->nama . ' Telah di ' . $request->status . ' Oleh ' . Auth::user()->name,
+            'title' => 'Proposal Inovasi '.$request->status,
+            'message' => 'Proposal dari '.$proposal->nama.' Telah di '.$request->status.' Oleh '.Auth::user()->name,
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Status berhasil diupdate'
+            'message' => 'Status berhasil diupdate',
         ]);
     }
+
     public function download($id)
     {
         $proposal = ProposalInovasi::findOrFail($id);
 
-
-        if (!$proposal->file_path || !Storage::disk('public')->exists($proposal->file_path)) {
+        if (! $proposal->file_path || ! Storage::disk('public')->exists($proposal->file_path)) {
             return back()->with('error', 'File tidak ditemukan atau telah dihapus.');
         }
 
-        $path = storage_path('app/public/' . $proposal->file_path);
+        $path = storage_path('app/public/'.$proposal->file_path);
 
         Notifikasi::create([
-            'title'   => 'Download proposal inovasi',
-            'message' => 'Pengguna mendownload proposal : ' . $proposal->judul,
+            'title' => 'Download proposal inovasi',
+            'message' => 'Pengguna mendownload proposal : '.$proposal->judul,
         ]);
 
         $slug = Str::slug($proposal->judul ?? 'proposal-inovasi');
@@ -110,8 +113,13 @@ class ProposalController extends Controller
 
         $newFilename = "{$slug}-{$shortCode}.{$extension}";
 
-        return response()->download($path, $newFilename);
+        // Force download sebagai attachment
+        return response()->download($path, $newFilename, [
+            'Content-Type' => 'application/octet-stream',
+            'Content-Disposition' => 'attachment; filename="'.$newFilename.'"',
+        ]);
     }
+
     public function destroy($id)
     {
         $proposal = ProposalInovasi::findOrFail($id);
@@ -125,62 +133,13 @@ class ProposalController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Proposal berhasil dihapus'
+            'message' => 'Proposal berhasil dihapus',
         ]);
     }
 
-
-
-    public function store(Request $request)
+    public function store(StoreProposalRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'nama' => 'required',
-            'judul' => 'required',
-            'latar_belakang' => 'required|min:100',
-            'email' => 'required|email',
-            'no_hp' => 'required',
-            'file' => 'required|file|mimes:pdf,doc,docx|max:2048',
-            'g-recaptcha-response' => 'required|captcha',
-            'ide_inovasi' => 'required',
-            'tujuan_inovasi' => 'required',
-            'target_perubahan' => 'required',
-            'stakeholder' => 'required',
-            'sdm' => 'required',
-            'penerima_manfaat' => 'required',
-            'kebaruan' => 'required',
-            'deskripsi_ide' => 'required',
-        ], [
-            'nama.required' => 'Nama wajib diisi.',
-            'judul.required' => 'Judul wajib diisi.',
-            'latar_belakang.required' => 'Latar belakang wajib diisi.',
-            'latar_belakang.min' => 'Latar belakang harus minimal 100 karakter.',
-            'email.required' => 'Email wajib diisi.',
-            'email.email' => 'Format email tidak valid.',
-            'no_hp.required' => 'Nomor HP wajib diisi.',
-            'file.required' => 'File proposal wajib diunggah.',
-            'file.mimes' => 'File harus berformat PDF, DOC, atau DOCX.',
-            'file.max' => 'Ukuran file maksimal 2MB.',
-            'g-recaptcha-response.required' => 'Silakan verifikasi CAPTCHA terlebih dahulu.',
-            'g-recaptcha-response.captcha' => 'Verifikasi CAPTCHA gagal, coba lagi.',
-            'ide_inovasi.required' => 'Ide inovasi wajib diisi',
-            'tujuan_inovasi.required' => 'tujuan inovasi wajib diisi',
-            'target_perubahan.required' => 'target perubahan wajib diisi',
-            'stakeholder.required' => 'stakeholder wajib diisi',
-            'sdm.required' => 'sumber daya manusia wajib diisi',
-            'penerima_manfaat.required' => 'penerima manfaat wajib diisi',
-            'kebaruan.required' => 'kebaruan wajib diisi',
-            'deskripsi_ide.required' => 'deskripsi singkat ide wajib diisi',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
         try {
-
             $path = $request->file('file')->store('proposal', 'public');
 
             $proposal = ProposalInovasi::create([
@@ -204,7 +163,7 @@ class ProposalController extends Controller
 
             Notifikasi::create([
                 'title' => 'Proposal Inovasi Baru',
-                'message' => 'Pengajuan proposal inovasi baru dari ' . $proposal->nama,
+                'message' => 'Pengajuan proposal inovasi baru dari '.$proposal->nama,
             ]);
 
             // --- KIRIM EMAIL ---
@@ -220,7 +179,7 @@ class ProposalController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Berhasil menyimpan pengajuan proposal. Silakan cek email Anda untuk konfirmasi.'
+                'message' => 'Berhasil menyimpan pengajuan proposal. Silakan cek email Anda untuk konfirmasi.',
             ], 200);
         } catch (Exception $e) {
             return response()->json([
@@ -236,12 +195,12 @@ class ProposalController extends Controller
         $email = $request->query('email');
         $apiKey = env('HUNTER_API_KEY');
 
-        if (!$email) {
+        if (! $email) {
             return response()->json(['valid' => false, 'message' => 'Email tidak boleh kosong'], 400);
         }
 
         try {
-            $response = Http::timeout(5)->get("https://api.hunter.io/v2/email-verifier", [
+            $response = Http::timeout(5)->get('https://api.hunter.io/v2/email-verifier', [
                 'email' => $email,
                 'api_key' => $apiKey,
             ]);
@@ -261,7 +220,7 @@ class ProposalController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'valid' => false,
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage(),
+                'message' => 'Terjadi kesalahan: '.$e->getMessage(),
             ], 500);
         }
     }

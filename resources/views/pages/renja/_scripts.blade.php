@@ -1,5 +1,6 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
 
         // --- 1. AJAX FILTERING & PAGINATION ---
         const searchInput = document.getElementById('filter-search');
@@ -19,10 +20,10 @@
                 const fullUrl = `${url}${separator}search=${search}&status=${status}&tahapan_filter=${tahapan}`;
 
                 fetch(fullUrl, {
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    })
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
                     .then(res => res.text())
                     .then(html => {
                         tableContainer.innerHTML = html;
@@ -38,7 +39,7 @@
             function attachPaginationListeners() {
                 const links = tableContainer.querySelectorAll('.pagination a');
                 links.forEach(link => {
-                    link.addEventListener('click', function(e) {
+                    link.addEventListener('click', function (e) {
                         e.preventDefault();
                         const url = this.getAttribute('href');
                         if (url) fetchRenja(url);
@@ -63,7 +64,7 @@
             const input = document.getElementById(inputId);
             const text = document.getElementById(textId);
             if (input && text) {
-                input.addEventListener('change', function(e) {
+                input.addEventListener('change', function (e) {
                     if (this.files.length) text.innerHTML =
                         `<span class="font-bold text-indigo-600">${this.files[0].name}</span>`;
                 });
@@ -78,7 +79,7 @@
         // ==========================================
         const uploadForm = document.getElementById('uploadForm');
         if (uploadForm) {
-            uploadForm.addEventListener('submit', function(e) {
+            uploadForm.addEventListener('submit', function (e) {
                 e.preventDefault();
                 // Close modal
                 document.getElementById('uploadModal').classList.add('hidden');
@@ -101,7 +102,7 @@
 
                 window.uploadProgressManager.upload(this.action, formData, {
                     name: 'Dokumen Renja',
-                    onSuccess: function(response) {
+                    onSuccess: function (response) {
                         Toast.fire({
                             icon: 'success',
                             title: response.message || 'Upload berhasil!'
@@ -115,7 +116,7 @@
                             if (searchInput) searchInput.dispatchEvent(new Event('keyup'));
                         }
                     },
-                    onError: function(error) {
+                    onError: function (error) {
                         console.error(error);
                         let errorMessage = 'Gagal upload dokumen.';
                         if (error.responseJSON && error.responseJSON.message) {
@@ -181,14 +182,14 @@
         btn.disabled = true;
         btn.classList.add('opacity-50');
         fetch(`/renja/tahapan/${id}/toggle`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({})
-            })
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({})
+        })
             .then(res => res.json())
             .then(data => {
                 if (data.success) setTimeout(() => window.location.reload(), 300);
@@ -272,6 +273,125 @@
         document.getElementById('formVerify').action = `/renja/${id}/verify`;
         document.getElementById('verifyModal').classList.remove('hidden');
     }
+    function openDeleteModal(id, opdName) {
+        document.getElementById('delete-opd-name').innerText = `OPD: ${opdName}`;
+        document.getElementById('formDelete').action = `/renja/${id}`;
+        document.getElementById('deleteModal').classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.add('hidden');
+    }
+
+    function openDeletePasswordModal(id, opdName) {
+        document.getElementById('delete-pw-opd-name').innerText = `OPD: ${opdName}`;
+        document.getElementById('formDeletePassword').action = `/renja/${id}`;
+        document.getElementById('delete_confirm_password').value = '';
+        document.getElementById('password-error-msg').classList.add('hidden');
+        const btn = document.getElementById('btnSubmitDeletePassword');
+        btn.disabled = true;
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+        document.getElementById('deletePasswordModal').classList.remove('hidden');
+    }
+
+    function closeDeletePasswordModal() {
+        document.getElementById('deletePasswordModal').classList.add('hidden');
+    }
+
+    // --- REAL-TIME PASSWORD CHECK ---
+    const pwInput = document.getElementById('delete_confirm_password');
+    if (pwInput) {
+        let pwTimeout;
+        pwInput.addEventListener('input', function () {
+            clearTimeout(pwTimeout);
+            const password = this.value;
+            const errorMsg = document.getElementById('password-error-msg');
+            const btn = document.getElementById('btnSubmitDeletePassword');
+
+            if (password.length < 1) {
+                errorMsg.classList.add('hidden');
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+                return;
+            }
+
+            pwTimeout = setTimeout(() => {
+                fetch('/check-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ password: password })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            errorMsg.classList.add('hidden');
+                            btn.disabled = false;
+                            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        } else {
+                            errorMsg.classList.remove('hidden');
+                            btn.disabled = true;
+                            btn.classList.add('opacity-50', 'cursor-not-allowed');
+                        }
+                    });
+            }, 400);
+        });
+    }
+
+    // --- DELETE FORM AJAX HANDLER ---
+    const deleteForm = document.getElementById('formDelete');
+    if (deleteForm) {
+        deleteForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            handleDelete(this.action, () => closeDeleteModal());
+        });
+    }
+
+    const deleteFormPw = document.getElementById('formDeletePassword');
+    if (deleteFormPw) {
+        deleteFormPw.addEventListener('submit', function (e) {
+            e.preventDefault();
+            handleDelete(this.action, () => closeDeletePasswordModal());
+        });
+    }
+
+    function handleDelete(action, closeCallback) {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        closeCallback();
+
+        fetch(action, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Terhapus!',
+                        text: data.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        if (typeof fetchRenja === 'function') fetchRenja();
+                        else window.location.reload();
+                    });
+                } else {
+                    Swal.fire('Gagal', data.message || 'Gagal menghapus data.', 'error');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                Swal.fire('Error', 'Terjadi kesalahan sistem.', 'error');
+            });
+    }
 
     function openDetailModal(button) {
         document.getElementById('detail-name').innerText = button.getAttribute('data-name');
@@ -326,9 +446,9 @@
             '<div class="flex flex-col items-center justify-center py-8"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div><p class="text-gray-500 dark:text-gray-400 mt-2 text-sm">Memuat...</p></div>';
         modal.classList.remove('hidden');
         fetch(`/renja/${id}/history`).then(res => {
-                if (!res.ok) throw new Error('Failed');
-                return res.json();
-            })
+            if (!res.ok) throw new Error('Failed');
+            return res.json();
+        })
             .then(data => {
                 container.innerHTML = '';
                 if (!data.length) {
@@ -353,8 +473,8 @@
             });
     }
 
-    window.onclick = function(e) {
-        const ids = ['tahapanModal', 'uploadModal', 'verifyModal', 'detailModal', 'historyModal'];
+    window.onclick = function (e) {
+        const ids = ['tahapanModal', 'uploadModal', 'verifyModal', 'detailModal', 'historyModal', 'deleteModal', 'deletePasswordModal'];
         ids.forEach(id => {
             if (e.target == document.getElementById(id)) document.getElementById(id).classList.add(
                 'hidden');
