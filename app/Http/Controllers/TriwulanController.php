@@ -125,15 +125,16 @@ class TriwulanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'file_laporan_1' => 'nullable|mimes:pdf,doc,docx,xls,xlsx|max:51200',
-            'file_laporan_2' => 'nullable|mimes:pdf,doc,docx,xls,xlsx|max:51200',
-            'file_laporan_3' => 'nullable|mimes:pdf,doc,docx,xls,xlsx|max:51200',
+            'file_laporan_1' => 'nullable|mimes:pdf,doc,docx,xls,xlsx|max:102400',
+            'file_laporan_2' => 'nullable|mimes:pdf,doc,docx,xls,xlsx|max:102400',
+            'file_laporan_3' => 'nullable|mimes:pdf,doc,docx,xls,xlsx|max:102400',
+            'file_laporan_4' => 'nullable|mimes:pdf,doc,docx,xls,xlsx|max:102400',
             'keterangan_opd' => 'nullable|string',
             'period_id' => 'required|exists:triwulan_periods,id',
         ]);
 
         // Minimal 1 file harus diupload
-        if (!$request->hasFile('file_laporan_1') && !$request->hasFile('file_laporan_2') && !$request->hasFile('file_laporan_3')) {
+        if (!$request->hasFile('file_laporan_1') && !$request->hasFile('file_laporan_2') && !$request->hasFile('file_laporan_3') && !$request->hasFile('file_laporan_4')) {
             if ($request->expectsJson()) {
                 return response()->json(['success' => false, 'message' => 'Minimal 1 file laporan harus diunggah.'], 422);
             }
@@ -142,12 +143,13 @@ class TriwulanController extends Controller
 
         $userId = Auth::id();
 
-        // --- PROSES UPLOAD 3 FILE ---
-        $filePaths = ['file_path' => null, 'file_path_2' => null, 'file_path_3' => null];
+        // --- PROSES UPLOAD 4 FILE ---
+        $filePaths = ['file_path' => null, 'file_path_2' => null, 'file_path_3' => null, 'file_path_4' => null];
         $fileFields = [
             'file_laporan_1' => 'file_path',
             'file_laporan_2' => 'file_path_2',
             'file_laporan_3' => 'file_path_3',
+            'file_laporan_4' => 'file_path_4',
         ];
 
         foreach ($fileFields as $inputName => $dbColumn) {
@@ -174,6 +176,7 @@ class TriwulanController extends Controller
                 'file_path' => $laporan->file_path,
                 'file_path_2' => $laporan->file_path_2,
                 'file_path_3' => $laporan->file_path_3,
+                'file_path_4' => $laporan->file_path_4,
                 'keterangan_opd' => $laporan->keterangan_opd,
                 'catatan_admin' => $laporan->catatan_admin,
                 'status_snapshot' => $laporan->status
@@ -204,6 +207,7 @@ class TriwulanController extends Controller
                 'file_path' => $filePaths['file_path'] ?? '',
                 'file_path_2' => $filePaths['file_path_2'],
                 'file_path_3' => $filePaths['file_path_3'],
+                'file_path_4' => $filePaths['file_path_4'],
                 'keterangan_opd' => $request->keterangan_opd,
                 'status' => 'MENUNGGU'
             ];
@@ -269,8 +273,8 @@ class TriwulanController extends Controller
     public function uploadTemplate(Request $request)
     {
         $request->validate([
-            'file_template' => 'required|mimes:doc,docx,xls,xlsx,pdf|max:20480', // Max 20MB
-            'slot' => 'required|in:1,2,3',
+            'file_template' => 'required|mimes:doc,docx,xls,xlsx,pdf|max:102400', // Max 100MB
+            'slot' => 'required|in:1,2,3,4',
         ]);
 
         $slot = $request->slot;
@@ -291,8 +295,8 @@ class TriwulanController extends Controller
             'slot' => $slot,
         ]);
 
-        $slotNames = [1 => 'Template 1', 2 => 'Template 2', 3 => 'Template 3'];
-        return redirect()->back()->with('success', $slotNames[$slot] . ' berhasil diperbarui.');
+        $slotNames = [1 => 'Indikator', 2 => 'Realisasi', 3 => 'OPD', 4 => 'Distrik'];
+        return redirect()->back()->with('success', 'Template ' . $slotNames[$slot] . ' berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -311,7 +315,7 @@ class TriwulanController extends Controller
         }
 
         // Hapus semua file dari storage
-        foreach (['file_path', 'file_path_2', 'file_path_3'] as $col) {
+        foreach (['file_path', 'file_path_2', 'file_path_3', 'file_path_4'] as $col) {
             if ($laporan->$col && Storage::disk('public')->exists($laporan->$col)) {
                 Storage::disk('public')->delete($laporan->$col);
             }

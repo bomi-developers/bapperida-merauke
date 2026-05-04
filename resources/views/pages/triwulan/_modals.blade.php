@@ -35,13 +35,16 @@
             <div class="bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-500 p-3 mb-4">
                 <p class="text-xs text-blue-700 dark:text-blue-300">
                     <i class="bi bi-info-circle me-1"></i>
-                    Upload file laporan sesuai template yang tersedia. Minimal <strong>1 file</strong> harus diunggah. Maksimal ukuran per file <strong>50MB</strong>.
+                    Upload file laporan sesuai template yang tersedia. Minimal <strong>1 file</strong> harus diunggah. Maksimal ukuran per file <strong>100MB</strong>.
                 </p>
             </div>
 
-            {{-- 3 File Inputs --}}
+            {{-- 4 File Inputs --}}
             <div class="space-y-3 mb-4">
-                @for ($slot = 1; $slot <= 3; $slot++)
+                @php
+                    $slotNames = [1 => 'Indikator', 2 => 'Realisasi', 3 => 'OPD', 4 => 'Distrik'];
+                @endphp
+                @for ($slot = 1; $slot <= 4; $slot++)
                     @php $tmpl = $masterTemplates->get($slot); @endphp
                     <div class="border border-gray-200 dark:border-gray-600 rounded-lg p-3 transition-all hover:border-indigo-300 dark:hover:border-indigo-700">
                         <div class="flex items-center gap-2 mb-2">
@@ -50,12 +53,16 @@
                             </div>
                             <div class="min-w-0 flex-1">
                                 <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">
-                                    {{ $tmpl ? $tmpl->judul : 'Template ' . $slot }}
+                                    {{ $slotNames[$slot] }}
+                                    @if ($tmpl)
+                                        <span class="text-xs font-normal text-gray-400">— {{ $tmpl->judul }}</span>
+                                    @endif
                                 </p>
                                 @if (!$tmpl)
                                     <p class="text-xs text-gray-400 dark:text-gray-500">Template belum tersedia</p>
                                 @endif
                             </div>
+                            <span class="text-[10px] font-medium px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">Opsional</span>
                         </div>
                         <input type="file" name="file_laporan_{{ $slot }}" id="fileInput{{ $slot }}"
                             class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-900 dark:file:text-indigo-300">
@@ -303,7 +310,7 @@
 
         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">File Terlalu Besar!</h3>
         <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
-            Ukuran file yang Anda pilih melebihi batas maksimum <strong>50MB</strong>. Silakan kompres file Anda atau
+            Ukuran file yang Anda pilih melebihi batas maksimum <strong>100MB</strong>. Silakan kompres file Anda atau
             pilih file lain.
         </p>
 
@@ -330,20 +337,21 @@
 
             <div class="bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-500 p-4 mb-4">
                 <p class="text-sm text-blue-700 dark:text-blue-300">
-                    File ini akan menjadi acuan format laporan untuk seluruh OPD. Anda bisa upload hingga <strong>3 template</strong> berbeda.
+                    File ini akan menjadi acuan format laporan untuk seluruh OPD. Anda bisa upload hingga <strong>4 template</strong> berbeda: Indikator, Realisasi, OPD, Distrik.
                 </p>
             </div>
 
             {{-- Slot Selection --}}
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pilih Slot Template</label>
-                <div class="grid grid-cols-3 gap-3" id="slot-selector">
-                    @for ($s = 1; $s <= 3; $s++)
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pilih Template</label>
+                <div class="grid grid-cols-4 gap-2" id="slot-selector">
+                    @php $slotNames = [1 => 'Indikator', 2 => 'Realisasi', 3 => 'OPD', 4 => 'Distrik']; @endphp
+                    @for ($s = 1; $s <= 4; $s++)
                         <button type="button" onclick="selectSlot({{ $s }})"
-                            class="slot-btn relative px-4 py-3 rounded-lg border-2 text-center transition-all duration-200 focus:outline-none
+                            class="slot-btn relative px-3 py-3 rounded-lg border-2 text-center transition-all duration-200 focus:outline-none
                             {{ $s === 1 ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 ring-2 ring-indigo-200 dark:ring-indigo-800' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:border-gray-400' }}"
                             data-slot="{{ $s }}">
-                            <span class="block text-sm font-bold">Template {{ $s }}</span>
+                            <span class="block text-xs font-bold">{{ $slotNames[$s] }}</span>
                         </button>
                     @endfor
                 </div>

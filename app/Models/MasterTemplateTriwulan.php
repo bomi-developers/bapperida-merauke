@@ -23,12 +23,13 @@ class MasterTemplateTriwulan extends Model
     }
 
     /**
-     * Ambil semua template aktif (1 per slot, max 3)
+     * Ambil semua template aktif (1 per slot, max 4)
+     * Slot: 1=Indikator, 2=Realisasi, 3=OPD, 4=Distrik
      */
     public static function getAllActive()
     {
         return static::where('is_active', true)
-            ->whereIn('slot', [1, 2, 3])
+            ->whereIn('slot', [1, 2, 3, 4])
             ->orderBy('slot')
             ->get()
             ->keyBy('slot');

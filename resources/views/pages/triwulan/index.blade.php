@@ -111,8 +111,9 @@
                             <i class="bi bi-file-earmark-spreadsheet text-indigo-500"></i>
                             <h4 class="text-sm font-bold text-gray-900 dark:text-white">Download Template Format</h4>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                            @for ($slot = 1; $slot <= 3; $slot++)
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                            @php $slotNames = [1 => 'Indikator', 2 => 'Realisasi', 3 => 'OPD', 4 => 'Distrik']; @endphp
+                            @for ($slot = 1; $slot <= 4; $slot++)
                                 @php $tmpl = $masterTemplates->get($slot); @endphp
                                 @if ($tmpl)
                                     <a href="{{ route('triwulan.template', $slot) }}"
@@ -122,7 +123,7 @@
                                         </div>
                                         <div class="min-w-0 flex-1">
                                             <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">{{ $tmpl->judul }}</p>
-                                            <p class="text-xs text-gray-400 dark:text-gray-500">Template {{ $slot }}</p>
+                                            <p class="text-xs text-gray-400 dark:text-gray-500">{{ $slotNames[$slot] }}</p>
                                         </div>
                                         <i class="bi bi-download text-gray-400 group-hover:text-indigo-500 transition-colors"></i>
                                     </a>
@@ -157,8 +158,9 @@
                             </button>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            @for ($slot = 1; $slot <= 3; $slot++)
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            @php $slotNames = [1 => 'Indikator', 2 => 'Realisasi', 3 => 'OPD', 4 => 'Distrik']; @endphp
+                            @for ($slot = 1; $slot <= 4; $slot++)
                                 @php $tmpl = $masterTemplates->get($slot); @endphp
                                 <div class="relative rounded-xl border transition-all duration-300 flex flex-col
                                     {{ $tmpl
@@ -169,7 +171,7 @@
                                     <div class="flex items-center justify-between px-4 pt-4 pb-2">
                                         <span class="text-xs font-bold uppercase tracking-wider
                                             {{ $tmpl ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-400 dark:text-gray-500' }}">
-                                            Template {{ $slot }}
+                                            {{ $slotNames[$slot] }}
                                         </span>
                                         @if ($tmpl)
                                             <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse" title="Aktif"></span>

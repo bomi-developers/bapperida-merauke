@@ -1,9 +1,11 @@
 <div class="overflow-x-auto">
+    @php $slotNames = [1 => 'Indikator', 2 => 'Realisasi', 3 => 'OPD', 4 => 'Distrik']; @endphp
     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
                 <th class="px-6 py-3">Pengirim</th>
                 <th class="px-6 py-3">Periode</th>
+                <th class="px-6 py-3">Template</th>
                 <th class="px-6 py-3">File</th>
                 <th class="px-6 py-3">Status</th>
                 <th class="px-6 py-3">Catatan</th>
@@ -27,28 +29,64 @@
                         </span>
                     </td>
 
+                    {{-- Template (Badge nama template berdasarkan file yang diupload) --}}
+                    <td class="px-6 py-4">
+                        <div class="flex flex-wrap gap-1">
+                            @php
+                                $fileSlots = [
+                                    1 => $item->file_path,
+                                    2 => $item->file_path_2,
+                                    3 => $item->file_path_3,
+                                    4 => $item->file_path_4,
+                                ];
+                                $badgeColors = [
+                                    1 => 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-300 dark:border-purple-800',
+                                    2 => 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900 dark:text-emerald-300 dark:border-emerald-800',
+                                    3 => 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900 dark:text-amber-300 dark:border-amber-800',
+                                    4 => 'bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-900 dark:text-cyan-300 dark:border-cyan-800',
+                                ];
+                            @endphp
+                            @foreach ($fileSlots as $slotNum => $filePath)
+                                @if ($filePath)
+                                    <span class="text-[10px] font-semibold px-2 py-0.5 rounded border {{ $badgeColors[$slotNum] }}">
+                                        {{ $slotNames[$slotNum] }}
+                                    </span>
+                                @endif
+                            @endforeach
+                            @if (!$item->file_path && !$item->file_path_2 && !$item->file_path_3 && !$item->file_path_4)
+                                <span class="text-gray-400 text-xs">-</span>
+                            @endif
+                        </div>
+                    </td>
+
                     {{-- File --}}
                     <td class="px-6 py-4">
                         <div class="flex flex-col gap-1">
                             @if ($item->file_path)
                                 <a href="{{ asset('storage/' . $item->file_path) }}" target="_blank"
                                     class="text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 text-xs">
-                                    <i class="bi bi-file-earmark-text"></i> File 1
+                                    <i class="bi bi-file-earmark-text"></i> Indikator
                                 </a>
                             @endif
                             @if ($item->file_path_2)
                                 <a href="{{ asset('storage/' . $item->file_path_2) }}" target="_blank"
                                     class="text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 text-xs">
-                                    <i class="bi bi-file-earmark-text"></i> File 2
+                                    <i class="bi bi-file-earmark-text"></i> Realisasi
                                 </a>
                             @endif
                             @if ($item->file_path_3)
                                 <a href="{{ asset('storage/' . $item->file_path_3) }}" target="_blank"
                                     class="text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 text-xs">
-                                    <i class="bi bi-file-earmark-text"></i> File 3
+                                    <i class="bi bi-file-earmark-text"></i> OPD
                                 </a>
                             @endif
-                            @if (!$item->file_path && !$item->file_path_2 && !$item->file_path_3)
+                            @if ($item->file_path_4)
+                                <a href="{{ asset('storage/' . $item->file_path_4) }}" target="_blank"
+                                    class="text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 text-xs">
+                                    <i class="bi bi-file-earmark-text"></i> Distrik
+                                </a>
+                            @endif
+                            @if (!$item->file_path && !$item->file_path_2 && !$item->file_path_3 && !$item->file_path_4)
                                 <span class="text-gray-400 text-xs">-</span>
                             @endif
                         </div>
@@ -106,6 +144,7 @@
                                 data-file="{{ $item->file_path ? asset('storage/' . $item->file_path) : '' }}"
                                 data-file-2="{{ $item->file_path_2 ? asset('storage/' . $item->file_path_2) : '' }}"
                                 data-file-3="{{ $item->file_path_3 ? asset('storage/' . $item->file_path_3) : '' }}"
+                                data-file-4="{{ $item->file_path_4 ? asset('storage/' . $item->file_path_4) : '' }}"
                                 data-opd-note="{{ $item->keterangan_opd ?? '-' }}"
                                 data-admin-note="{{ $item->catatan_admin ?? '-' }}"
                                 class="text-indigo-500 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-200"
@@ -146,7 +185,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="text-center py-8 text-gray-500 dark:text-gray-400">Tidak ada data
+                    <td colspan="7" class="text-center py-8 text-gray-500 dark:text-gray-400">Tidak ada data
                         ditemukan.</td>
                 </tr>
             @endforelse

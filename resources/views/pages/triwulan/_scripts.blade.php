@@ -110,10 +110,10 @@
                 }
 
                 // ==========================================
-                // 3. VALIDASI FILE SIZE (Max 50MB) - 3 File Inputs
+                // 3. VALIDASI FILE SIZE (Max 100MB) - 4 File Inputs
                 // ==========================================
-                const maxSize = 50 * 1024 * 1024; // 50MB
-                for (let i = 1; i <= 3; i++) {
+                const maxSize = 100 * 1024 * 1024; // 100MB
+                for (let i = 1; i <= 4; i++) {
                     const fi = document.getElementById('fileInput' + i);
                     if (fi) {
                         fi.addEventListener('change', function() {
@@ -230,13 +230,15 @@
                     const slotInput = document.getElementById('template_slot');
                     if (slotInput) slotInput.value = slot;
 
+                    const slotNames = {1: 'Indikator', 2: 'Realisasi', 3: 'OPD', 4: 'Distrik'};
+
                     // Update button styles
                     document.querySelectorAll('.slot-btn').forEach(btn => {
                         const btnSlot = parseInt(btn.getAttribute('data-slot'));
                         if (btnSlot === slot) {
-                            btn.className = 'slot-btn relative px-4 py-3 rounded-lg border-2 text-center transition-all duration-200 focus:outline-none border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 ring-2 ring-indigo-200 dark:ring-indigo-800';
+                            btn.className = 'slot-btn relative px-3 py-3 rounded-lg border-2 text-center transition-all duration-200 focus:outline-none border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 ring-2 ring-indigo-200 dark:ring-indigo-800';
                         } else {
-                            btn.className = 'slot-btn relative px-4 py-3 rounded-lg border-2 text-center transition-all duration-200 focus:outline-none border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:border-gray-400';
+                            btn.className = 'slot-btn relative px-3 py-3 rounded-lg border-2 text-center transition-all duration-200 focus:outline-none border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:border-gray-400';
                         }
                     });
 
@@ -246,7 +248,7 @@
                     if (warning && warningText) {
                         if (activeSlots.includes(slot)) {
                             warning.classList.remove('hidden');
-                            warningText.textContent = `Template ${slot} sudah ada dan akan digantikan dengan file baru.`;
+                            warningText.textContent = `Template ${slotNames[slot]} sudah ada dan akan digantikan dengan file baru.`;
                         } else {
                             warning.classList.add('hidden');
                         }
@@ -309,15 +311,19 @@
                             <div class="flex flex-wrap gap-2">
                                 ${item.file_path ? `<a href="/storage/${item.file_path}" target="_blank" 
                                 class="inline-flex items-center px-3 py-1 text-xs font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600">
-                                    <i class="bi bi-download me-2"></i> File 1
+                                    <i class="bi bi-download me-2"></i> Indikator
                                 </a>` : ''}
                                 ${item.file_path_2 ? `<a href="/storage/${item.file_path_2}" target="_blank" 
                                 class="inline-flex items-center px-3 py-1 text-xs font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600">
-                                    <i class="bi bi-download me-2"></i> File 2
+                                    <i class="bi bi-download me-2"></i> Realisasi
                                 </a>` : ''}
                                 ${item.file_path_3 ? `<a href="/storage/${item.file_path_3}" target="_blank" 
                                 class="inline-flex items-center px-3 py-1 text-xs font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600">
-                                    <i class="bi bi-download me-2"></i> File 3
+                                    <i class="bi bi-download me-2"></i> OPD
+                                </a>` : ''}
+                                ${item.file_path_4 ? `<a href="/storage/${item.file_path_4}" target="_blank" 
+                                class="inline-flex items-center px-3 py-1 text-xs font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600">
+                                    <i class="bi bi-download me-2"></i> Distrik
                                 </a>` : ''}
                             </div>
                         </li>`;
@@ -457,6 +463,7 @@
                     const fileUrl1 = button.getAttribute('data-file') || '';
                     const fileUrl2 = button.getAttribute('data-file-2') || '';
                     const fileUrl3 = button.getAttribute('data-file-3') || '';
+                    const fileUrl4 = button.getAttribute('data-file-4') || '';
                     const opdNote = button.getAttribute('data-opd-note');
                     const adminNote = button.getAttribute('data-admin-note');
 
@@ -480,9 +487,10 @@
                     const filesList = document.getElementById('detail-files-list');
                     filesList.innerHTML = '';
                     const files = [
-                        { url: fileUrl1, label: 'File 1' },
-                        { url: fileUrl2, label: 'File 2' },
-                        { url: fileUrl3, label: 'File 3' },
+                        { url: fileUrl1, label: 'Indikator' },
+                        { url: fileUrl2, label: 'Realisasi' },
+                        { url: fileUrl3, label: 'OPD' },
+                        { url: fileUrl4, label: 'Distrik' },
                     ];
 
                     let hasFiles = false;
