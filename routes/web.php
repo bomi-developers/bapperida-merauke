@@ -281,6 +281,9 @@ Route::middleware(['auth'])->group(function () {
             // user admin
             Route::get('user/admin', [\App\Http\Controllers\UserController::class, 'admin'])->name('user.admin');
             Route::get('user/admin-data', [\App\Http\Controllers\UserController::class, 'admin_data'])->name('user.admin-data');
+            Route::post('user/admin', [\App\Http\Controllers\UserController::class, 'admin_store'])->name('user.admin-store');
+            Route::put('user/admin/{id}', [\App\Http\Controllers\UserController::class, 'admin_update'])->name('user.admin-update');
+            Route::delete('user/admin/{id}', [\App\Http\Controllers\UserController::class, 'admin_destroy'])->name('user.admin-destroy');
         });
 
         // berita
@@ -349,6 +352,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/website-setting', [PagesController::class, 'websiteSettingUpdate'])->name('website-setting.update');
     // account
     Route::get('/profile', [PagesController::class, 'profile'])->name('profile');
+    Route::put('/profile/user', [PagesController::class, 'updateUser'])->name('profile.update-user');
+    Route::put('/profile/pegawai', [PagesController::class, 'updatePegawai'])->name('profile.update-pegawai');
 
     // pages examples
     Route::get('/calendar', [PagesController::class, 'calendar'])->name('calendar');

@@ -133,4 +133,66 @@ class UserController extends Controller
 
         return response()->json($users);
     }
+    public function admin_store(Request $request)
+    {
+        $request->validate([
+            'name'     => 'required|string',
+            'email'    => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6',
+            'role'     => 'required|string',
+        ]);
+
+        $user = User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'password' => bcrypt($request->password),
+            'role'     => $request->role,
+        ]);
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Super Admin berhasil dibuat',
+            'data'    => $user
+        ], 200);
+    }
+
+    public function admin_update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        
+        $request->validate([
+            'name'  => 'required|string',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'role'  => 'required|string',
+        ]);
+
+        $userData = [
+            'name'  => $request->name,
+            'email' => $request->email,
+            'role'  => $request->role,
+        ];
+
+        if ($request->filled('password')) {
+            $userData['password'] = bcrypt($request->password);
+        }
+
+        $user->update($userData);
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Super Admin berhasil diperbarui',
+            'data'    => $user
+        ], 200);
+    }
+
+    public function admin_destroy($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Super Admin berhasil dihapus'
+        ], 200);
+    }
 }

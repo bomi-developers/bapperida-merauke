@@ -26,9 +26,9 @@
                                     <h3 class="font-medium text-black dark:text-white">Informasi Pribadi</h3>
                                 </div>
 
-                                <form class="p-6">
+                                <form id="formUpdatePegawai" class="p-6">
                                     @csrf
-                                    <input type="hidden" id="pegawai_id" name="id">
+                                    <input type="hidden" id="pegawai_id" name="id" value="{{ $pegawai->id }}">
 
                                     <x-input label="Nama Lengkap" id="nama" name="nama" type="text"
                                         value="{{ $pegawai->nama }}" />
@@ -36,7 +36,7 @@
                                         value="{{ $pegawai->nip }}" />
                                     <x-input label="NIK" id="nik" name="nik" type="text"
                                         value="{{ $pegawai->nik }}" />
-                                    <x-textarea label="Alamat" name="alamat" rows="4" placeholder="Alamat Rumah"
+                                    <x-textarea id="alamat" label="Alamat" name="alamat" rows="4" placeholder="Alamat Rumah"
                                         slot="{{ $pegawai->alamat }}" />
 
                                     <div class="flex justify-end gap-3 pt-4">
@@ -54,7 +54,7 @@
                                     <h3 class="font-medium text-black dark:text-white">Perbarui Akun</h3>
                                 </div>
 
-                                <form class="p-6">
+                                <form id="formUpdateUser" class="p-6">
                                     @csrf
                                     <x-input label="Username" id="name" name="name" type="text"
                                         value="{{ Auth::user()->name }}" />
@@ -144,3 +144,111 @@
         </div>
     </main>
 </x-layout>
+
+<script>
+    document.getElementById('formPegawai').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const data = {
+            password: document.getElementById('password').value,
+            new_password: document.getElementById('new_password').value,
+        };
+
+        fetch("{{ route('admin.password.update') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(async res => {
+                const resData = await res.json();
+                if (!res.ok) {
+                    if (resData.errors) {
+                        throw new Error(Object.values(resData.errors).flat().join('\n'));
+                    }
+                    throw new Error(resData.message || 'Terjadi kesalahan');
+                }
+                return resData;
+            })
+            .then(res => {
+                alert(res.message);
+                document.getElementById('password').value = "";
+                document.getElementById('new_password').value = "";
+            })
+            .catch(err => {
+                console.error(err);
+                alert(err.message);
+            });
+    });
+
+    if (document.getElementById('formUpdatePegawai')) {
+        document.getElementById('formUpdatePegawai').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const data = {
+                nama: document.getElementById('nama').value,
+                nip: document.getElementById('nip').value,
+                nik: document.getElementById('nik').value,
+                alamat: document.getElementById('alamat').value,
+            };
+
+            fetch("{{ route('profile.update-pegawai') }}", {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(async res => {
+                    const resData = await res.json();
+                    if (!res.ok) {
+                        if (resData.errors) throw new Error(Object.values(resData.errors).flat().join('\n'));
+                        throw new Error(resData.message || 'Terjadi kesalahan');
+                    }
+                    return resData;
+                })
+                .then(res => alert(res.message))
+                .catch(err => {
+                    console.error(err);
+                    alert(err.message);
+                });
+        });
+    }
+
+    if (document.getElementById('formUpdateUser')) {
+        document.getElementById('formUpdateUser').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const data = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+            };
+
+            fetch("{{ route('profile.update-user') }}", {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(async res => {
+                    const resData = await res.json();
+                    if (!res.ok) {
+                        if (resData.errors) throw new Error(Object.values(resData.errors).flat().join('\n'));
+                        throw new Error(resData.message || 'Terjadi kesalahan');
+                    }
+                    return resData;
+                })
+                .then(res => alert(res.message))
+                .catch(err => {
+                    console.error(err);
+                    alert(err.message);
+                });
+        });
+    }
+</script>

@@ -323,4 +323,45 @@ class PagesController extends Controller
         ];
         return view('pages.logs.view', $data);
     }
+    public function updateUser(Request $request)
+    {
+        $user = Auth::user();
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+        ]);
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Profil berhasil diperbarui']);
+    }
+
+    public function updatePegawai(Request $request)
+    {
+        $user = Auth::user();
+        $pegawai = Pegawai::find($user->id_pegawai);
+
+        if (!$pegawai) {
+            return response()->json(['success' => false, 'message' => 'Data pegawai tidak ditemukan'], 404);
+        }
+
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'nip' => 'required|string|unique:pegawais,nip,' . $pegawai->id,
+            'nik' => 'required|string|unique:pegawais,nik,' . $pegawai->id,
+            'alamat' => 'nullable|string',
+        ]);
+
+        $pegawai->update([
+            'nama' => $request->nama,
+            'nip' => $request->nip,
+            'nik' => $request->nik,
+            'alamat' => $request->alamat,
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Data pribadi berhasil diperbarui']);
+    }
 }

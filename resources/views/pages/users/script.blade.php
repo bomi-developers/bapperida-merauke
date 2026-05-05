@@ -14,6 +14,7 @@
                                      <th class="px-4 py-3">#</th>
                                     <th class="px-4 py-3">Nama Lengkap</th>
                                     <th class="px-4 py-3">Email</th>
+                                    <th class="px-4 py-3">Role</th>
                                     <th class="px-4 py-3 text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -25,9 +26,10 @@
                                 <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">${i + 1}</td>
                                 <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">${b.name}</td>
                                 <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">${b.email}</td>
+                                <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">${b.role}</td>
                                 <td class="px-4 py-3 text-center">
                                     <div class="flex justify-center gap-3">
-                                        <button onclick="editUser(${b.id}, '${b.name}', '${b.email}')"
+                                        <button onclick="editUser(${b.id}, '${b.name}', '${b.email}', '${b.role}')"
                                             class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition"
                                             title="Edit">
                                             <i class="bi bi-pencil-square text-lg"></i>
@@ -64,8 +66,8 @@
                             <button onclick="loadData('${link.url}')"
                                 class="px-3 py-1 text-sm rounded font-medium transition-colors duration-200
                                 ${link.active
-                                    ? 'bg-indigo-600 text-white'
-                                    : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600'}">
+                                ? 'bg-indigo-600 text-white'
+                                : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600'}">
                                 ${label}
                             </button>`;
                     }
@@ -82,14 +84,18 @@
         document.getElementById('user_id').value = "";
         document.getElementById('name').value = "";
         document.getElementById('email').value = "";
+        document.getElementById('password').value = "";
+        document.getElementById('role').value = "super_admin";
         document.getElementById('formModal').classList.remove('hidden');
     }
 
-    function editUser(id, name, email) {
+    function editUser(id, name, email, role) {
         document.getElementById('modalTitle').innerText = "Edit Super Admin";
         document.getElementById('user_id').value = id;
         document.getElementById('name').value = name;
         document.getElementById('email').value = email;
+        document.getElementById('password').value = "";
+        document.getElementById('role').value = role;
         document.getElementById('formModal').classList.remove('hidden');
     }
 
@@ -97,41 +103,57 @@
         document.getElementById('formModal').classList.add('hidden');
     }
 
-    document.getElementById('formUser').addEventListener('submit', function(e) {
+    document.getElementById('formUser').addEventListener('submit', function (e) {
         e.preventDefault();
 
         const id = document.getElementById('user_id').value;
         const method = id ? 'PUT' : 'POST';
-        const url = id ? `/admin/jabatan/${id}` : `/admin/jabatan`;
+        const url = id ? `/admin/user/admin/${id}` : `/admin/user/admin`;
 
         const data = {
             name: document.getElementById('name').value,
             email: document.getElementById('email').value,
+            password: document.getElementById('password').value,
+            role: document.getElementById('role').value,
         };
 
         fetch(url, {
-                method,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify(data)
+            method,
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(async res => {
+                const data = await res.json();
+                if (!res.ok) {
+                    if (data.errors) {
+                        const messages = Object.values(data.errors).flat().join('\n');
+                        throw new Error(messages);
+                    }
+                    throw new Error(data.message || 'Terjadi kesalahan sistem');
+                }
+                return data;
             })
-            .then(res => res.json())
             .then(res => {
                 alert(res.message);
                 closeForm();
                 loadData();
             })
-            .catch(err => console.error(err));
+            .catch(err => {
+                console.error(err);
+                alert(err.message);
+            });
     });
 
     function deleteUser(id) {
         deleteConfirm({
             title: 'Hapus User?',
             text: 'Data user ini akan dihapus permanen!',
-            url: `/admin/user/${id}`,
-            onSuccess: function() {
+            url: `/admin/user/admin/${id}`,
+            onSuccess: function () {
                 loadData();
             }
         });

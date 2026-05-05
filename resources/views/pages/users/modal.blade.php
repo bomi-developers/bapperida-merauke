@@ -2,12 +2,12 @@
     <form id="formUser" class="space-y-4">
         @csrf
         <input type="hidden" id="user_id" name="id">
+        <input type="hidden" id="role" name="role" value="super_admin">
         <x-input label="Nama Lengkap" id="name" name="name" type="text" />
         <x-input label="Email Address" id="email" name="email" type="email" />
         <x-input label="Password" id="password" name="password" type="password" />
         <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-            <button type="button" onclick="closeForm()"
-                class="px-4 py-2 text-sm font-medium rounded-lg border border-gray-300 dark:border-gray-600
+            <button type="button" onclick="closeForm()" class="px-4 py-2 text-sm font-medium rounded-lg border border-gray-300 dark:border-gray-600
                        text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
                 Batal
             </button>
